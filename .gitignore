@@ -39,3 +39,4 @@ Thumbs.db
 
 # Large raw cache (processed real datasets will be committed in Dataset/)
 Dataset/raw/
+guide_text.txt
