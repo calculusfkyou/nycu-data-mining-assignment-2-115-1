@@ -1,0 +1,5 @@
+Metric,Tier 1 (Naive),Tier 2 (Ours),Tier 3 (Supervised)
+Caught Failures (out of 400),340 / 400,380 / 400,337 / 400
+Silent Bug Escapes (FN),60,20 (-70% vs T1),63
+False Audit Reviews (FP),30,8 (-72% vs T1),16
+Net Monthly Savings ($),"$407,100","$455,760 (+$48.6k/mo)","$403,920"
