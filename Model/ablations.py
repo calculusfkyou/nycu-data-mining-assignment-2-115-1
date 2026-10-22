@@ -1,167 +1,89 @@
-"""Controlled Ablation Experiments for AI Agent Ghostwork Detector.
+"""Controlled weight-contamination, masked-feature, and threshold ablations.
 
-Ablation 1 (AD-Specific): Training Contamination Ratio (0%, 1%, 5%, 10% anomalies in training).
-Ablation 2 (Core Research Question): Trajectory Process Dynamics vs. Static Final Patch Output Features.
+Only training rows may enter gradient updates. All runs keep 32 training rows,
+24 inputs, the 24-16-6-16-24 architecture, optimizer and seeds fixed.
 """
-
-from __future__ import annotations
-
 import sys
 from pathlib import Path
-
-# Add project root to sys.path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
-from sklearn.metrics import average_precision_score, fbeta_score, roc_auc_score
-
+from sklearn.metrics import average_precision_score, roc_auc_score, fbeta_score
+from sklearn.preprocessing import StandardScaler
 from Model.models import AutoencoderDetector
 
-
-TABLES_DIR = Path("Model/tables")
-TABLES_DIR.mkdir(parents=True, exist_ok=True)
 SEEDS = [42, 123, 456, 789, 2026]
+OUT = Path('Model/tables')
+META = ['instance_id', 'repo', 'label', 'is_resolved', 'exit_status']
 
-
-def run_ablation_contamination() -> pd.DataFrame:
-    """Ablate training set contamination by injecting 0%, 1%, 5%, 10% anomalies."""
-    train_df = pd.read_csv("Dataset/train.csv")
-    val_df = pd.read_csv("Dataset/val.csv")
-    test_df = pd.read_csv("Dataset/test.csv")
-
-    meta_cols = ["instance_id", "repo", "label", "is_resolved", "exit_status"]
-    feature_cols = [c for c in train_df.columns if c not in meta_cols]
-
-    clean_normal = train_df[train_df["label"] == 0][feature_cols].values
-    val_anomalies = val_df[val_df["label"] == 1][feature_cols].values
-
-    X_val = val_df[feature_cols].values
-    y_val = val_df["label"].values
-    X_test = test_df[feature_cols].values
-    y_test = test_df["label"].values
-
-    contamination_levels = [0.0, 0.01, 0.05, 0.10]
+def main():
+    train, val, test = [pd.read_csv(f'Dataset/{s}.csv') for s in ['train', 'val', 'test']]
+    cols = [c for c in train if c not in META]
+    clean = train[train.label == 0][cols].to_numpy()
+    failures = train[train.label == 1][cols].to_numpy()
+    xv, xt = val[cols].to_numpy(), test[cols].to_numpy()
+    yv, yt = val.label.to_numpy(), test.label.to_numpy()
     records = []
+    fitting_ids = {}
+    for seed in SEEDS:
+        order = np.random.default_rng(seed).permutation(len(failures))
+        for k in [0, 1, 2, 3]:
+            x = clean.copy()
+            if k: x[-k:] = failures[order[:k]]
+            ids = train.loc[train.label == 0, 'instance_id'].tolist()
+            if k:
+                ids[-k:] = train.loc[train.label == 1, 'instance_id'].iloc[order[:k]].tolist()
+            fitting_ids[f'{seed}:{k}'] = ids
+            # Freeze clean scaler to isolate contamination of weight fitting only.
+            model = AutoencoderDetector(24, seed=seed).fit(x, scaler=StandardScaler().fit(clean))
+            model.tune_threshold(xv, yv)
+            scores = model.score_samples(xt)
+            records.append(dict(experiment='contamination', setting=f'{100*k/len(clean):.3f}%',
+                                count=k, seed=seed, PR_AUC=average_precision_score(yt,scores),
+                                ROC_AUC=roc_auc_score(yt,scores), F2=fbeta_score(yt,scores>=model.threshold,beta=2)))
+        for name, active in [('Full', list(range(24))), ('Process', list(range(16))), ('Patch', list(range(16,24)))]:
+            mask = np.zeros(24); mask[active] = 1
+            # Center all inputs using clean normal statistics before zero masking.
+            scaler = StandardScaler().fit(clean)
+            a,b,c = [scaler.transform(z)*mask for z in [clean,xv,xt]]
+            # Identity scaler prevents reintroducing inactive columns.
+            identity = StandardScaler(with_mean=False, with_std=False).fit(a)
+            model = AutoencoderDetector(24, seed=seed).fit(a, scaler=identity)
+            model.tune_threshold(b,yv)
+            score = model.score_samples(c)
+            records.append(dict(experiment='features',setting=name,count=len(active),seed=seed,
+                                PR_AUC=average_precision_score(yt,score),ROC_AUC=roc_auc_score(yt,score),
+                                F2=fbeta_score(yt,score>=model.threshold,beta=2)))
+        # Reuse the full model's scores; only the threshold rule changes.
+        v = pd.read_csv(f'Model/outputs/val_predictions_seed_{seed}.csv')
+        t = pd.read_csv(f'Model/outputs/test_predictions_seed_{seed}.csv')
+        for rule,beta in [('F1',1),('F2',2),('Normal95',None)]:
+            if beta:
+                candidates=np.percentile(v.T2_score,np.linspace(5,95,91))
+                tau=max(candidates,key=lambda z: fbeta_score(yv,v.T2_score>=z,beta=beta,zero_division=0))
+            else: tau=np.percentile(v.loc[v.label==0,'T2_score'],95)
+            pred=t.T2_score>=tau
+            from sklearn.metrics import confusion_matrix
+            tn,fp,fn,tp=confusion_matrix(yt,pred,labels=[0,1]).ravel()
+            records.append(dict(experiment='threshold',setting=rule,count=24,seed=seed,
+                PR_AUC=average_precision_score(yt,t.T2_score),ROC_AUC=roc_auc_score(yt,t.T2_score),
+                F2=fbeta_score(yt,pred,beta=2),FN=fn,FP=fp,Threshold=tau))
+    runs=pd.DataFrame(records); runs.to_csv(OUT/'ablation_runs.csv',index=False)
+    import json
+    (OUT/'ablation_fitting_ids.json').write_text(json.dumps(fitting_ids, indent=2) + '\n')
+    for ex,file,index in [('contamination','ablation_contamination.csv','Contamination_Ratio'),
+                          ('features','ablation_features.csv','Feature_Set'),
+                          ('threshold','ablation_threshold.csv','Threshold_Rule')]:
+        sub=runs[runs.experiment==ex]; rows=[]
+        for setting in sub.setting.unique():
+            d=sub[sub.setting==setting]; row={index:setting,'Count':int(d['count'].iloc[0])}
+            for metric in ['PR_AUC','ROC_AUC','F2','FN','FP']:
+                if metric in d and d[metric].notna().any():
+                    row[metric+'_mean']=d[metric].mean(); row[metric+'_std']=d[metric].std(ddof=1)
+            rows.append(row)
+        result=pd.DataFrame(rows)
+        for metric in ['PR_AUC','F2']:
+            result['Delta_'+metric]=result[metric+'_mean']-result[metric+'_mean'].iloc[0]
+        result.to_csv(OUT/file,index=False); print(result.to_string(index=False))
 
-    for contam in contamination_levels:
-        seed_pr = []
-        seed_roc = []
-        seed_f2 = []
-
-        for seed in SEEDS:
-            np.random.seed(seed)
-            if contam == 0.0:
-                X_train = clean_normal.copy()
-            else:
-                n_inject = max(1, int(len(clean_normal) * contam))
-                inject_idx = np.random.choice(len(val_anomalies), size=n_inject, replace=False)
-                injected = val_anomalies[inject_idx]
-                X_train = np.vstack([clean_normal, injected])
-
-            detector = AutoencoderDetector(input_dim=len(feature_cols), seed=seed)
-            detector.fit(X_train)
-            detector.tune_threshold(X_val, y_val, beta=2.0)
-
-            scores = detector.score_samples(X_test)
-            preds = detector.predict(X_test)
-
-            seed_pr.append(average_precision_score(y_test, scores))
-            seed_roc.append(roc_auc_score(y_test, scores))
-            seed_f2.append(fbeta_score(y_test, preds, beta=2.0, zero_division=0))
-
-        records.append({
-            "Contamination_Ratio": f"{int(contam*100)}%",
-            "PR_AUC_mean": np.mean(seed_pr),
-            "PR_AUC_std": np.std(seed_pr),
-            "ROC_AUC_mean": np.mean(seed_roc),
-            "ROC_AUC_std": np.std(seed_roc),
-            "F2_mean": np.mean(seed_f2),
-            "F2_std": np.std(seed_f2),
-        })
-
-    df_contam = pd.DataFrame(records)
-    base_pr = df_contam.loc[0, "PR_AUC_mean"]
-    base_f2 = df_contam.loc[0, "F2_mean"]
-    df_contam["Delta_PR_AUC"] = df_contam["PR_AUC_mean"] - base_pr
-    df_contam["Delta_F2"] = df_contam["F2_mean"] - base_f2
-
-    df_contam.to_csv(TABLES_DIR / "ablation_contamination.csv", index=False)
-    print("\n=== Ablation 1: Training Contamination Ratio ===")
-    print(df_contam[["Contamination_Ratio", "PR_AUC_mean", "PR_AUC_std", "Delta_PR_AUC", "F2_mean", "Delta_F2"]].to_string())
-    return df_contam
-
-
-def run_ablation_features() -> pd.DataFrame:
-    """Ablate Trajectory Process Dynamics vs Static Final Patch Output features."""
-    train_df = pd.read_csv("Dataset/train.csv")
-    val_df = pd.read_csv("Dataset/val.csv")
-    test_df = pd.read_csv("Dataset/test.csv")
-
-    meta_cols = ["instance_id", "repo", "label", "is_resolved", "exit_status"]
-    all_feature_cols = [c for c in train_df.columns if c not in meta_cols]
-    process_cols = all_feature_cols[:16]
-    patch_cols = all_feature_cols[16:]
-
-    feature_sets = {
-        "Full Representation (Process + Patch, D=24)": all_feature_cols,
-        "Trajectory Process Dynamics Only (D=16)": process_cols,
-        "Static Final Patch Output Only (D=8)": patch_cols,
-    }
-
-    records = []
-    for name, cols in feature_sets.items():
-        seed_pr = []
-        seed_roc = []
-        seed_f1 = []
-        seed_f2 = []
-
-        X_train_norm = train_df[train_df["label"] == 0][cols].values
-        X_val = val_df[cols].values
-        y_val = val_df["label"].values
-        X_test = test_df[cols].values
-        y_test = test_df["label"].values
-
-        for seed in SEEDS:
-            detector = AutoencoderDetector(input_dim=len(cols), seed=seed)
-            detector.fit(X_train_norm)
-            detector.tune_threshold(X_val, y_val, beta=2.0)
-
-            scores = detector.score_samples(X_test)
-            preds = detector.predict(X_test)
-
-            seed_pr.append(average_precision_score(y_test, scores))
-            seed_roc.append(roc_auc_score(y_test, scores))
-            seed_f1.append(average_precision_score(y_test, preds))
-            seed_f2.append(fbeta_score(y_test, preds, beta=2.0, zero_division=0))
-
-        records.append({
-            "Feature_Set": name,
-            "Feature_Count": len(cols),
-            "PR_AUC_mean": np.mean(seed_pr),
-            "PR_AUC_std": np.std(seed_pr),
-            "ROC_AUC_mean": np.mean(seed_roc),
-            "ROC_AUC_std": np.std(seed_roc),
-            "F2_mean": np.mean(seed_f2),
-            "F2_std": np.std(seed_f2),
-        })
-
-    df_feat = pd.DataFrame(records)
-    base_pr = df_feat.loc[0, "PR_AUC_mean"]
-    base_f2 = df_feat.loc[0, "F2_mean"]
-    df_feat["Delta_PR_AUC"] = df_feat["PR_AUC_mean"] - base_pr
-    df_feat["Delta_F2"] = df_feat["F2_mean"] - base_f2
-
-    df_feat.to_csv(TABLES_DIR / "ablation_features.csv", index=False)
-    print("\n=== Ablation 2: Trajectory Process vs. Final Patch Output ===")
-    print(df_feat[["Feature_Set", "Feature_Count", "PR_AUC_mean", "PR_AUC_std", "Delta_PR_AUC", "F2_mean", "Delta_F2"]].to_string())
-    return df_feat
-
-
-def main() -> None:
-    run_ablation_contamination()
-    run_ablation_features()
-
-
-if __name__ == "__main__":
-    main()
+if __name__=='__main__': main()

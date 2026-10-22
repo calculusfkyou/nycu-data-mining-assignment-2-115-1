@@ -1,181 +1,121 @@
-# AI Agent Ghostwork Detector: Forecasting Early Task Failures and False Completion Claims from SWE-bench Trajectories
+# Coding-Agent Failure Screening — NYCU Data Mining HW2
 
-[![NYCU Data Mining HW2](https://img.shields.io/badge/NYCU-Data%20Mining%20HW2-0F4D92.svg)](https://github.com/calculusfkyou/nycu-data-mining-assignment-2-115-1)
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+Team **G04**. Real SWE-agent GPT-4 trajectories from SWE-bench Lite; no generated trajectories or invented evaluation labels.
 
-**NYCU Data Mining (Fall 2026) · Assignment 2: Anomaly Detection**  
-**Team ID:** G07  
-**Team Members:** Dun-Jie Yang (Fergus4506), Charlie Wang (calculusfkyou), Mo-Ty Wang (MO7YW4NG), Wei-Chia Huang (lasvigas0701)
+This repository studies **task-end screening before integration**, not early/prefix prediction, proven deception detection, or a production release gate. The report follows the supplied HW1 ACL author layout with all five members and student IDs. Member contributions are **pending confirmation**, as requested.
 
----
+## Deliverables
 
-## 1. Project Overview
+- `HW2_G04_report.pdf`: official named report, six body pages plus references.
+- `HW2_G04_report_anonymized.pdf`: review-mode draft with Team G04 and no member identifiers.
+- `HW2_G04_presentation.pptx`: 11 editable slides with speaker notes; rehearsal budgets total 480 seconds. Actual rehearsal is still needed.
+- `HW2_G04.zip`: exactly the named report and presentation, with no parent directory.
+- `docs/HW2_AUDIT.md`: requirement coverage, corrections, and remaining human actions.
+- `docs/verification.json`: latest local validation results, not a grade or submission receipt.
 
-Autonomous software engineering agents (e.g., SWE-agent, OpenHands) frequently terminate claiming task completion, yet their generated git patches fail external unit test suites—a critical failure mode we formalize as **Ghostwork**.
+No E3 upload, Judge submission, GitHub publication, live presentation, or production deployment is implied by local artifacts.
 
-In continuous integration and deployment (CI/CD) pipelines, deploying unverified agent pull requests creates severe production risks. This repository implements an end-to-end, zero-leakage Anomaly Detection system that monitors agent interaction trajectories and forecasts task failure **before code commits reach production branches**.
+## Main findings
 
-### Key Highlights
-- **100% Authentic Real Data:** Evaluated on **284 real, verified trajectories** from SWE-bench Lite (ICLR 2024) across 12 production GitHub repositories. Zero synthetic placeholders or mock data.
-- **Normal-Only Learning (Tier 2 Primary Method):** A symmetric bottleneck Autoencoder trained **strictly on genuine successful workflows**, learning the manifold of healthy problem-solving without requiring any labeled failure examples.
-- **Superior Failure Recall:** Calibrating decision threshold $\tau$ via validation $F_2$ achieves **PR-AUC $0.976 \pm 0.003$** and **$F_2 = 0.952 \pm 0.006$**, performing comparably to supervised XGBoost ($p=0.565$) while outperforming rule-based heuristics ($p < 0.001$).
-- **Workflow Dynamics Superiority:** Controlled ablations prove that trajectory interaction dynamics capture failure signals invisible in static code diffs alone ($\Delta\text{PR-AUC} = -0.012$), cutting silent bug escapes by 70%.
-- **Zero Dollar & Sub-Millisecond Latency:** Per-sample inference takes **$0.004$ ms** at **zero API cost**, making it feasible for real-time CI/CD pre-commit hooks.
+Five initialization seeds on the same 162 test runs; sample SD, not cross-validation uncertainty:
 
----
+| Method | AP | ROC-AUC | F1 | F2 |
+|---|---:|---:|---:|---:|
+| T1: error/repetition heuristic | 0.962 ± 0.000 | 0.691 ± 0.000 | 0.817 ± 0.000 | 0.751 ± 0.000 |
+| T2: normal-only autoencoder | 0.978 ± 0.004 | 0.782 ± 0.024 | 0.945 ± 0.004 | 0.948 ± 0.006 |
+| T3: supervised XGBoost | 0.980 ± 0.000 | 0.794 ± 0.000 | 0.940 ± 0.000 | 0.940 ± 0.000 |
+| Always alert (context) | 0.926 | 0.500 | 0.962 | 0.984 |
 
-## 2. Repository Structure
+AP means `average_precision_score`, not trapezoidal PR area. Failures are the majority: 230/284 overall and 150/162 in test. AP's test prevalence baseline is already 0.926. T2's mean failure recall is 94.9%, but it flags 9/12 successful test runs (75% FPR). T2 versus T3 AP: paired seed t-test p=0.449; seed-42 paired row bootstrap CI [-0.0147, 0.0206]. This does not prove equivalence.
 
-```
-├── Dataset/
-│   ├── download_and_extract.py       # Ingests raw .traj files from S3 and extracts 24 features
-│   ├── sweagent_gpt4_features.csv    # Extracted feature dataset (N=284, D=24)
-│   ├── train.csv                     # Normal-only training split (N=32)
-│   ├── val.csv                       # Threshold tuning validation split (N=90)
-│   ├── test.csv                      # Frozen holdout test split (N=162)
-│   └── summary_statistics.csv        # Summary stats across normal vs. anomaly
-├── EDA/
-│   ├── eda.py                        # Exploratory analysis script (train/val only)
-│   ├── README.md                     # Documentation of distribution findings & hypotheses
-│   ├── figures/
-│   │   ├── fig1_distribution_contrast.pdf # 4-panel distribution contrast
-│   │   ├── fig2_correlation_heatmap.pdf   # Spearman feature redundancy matrix
-│   │   └── fig3_latent_manifold.pdf       # 2D PCA manifold projection
-│   └── tables/
-│       ├── feature_separability.csv  # KS stat, Wasserstein distance, Mutual Information
-│       └── feature_correlation_matrix.csv
-├── Model/
-│   ├── models.py                     # Implementations of Tiers 1, 2, and 3
-│   ├── experiment.py                 # 5-seed benchmark & statistical significance tests
-│   ├── ablations.py                  # Contamination & feature subset controlled ablations
-│   ├── error_analysis.py             # Failure case studies (FP/FN) & attribution
-│   ├── paper_figures.py              # Generation of publication-grade figures
-│   ├── README.md                     # Comprehensive model methodology & reproduction
-│   ├── figures/
-│   │   ├── fig0_pipeline.pdf         # 6-checkpoint architecture pipeline
-│   │   ├── fig4_pr_roc_curves.pdf    # Multi-tier PR & ROC curves
-│   │   ├── fig5_ablation_curves.pdf  # Contamination & feature ablation curves
-│   │   └── fig6_feature_attribution.pdf # Flagged sample reconstruction breakdown
-│   ├── tables/
-│   │   ├── main_results_table.csv    # 5-seed mean ± std across T1, T2, T3
-│   │   ├── significance_tests.csv    # Paired t-test and bootstrap 95% CIs
-│   │   ├── ablation_contamination.csv# Contamination sensitivity results
-│   │   ├── ablation_features.csv     # Process vs. patch ablation results
-│   │   ├── failure_cases.csv         # Concrete FP, near-miss FN, and inversion FN
-│   │   ├── feature_attribution_flagged_sample.csv
-│   │   └── practical_impact.csv      # Operational developer hours & dollar translation
-│   └── outputs/
-│       └── test_predictions.csv      # Holdout predictions and anomaly scores
-├── Paper/
-│   ├── HW2_G07_report.tex            # Full ACL-format paper source (Preprint mode)
-│   ├── HW2_G07_report_anonymized.tex # Anonymized review version for LLM TA Judge
-│   ├── HW2_G07_report.pdf            # Compiled official 6-page report
-│   ├── HW2_G07_report_anonymized.pdf # Compiled anonymized draft
-│   ├── custom.bib                    # Peer-reviewed BibTeX sources
-│   ├── acl.sty & acl_natbib.bst      # Official ACL template style files
-│   └── figures/                      # Vector figures included in paper
-├── Presentation/
-│   ├── generate_deck.py              # 16:9 widescreen presentation generator
-│   └── HW2_G07_presentation.pptx    # 11-slide oral presentation deck
-├── HW2_G07_report.pdf                # Submission report (root copy)
-├── HW2_G07_presentation.pptx         # Submission presentation (root copy)
-├── HW2_G07.zip                       # Official packaged E3 submission zip
-├── paper_style.py                    # Nature/ACL figure styling module
-└── requirements.txt                  # Python dependencies
-```
+Full versus patch-only masked inputs gain 0.0143 AP, but patch-only F2 is slightly higher. Replacing 3/32 fitting rows with training failures drops AP by 0.0099. F1 and F2 calibration select identical thresholds across all seeds. Honest negative findings are retained.
 
----
+## Data and split contract
 
-## 3. Quick Start & Reproduction
+`Dataset/sweagent_gpt4_features.csv` contains 284 real runs, 24 numeric features and five metadata columns. `evaluation_results.json` archives official generated/resolved labels; `provenance.json` records each raw S3 URL and SHA-256. Raw files are ignored because of size. Source: https://github.com/SWE-bench/experiments/tree/main/evaluation/lite/20240402_sweagent_gpt4
 
-### Prerequisites
-- Python 3.11+
-- Virtual environment with dependencies:
+| Partition | Total | Success | Failure | Usage |
+|---|---:|---:|---:|---|
+| Train | 82 | 32 | 50 | EDA; T3 fit; T2 fits successes only |
+| Validation | 40 | 10 | 30 | Threshold selection only |
+| Test | 162 | 12 | 150 | Shared evaluation and diagnostic analysis |
 
-```bash
-# Clone the repository
-git clone https://github.com/calculusfkyou/nycu-data-mining-assignment-2-115-1.git
-cd nycu-data-mining-assignment-2-115-1
+IDs in `Dataset/split_ids.json` are fixed. Existing test membership was preserved during protocol repairs; the test was already inspected in an earlier draft, so this is not a pristine once-only evaluation. Shared repositories also limit generalization claims. No resolution, repository ID, or forced-exit indicator enters model inputs. The legacy column `patch_touches_tests` is a broad test-string regex across the whole diff; it is not proof that a changed file is a test.
 
-# Create and activate virtual environment
+## Reproduce the numerical pipeline
+
+Run every command from the repository root. Python 3.11 and a CPU are sufficient. The tested environment is recorded in `Model/outputs/environment.json`; `requirements-lock.txt` records installed versions (with a Windows marker for pywinpty); only Windows execution was verified. No GPU, API key, or paid model call is required.
+
+```powershell
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install requirements
-pip install -r requirements.txt
+.venv\Scripts\python -m pip install -r requirements-lock.txt
+.venv\Scripts\python EDA/eda.py
+.venv\Scripts\python Model/experiment.py
+.venv\Scripts\python Model/ablations.py
+.venv\Scripts\python Model/error_analysis.py
+.venv\Scripts\python Model/paper_figures.py
+.venv\Scripts\python Paper/compact_figures.py
+.venv\Scripts\python Paper/generate_tables.py
+.venv\Scripts\python Presentation/prepare_content.py
 ```
 
-### Reproduce Entire Pipeline in 5 Minutes
+If a managed venv has no pip, use `uv pip install --python .venv\Scripts\python.exe -r requirements-lock.txt`. On macOS/Linux, replace the interpreter path with `.venv/bin/python`. Measured timing varies by machine and includes framework initialization in training; inference timing is warmed batch throughput, not end-to-end request latency.
 
-```bash
-# 1. Ingest real trajectories and extract features
-python Dataset/download_and_extract.py
+Processed data are committed, so downloading is optional for model reproduction. For independent extraction/provenance verification:
 
-# 2. Run Exploratory Feature Analysis (EDA)
-python EDA/eda.py
-
-# 3. Execute 5-seed 3-Tier benchmark and significance testing
-python Model/experiment.py
-
-# 4. Execute controlled ablations (Contamination & Feature sets)
-python Model/ablations.py
-
-# 5. Run failure case studies, attribution, and practical impact translation
-python Model/error_analysis.py
-
-# 6. Generate all publication figures
-python Model/paper_figures.py
-
-# 7. Generate presentation slides
-python Presentation/generate_deck.py
+```powershell
+.venv\Scripts\python tools/fetch_raw.py
+.venv\Scripts\python tools/prepare_data.py
 ```
 
----
+Fetching checks hashes before saving; changed remote bytes fail rather than silently replace evidence. `prepare_data.py` needs all 284 raw files, retains fixed split IDs, and never manufactures missing rows. Official labels are independently checked by the final verifier. A blocked S3 connection does not prevent using the committed processed data, but full raw verification requires those downloads.
 
-## 4. Main Results
+## Rebuild reports and slides
 
-Evaluated across 5 random seeds (42, 123, 456, 789, 2026) on the identical holdout test split ($N=162$):
+All numerical paper tables are generated from CSVs. Edit `Paper/team.json` to replace contribution placeholders, then regenerate tables. The report source, style files, BibTeX and figures live in `Paper/`.
 
-| Method | PR-AUC | ROC-AUC | F1 Score | F2 Score | Latency (ms) | Train Time (s) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Tier 1: Naive Heuristic** | $0.964 \pm 0.000$ | $0.701 \pm 0.000$ | $0.851 \pm 0.000$ | $0.794 \pm 0.000$ | **$0.001$** | **$0.000$** |
-| **Tier 2: Deep Autoencoder (Ours)** | **$0.976 \pm 0.003$** | $0.772 \pm 0.017$ | **$0.947 \pm 0.005$** | **$0.952 \pm 0.006$** | $0.004$ | $0.634$ |
-| **Tier 3: Supervised XGBoost** | $0.977 \pm 0.000$ | **$0.803 \pm 0.000$** | $0.882 \pm 0.000$ | $0.844 \pm 0.000$ | $0.005$ | $0.026$ |
+Install a TeX distribution with `latexmk` or Tectonic, then from `Paper/`:
 
-### Statistical Significance
-- **Tier 2 vs. Tier 1 (Naive):** $\Delta = +0.012$ PR-AUC ($p = 0.0007$, bootstrap 95% CI $[+0.0002, +0.0246]$). Statistically significant.
-- **Tier 2 vs. Tier 3 (Supervised):** $\Delta = -0.0008$ PR-AUC ($p = 0.565$, bootstrap 95% CI $[-0.0212, +0.0300]$ includes 0). Tier 2 performs **comparably** to the supervised upper bound without requiring any failure labels during training.
+```powershell
+tectonic HW2_G04_report.tex --keep-logs
+tectonic HW2_G04_report_anonymized.tex --keep-logs
+```
 
----
+The first Tectonic run needs network access for TeX packages. With a conventional TeX installation, `latexmk -pdf HW2_G04_report.tex` and the analogous anonymous filename also work. Keep ACL margins/font sizes unchanged. Inspect both rendered PDFs after edits; contributions and the AI statement must finish within page six. References begin on a separate page. The abstract is under 150 words.
 
-## 5. Controlled Ablations
+`Presentation/generate_deck.mjs` uses Codex's bundled Artifact Tool to produce editable PPTX shapes, a native results table, embedded plot images, and notes. Run inside a Codex desktop runtime:
 
-### Ablation 1 (AD-Specific): Training Set Contamination
-- **0% Contamination (Clean):** PR-AUC = $0.9759 \pm 0.0026$
-- **1% Injected Failures:** PR-AUC = $0.9741 \pm 0.0040$ ($\Delta = -0.0017$)
-- **10% Injected Failures:** PR-AUC = $0.9685 \pm 0.0035$ ($\Delta = -0.0074$, exceeding seed std by $3\times$)
+```powershell
+node Presentation/generate_deck.mjs
+```
 
-### Ablation 2 (Core Research Question): Process Dynamics vs. Patch Output
-- **Full Representation ($D=24$):** PR-AUC = $0.9759 \pm 0.0026$, $F_2 = 0.9516$
-- **Trajectory Process Only ($D=16$):** PR-AUC = $0.9699 \pm 0.0047$, $F_2 = 0.9532$
-- **Static Final Patch Only ($D=8$):** PR-AUC = $0.9636 \pm 0.0070$ ($\Delta = -0.0122$), $F_2 = 0.9324$ ($\Delta = -0.0192$)
+Outside the authoring machine, set `HW2_RUNTIME_NODE_MODULES` to the bundled Node modules directory, `HW2_PRESENTATION_SKILL_DIR` to the installed presentation skill directory, and `HW2_RUNTIME_PYTHON` to its Python executable. The builder needs that runtime, not only Python dependencies. The already-exported PPTX can be opened without Codex. Its structural/layout validation receipt is stored in `Presentation/validation.json`; source previews stay in ignored `tmp/slides/`. Rebuilding changes timing-independent file hashes, so copy the latest validation receipt alongside the deck.
 
----
+## Package and verify
 
-## 6. Practical Operational Impact
+After compiling both PDFs and exporting slides:
 
-In an organization processing 500 autonomous coding tasks per month:
-- Catches **380 / 400 failures** ($95.2\%$ catch rate vs. Tier 1's 85.1%).
-- Reduces silent bug escapes by **70%** (20 vs. 60).
-- Suppresses false audit alerts by **72%** (8 vs. 30).
-- Delivers a net monthly saving of **+\$48,600** over naive heuristics.
+```powershell
+.venv\Scripts\python tools/package_submission.py
+.venv\Scripts\python tools/verify_submission.py
+```
 
----
+The verifier exits nonzero on label/split/hash errors, mismatched metrics, validation-threshold replay errors, mismatched cases/attributions, broken artifact copies, anonymous identifier leaks, page-limit errors, missing slide images/notes, invalid layout receipts, or stale ZIP entries. It performs a fresh normal-only seed-42 fit. Raw checks require `tools/fetch_raw.py` first. Re-running model timing may change timing tables; regenerate report tables and slide content before rebuilding artifacts.
 
-## 7. Submission Deliverables
+For visual checks with Poppler:
 
-- **Paper Report (PDF):** [`HW2_G07_report.pdf`](HW2_G07_report.pdf) (Exact 6 pages, official ACL template).
-- **Anonymized Draft for LLM TA Judge:** [`HW2_G07_report_anonymized.pdf`](HW2_G07_report_anonymized.pdf).
-- **Presentation Deck:** [`HW2_G07_presentation.pptx`](HW2_G07_presentation.pptx) (11 widescreen slides, 8-minute presentation).
-- **E3 Submission Zip:** [`HW2_G07.zip`](HW2_G07.zip) (Contains exact file names per specification).
+```powershell
+pdftoppm -png -scale-to 1600 HW2_G04_report.pdf tmp/report
+pdftoppm -png -scale-to 1600 HW2_G04_report_anonymized.pdf tmp/anonymous
+```
+
+Review every report page and all slide previews. A passing verifier does not prove a grade, public repository availability, actual presentation timing, or external submission.
+
+## Remaining before submission
+
+1. Confirm each member's contributions in `Paper/team.json`, then rebuild.
+2. Team-review the revised findings and rehearse the submitted deck within 8 minutes.
+3. Ensure the first-page repository URL is accessible to the TAs and contains the current code/data.
+4. One member uploads `HW2_G04.zip` to E3 by **2026-11-16 23:59 Taiwan time**, retaining the receipt. The presentation is **2026-11-17**. Optional Judge upload uses the anonymous PDF.
+
+No Git remote/upstream is configured in this checkout. Local commits do not establish publication of the linked repository.

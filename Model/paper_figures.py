@@ -19,7 +19,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_curve, roc_curve
+from sklearn.metrics import precision_recall_curve, roc_curve, average_precision_score, roc_auc_score
 
 import paper_style
 
@@ -39,11 +39,11 @@ def plot_pipeline_diagram() -> None:
 
     stages = [
         {"num": "STAGE 1", "title": "Input Tensor", "sub": "Raw Trajectory\nx in R^24\nProcess + Patch"},
-        {"num": "STAGE 2", "title": "Hygiene Split", "sub": "Fit Scaler on\nNormal-Only Train\nZero Leakage"},
+        {"num": "STAGE 2", "title": "Train Scaling", "sub": "Fit Scaler on\nNormal-Only Train\nTrain statistics only"},
         {"num": "STAGE 3", "title": "Core Model", "sub": "Bottleneck Autoencoder\n24 -> 16 -> 6 -> 16 -> 24\nLayerNorm + ReLU"},
-        {"num": "STAGE 4", "title": "Scoring s(x)", "sub": "Reconstruction MSE\ns(x) = (1/D) sum |x - x_hat|^2\nScalar Anomaly Score"},
-        {"num": "STAGE 5", "title": "Threshold tau", "sub": "Val-Tuned Cutoff\nCost-Sensitive F2\ntau = 0.118"},
-        {"num": "STAGE 6", "title": "Operational Alert", "sub": "Binary Decision\ny_hat = 1[s(x) >= tau]\nCI/CD Quarantine"},
+        {"num": "STAGE 4", "title": "Scoring s(x)", "sub": "Standardized Residuals\nMean Squared Error\nDimensionless Score"},
+        {"num": "STAGE 5", "title": "Threshold tau", "sub": "Val-Tuned Cutoff\nCost-Sensitive F2\nvalidation F2 cutoff"},
+        {"num": "STAGE 6", "title": "Operational Alert", "sub": "Binary Decision\ny_hat = 1[s(x) >= tau]\nHuman Trace Review"},
     ]
 
     box_w = 13.8
@@ -145,10 +145,11 @@ def plot_pr_roc_curves() -> None:
     p2, r2, _ = precision_recall_curve(y_true, preds_df["T2_score"].values)
     p3, r3, _ = precision_recall_curve(y_true, preds_df["T3_score"].values)
 
-    ax1.plot(r1, p1, color=paper_style.REF_GRAY, lw=1.2, linestyle="--", label="T1 · Naive (0.964)")
-    ax1.plot(r2, p2, color=paper_style.BLUE_MAIN, lw=1.8, label="T2 · Autoencoder (0.976)")
-    ax1.plot(r3, p3, color=paper_style.RED, lw=1.2, linestyle="-.", label="T3 · XGBoost (0.977)")
-    ax1.set_xlabel("Recall (Caught Ghostwork)")
+    ax1.plot(r1, p1, color=paper_style.REF_GRAY, lw=1.2, linestyle="--", label=f"T1 AP ({average_precision_score(y_true, preds_df['T1_score']):.3f})")
+    ax1.plot(r2, p2, color=paper_style.BLUE_MAIN, lw=1.8, label=f"T2 AP ({average_precision_score(y_true, preds_df['T2_score']):.3f})")
+    ax1.plot(r3, p3, color=paper_style.RED, lw=1.2, linestyle="-.", label=f"T3 AP ({average_precision_score(y_true, preds_df['T3_score']):.3f})")
+    ax1.axhline(y_true.mean(), color=paper_style.LIGHT_GRAY, linestyle=":", label=f"Prior {y_true.mean():.3f}")
+    ax1.set_xlabel("Recall (caught failures)")
     ax1.set_ylabel("Precision")
     ax1.set_title("Precision-Recall Curves", fontsize=8, pad=4)
     ax1.legend(loc="lower left", frameon=False, fontsize=6.5)
@@ -158,9 +159,9 @@ def plot_pr_roc_curves() -> None:
     fpr2, tpr2, _ = roc_curve(y_true, preds_df["T2_score"].values)
     fpr3, tpr3, _ = roc_curve(y_true, preds_df["T3_score"].values)
 
-    ax2.plot(fpr1, tpr1, color=paper_style.REF_GRAY, lw=1.2, linestyle="--", label="T1 · Naive (0.701)")
-    ax2.plot(fpr2, tpr2, color=paper_style.BLUE_MAIN, lw=1.8, label="T2 · Autoencoder (0.772)")
-    ax2.plot(fpr3, tpr3, color=paper_style.RED, lw=1.2, linestyle="-.", label="T3 · XGBoost (0.803)")
+    ax2.plot(fpr1, tpr1, color=paper_style.REF_GRAY, lw=1.2, linestyle="--", label=f"T1 ROC ({roc_auc_score(y_true, preds_df['T1_score']):.3f})")
+    ax2.plot(fpr2, tpr2, color=paper_style.BLUE_MAIN, lw=1.8, label=f"T2 ROC ({roc_auc_score(y_true, preds_df['T2_score']):.3f})")
+    ax2.plot(fpr3, tpr3, color=paper_style.RED, lw=1.2, linestyle="-.", label=f"T3 ROC ({roc_auc_score(y_true, preds_df['T3_score']):.3f})")
     ax2.plot([0, 1], [0, 1], color=paper_style.LIGHT_GRAY, lw=0.8, linestyle=":")
     ax2.set_xlabel("False Positive Rate")
     ax2.set_ylabel("True Positive Rate")
@@ -183,7 +184,7 @@ def plot_ablation_figures() -> None:
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 2.8), dpi=300)
 
     # Panel A: Contamination Curve
-    x_ratios = [0, 1, 5, 10]
+    x_ratios = [0, 3.125, 6.25, 9.375]
     ax1.errorbar(
         x_ratios,
         contam_df["PR_AUC_mean"],
@@ -200,7 +201,7 @@ def plot_ablation_figures() -> None:
     ax1.set_ylabel("Test PR-AUC")
     ax1.set_title("Contamination Sensitivity (Ablation 1)", fontsize=8, pad=4)
     ax1.set_xticks(x_ratios)
-    ax1.set_xticklabels(["0% (Clean)", "1%", "5%", "10%"])
+    ax1.set_xticklabels(["0%", "3.125%", "6.25%", "9.375%"])
 
     # Panel B: Feature Subset Bar Chart
     labels = ["Full (D=24)", "Process (D=16)", "Patch (D=8)"]
@@ -217,7 +218,7 @@ def plot_ablation_figures() -> None:
         linewidth=0.6,
     )
     ax2.set_ylabel("Test PR-AUC")
-    ax2.set_ylim(0.95, 0.985)
+    ax2.set_ylim(0.94, 1.0)
     ax2.set_title("Trajectory vs. Patch Output (Ablation 2)", fontsize=8, pad=4)
 
     plt.tight_layout()
@@ -246,7 +247,7 @@ def plot_interpretability() -> None:
     ax.set_yticklabels(attr_df["Feature"], fontsize=7)
     ax.invert_yaxis()
     ax.set_xlabel("Reconstruction Error Contribution (%)")
-    ax.set_title("Flagged Sample Reconstruction Attribution\n(django__django-11630)", fontsize=8, pad=4)
+    ax.set_title(f"Flagged Sample Attribution\n({attr_df.Instance_ID.iloc[0]})", fontsize=8, pad=4)
 
     for i, bar in enumerate(bars):
         pct = attr_df.loc[i, "Contribution_Percent"]

@@ -76,6 +76,9 @@ def extract_features_from_trajectory(
     reproduce_created = 0
     test_suite_runs = 0
     prev_obs = ""
+    previous_tool = None
+    tool_streak = 0
+    max_tool_streak = 0
     last_step_error = 0
 
     tool_pattern = re.compile(r"^([a-zA-Z0-9_\-\.]+)")
@@ -93,6 +96,9 @@ def extract_features_from_trajectory(
         match = tool_pattern.match(action)
         tool_name = match.group(1).lower() if match else "unknown"
         tool_counter[tool_name] += 1
+        tool_streak = tool_streak + 1 if tool_name == previous_tool else 1
+        max_tool_streak = max(max_tool_streak, tool_streak)
+        previous_tool = tool_name
 
         # Check reproduction script creation
         if "reproduce" in action.lower() or (
@@ -130,7 +136,7 @@ def extract_features_from_trajectory(
             p = count / total_tool_calls
             entropy -= p * math.log2(p)
         tool_entropy = float(entropy)
-        max_repeated_tool = max(tool_counter.values())
+        max_repeated_tool = max_tool_streak
     else:
         tool_entropy = 0.0
         max_repeated_tool = 0
@@ -143,9 +149,6 @@ def extract_features_from_trajectory(
     patch_is_empty = 1 if patch_char_length == 0 or submission.isspace() else 0
     patch_touches_tests = 1 if re.search(r"(test/|tests/|test_)", submission, re.IGNORECASE) else 0
     patch_edit_ratio = float(lines_added / (lines_added + lines_removed + 1e-5))
-
-    # Forced termination flag (e.g. hitting cost budget)
-    exit_cost_forced = 1 if "exit_cost" in exit_status else 0
 
     # Model and token usage stats
     total_cost_usd = float(model_stats.get("instance_cost", 0.0) or 0.0)
@@ -193,111 +196,15 @@ def extract_features_from_trajectory(
         "patch_is_empty": patch_is_empty,
         "patch_touches_tests": patch_touches_tests,
         "patch_edit_ratio": patch_edit_ratio,
-        "exit_cost_forced": exit_cost_forced,
+        "patch_hunk_count": sum(line.startswith("@@ ") for line in submission.splitlines()),
     }
 
 
 def main() -> None:
-    print("Step 1: Fetching official SWE-bench evaluation results...")
-    eval_results = fetch_evaluation_metadata()
-    resolved_set = set(eval_results.get("resolved", []))
-    generated_set = set(eval_results.get("generated", []))
-    print(f"Total generated: {len(generated_set)}, Resolved: {len(resolved_set)}")
-
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-
-    print("Step 2: Downloading raw trajectory files from public AWS S3...")
-    instance_list = sorted(list(generated_set))
-    download_tasks = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-        for instance_id in instance_list:
-            url = f"{S3_BASE_URL}/{instance_id}.traj"
-            dest = RAW_DIR / f"{instance_id}.traj"
-            download_tasks.append((instance_id, executor.submit(download_file, url, dest)))
-
-        downloaded_count = 0
-        for instance_id, future in download_tasks:
-            if future.result():
-                downloaded_count += 1
-    print(f"Downloaded {downloaded_count} trajectories to {RAW_DIR}.")
-
-    print("Step 3: Extracting trajectory and patch features...")
-    records = []
-    for instance_id in instance_list:
-        traj_path = RAW_DIR / f"{instance_id}.traj"
-        if not traj_path.exists():
-            continue
-        try:
-            with open(traj_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            is_resolved = instance_id in resolved_set
-            rec = extract_features_from_trajectory(data, instance_id, is_resolved)
-            records.append(rec)
-        except Exception as e:
-            print(f"Error parsing {instance_id}: {e}")
-
-    df = pd.DataFrame(records)
-    print(f"Successfully processed {len(df)} samples.")
-    print(f"Class breakdown: Normal (Resolved) = {(df['label'] == 0).sum()}, Anomaly (Failed) = {(df['label'] == 1).sum()}")
-
-    # Save full features dataset
-    DATASET_DIR.mkdir(parents=True, exist_ok=True)
-    full_path = DATASET_DIR / "sweagent_gpt4_features.csv"
-    df.to_csv(full_path, index=False)
-    print(f"Saved full feature dataset to {full_path}")
-
-    # Step 4: Create shared, leakage-free train / val / test splits
-    # Following rigorous Anomaly Detection partition protocol:
-    # Train set: Normal-only samples (clean baseline manifold)
-    # Val set: Mixed Normal & Anomaly (strictly for threshold tuning and hyperparameter selection)
-    # Test set: Mixed Normal & Anomaly (held out for identical 3-tier comparison)
-    np.random.seed(42)
-    normal_df = df[df["label"] == 0].sample(frac=1.0, random_state=42).reset_index(drop=True)
-    anomaly_df = df[df["label"] == 1].sample(frac=1.0, random_state=42).reset_index(drop=True)
-
-    # 60% of normal samples go to train (normal-only)
-    n_normal_train = int(len(normal_df) * 0.60)
-    n_normal_val = int(len(normal_df) * 0.20)
-    train_normal = normal_df.iloc[:n_normal_train]
-    val_normal = normal_df.iloc[n_normal_train : n_normal_train + n_normal_val]
-    test_normal = normal_df.iloc[n_normal_train + n_normal_val :]
-
-    # Anomalies split 50% val / 50% test (0% in pure normal train)
-    n_anomaly_val = int(len(anomaly_df) * 0.35)
-    val_anomaly = anomaly_df.iloc[:n_anomaly_val]
-    test_anomaly = anomaly_df.iloc[n_anomaly_val:]
-
-    train_df = train_normal.copy()
-    val_df = pd.concat([val_normal, val_anomaly], ignore_index=True).sample(frac=1.0, random_state=42).reset_index(drop=True)
-    test_df = pd.concat([test_normal, test_anomaly], ignore_index=True).sample(frac=1.0, random_state=42).reset_index(drop=True)
-
-    train_df.to_csv(DATASET_DIR / "train.csv", index=False)
-    val_df.to_csv(DATASET_DIR / "val.csv", index=False)
-    test_df.to_csv(DATASET_DIR / "test.csv", index=False)
-
-    print(f"Train split: {len(train_df)} samples (Normal: {(train_df['label'] == 0).sum()}, Anomaly: {(train_df['label'] == 1).sum()})")
-    print(f"Val split:   {len(val_df)} samples (Normal: {(val_df['label'] == 0).sum()}, Anomaly: {(val_df['label'] == 1).sum()})")
-    print(f"Test split:  {len(test_df)} samples (Normal: {(test_df['label'] == 0).sum()}, Anomaly: {(test_df['label'] == 1).sum()})")
-
-    # Step 5: Generate Summary Statistics Table (§3 requirement)
-    feature_cols = [c for c in df.columns if c not in ["instance_id", "repo", "label", "is_resolved", "exit_status"]]
-    stats = []
-    for col in feature_cols:
-        norm_series = df[df["label"] == 0][col]
-        anom_series = df[df["label"] == 1][col]
-        stats.append({
-            "Feature": col,
-            "Type": "Trajectory" if col in feature_cols[:16] else "Patch",
-            "Normal_Mean": float(norm_series.mean()),
-            "Normal_Std": float(norm_series.std()),
-            "Anomaly_Mean": float(anom_series.mean()),
-            "Anomaly_Std": float(anom_series.std()),
-            "Overall_Median": float(df[col].median()),
-            "Overall_IQR": float(df[col].quantile(0.75) - df[col].quantile(0.25)),
-        })
-    stats_df = pd.DataFrame(stats)
-    stats_df.to_csv(DATASET_DIR / "summary_statistics.csv", index=False)
-    print(f"Saved summary statistics table with {len(stats_df)} features to {DATASET_DIR / 'summary_statistics.csv'}")
+    raise SystemExit(
+        "Processed splits are frozen. To restore raw inputs run python tools/fetch_raw.py; "
+        "then python tools/prepare_data.py. See README.md."
+    )
 
 
 if __name__ == "__main__":

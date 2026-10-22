@@ -1,0 +1,20 @@
+[
+  {
+    "instance_id": "scikit-learn__scikit-learn-14894",
+    "exit_status": "submitted",
+    "final_action": "submit\n",
+    "final_observation": "\ndiff --git a/sklearn/svm/base.py b/sklearn/svm/base.py\nindex 64cebe837..347c460a9 100644\n--- a/sklearn/svm/base.py\n+++ b/sklearn/svm/base.py\n@@ -287,11 +287,14 @@ class BaseLibSVM(BaseEstimator, metaclass=ABCMeta):\n         n_SV = self.support_vectors_.shape[0]\n \n         dual_coef_indices = np.tile(np.arange(n_SV), n_class)\n-        dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1,\n-                                     dual_coef_indices.size / n_class)\n-        self.dual_coef_ = sp.csr_matrix(\n-            (dual_coef_data, dual_coef_indices, dual_coef_indptr),\n-            (n_class, n_SV))\n+        if dual_coef_indices.size == 0:\n+            # Create an empty sparse matrix with 0 non-zero elements\n+            self.dual_coef_ = sp.csr_matrix((0, n_SV), dtype=np.float64)\n+        else:\n+            dual_coef_indptr = np.arange(0, dual_coef_indices.size + 1, dual_coef_indices.size // n_class, dtype=np.int32)\n+            self.dual_coef_ = sp.csr_matrix(\n+                (dual_coef_data, dual_coef_indices, dual_coef_indptr),\n+                (n_class, n_SV))\n \n     def predict(self, X):\n         \"\"\"Perform regression on samples in X.\n"
+  },
+  {
+    "instance_id": "django__django-14155",
+    "exit_status": "submitted",
+    "final_action": "submit\n",
+    "final_observation": "\ndiff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..819da2032c 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,6 +31,17 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n+        # Unwrap functools.partial objects\n+        if isinstance(func, functools.partial):\n+            self._partial_func = func.func\n+            self._partial_args = func.args\n+            self._partial_kwargs = func.keywords\n+            func = func.func\n+        else:\n+            self._partial_func = None\n+            self._partial_args = ()\n+            self._partial_kwargs = {}\n+\n         self.func = func\n         self.args = args\n         self.kwargs = kwargs\n@@ -59,8 +70,11 @@ class ResolverMatch:\n         return (self.func, self.args, self.kwargs)[index]\n \n     def __repr__(self):\n+        func_path = self._func_path\n+        if self._partial_func:\n+            func_path += ' (partial)'\n         return \"ResolverMatch(func=%s, args=%s, kwargs=%s, url_name=%s, app_names=%s, namespaces=%s, route=%s)\" % (\n-            self._func_path, self.args, self.kwargs, self.url_name,\n+            func_path, self.args + self._partial_args, {**self.kwargs, **self._partial_kwargs}, self.url_name,\n             self.app_names, self.namespaces, self.route,\n         )\n \n"
+  },
+  {
+    "instance_id": "sympy__sympy-15345",
+    "exit_status": "submitted",
+    "final_action": "submit\n",
+    "final_observation": "\ndiff --git a/sympy/printing/mathematica.py b/sympy/printing/mathematica.py\nindex ea7e3a2d94..ef5ee2b95b 100644\n--- a/sympy/printing/mathematica.py\n+++ b/sympy/printing/mathematica.py\n@@ -93,7 +93,8 @@ def _print_list(self, expr):\n     _print_tuple = _print_list\n     _print_Tuple = _print_list\n \n-    def _print_Function(self, expr):\n+    def _print_Max(self, expr):\n+        return \"Max[\" + ', '.join(self.doprint(arg) for arg in expr.args) + \"]\"\n         if expr.func.__name__ in self.known_functions:\n             cond_mfunc = self.known_functions[expr.func.__name__]\n             for cond, mfunc in cond_mfunc:\n"
+  }
+]

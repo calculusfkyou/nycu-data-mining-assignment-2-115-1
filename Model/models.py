@@ -30,11 +30,10 @@ from xgboost import XGBClassifier
 # ==============================================================================
 
 class NaiveHeuristicDetector:
-    """Rule-based heuristic detector adapted from ATFD benchmark.
+    """Rule-based heuristic using two observable workflow features.
 
-    Flags an anomaly if:
-    - Number of error observations exceeds error_threshold (default: >= 3) OR
-    - Maximum tool repeat streak exceeds loop_threshold (default: > 5)
+    Flags an anomaly when 0.5 * errors / 3 + 0.5 * consecutive tool streak / 5 >= 1.
+    This is our heuristic, not an implementation of an external benchmark.
     """
 
     def __init__(self, error_threshold: int = 3, loop_threshold: int = 5) -> None:
@@ -49,8 +48,8 @@ class NaiveHeuristicDetector:
         """Anomaly score is a composite error count and loop severity score."""
         errors = X_df["num_error_observations"].values
         streaks = X_df["max_repeated_tool_streak"].values
-        scores = (errors / (self.error_threshold + 1e-5)) * 0.5 + (
-            streaks / (self.loop_threshold + 1e-5)
+        scores = (errors / self.error_threshold) * 0.5 + (
+            streaks / self.loop_threshold
         ) * 0.5
         return scores
 
@@ -116,13 +115,14 @@ class AutoencoderDetector:
         self.scaler: StandardScaler | None = None
         self.threshold: float = 1.0
 
-    def fit(self, X_train: np.ndarray) -> AutoencoderDetector:
+    def fit(self, X_train: np.ndarray, scaler=None) -> AutoencoderDetector:
         """Fit scaler and train autoencoder strictly on normal data."""
+        torch.set_num_threads(1)
         torch.manual_seed(self.seed)
         np.random.seed(self.seed)
 
-        self.scaler = StandardScaler()
-        X_scaled = self.scaler.fit_transform(X_train)
+        self.scaler = StandardScaler().fit(X_train) if scaler is None else scaler
+        X_scaled = self.scaler.transform(X_train)
 
         self.model = AutoencoderModule(
             self.input_dim, self.hidden_dim, self.latent_dim
@@ -198,6 +198,7 @@ class SupervisedReferenceDetector:
             scale_pos_weight=1.0,
             random_state=seed,
             eval_metric="logloss",
+            n_jobs=1,
         )
         self.threshold = 0.5
 

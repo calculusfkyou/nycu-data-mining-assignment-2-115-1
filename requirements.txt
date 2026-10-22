@@ -11,3 +11,5 @@ tqdm
 requests
 pyyaml
 jupyter
+
+pypdf>=6.0

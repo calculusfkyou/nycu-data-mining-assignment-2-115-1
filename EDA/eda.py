@@ -1,6 +1,6 @@
 """Exploratory Feature Analysis (EDA) for AI Agent Ghostwork Detector.
 
-Strict Rule: Uses the training and validation portion only so the test set remains unseen!
+Strict Rule: Uses the training portion only so the test set remains unseen!
 Produces:
 - Tables: feature_separability.csv, correlation_ranking.csv, summary_table.csv
 - Figures: fig1_distribution_contrast (pdf/png), fig2_correlation_heatmap (pdf/png), fig3_latent_manifold (pdf/png)
@@ -34,11 +34,11 @@ FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_development_data() -> tuple[pd.DataFrame, list[str]]:
-    """Load training and validation sets strictly without touching the test set."""
+    """Load training sets strictly without touching the test set."""
     train_df = pd.read_csv("Dataset/train.csv")
-    val_df = pd.read_csv("Dataset/val.csv")
 
-    dev_df = pd.concat([train_df, val_df], ignore_index=True)
+
+    dev_df = train_df.copy()
     meta_cols = ["instance_id", "repo", "label", "is_resolved", "exit_status"]
     feature_cols = [c for c in dev_df.columns if c not in meta_cols]
     return dev_df, feature_cols
@@ -119,7 +119,7 @@ def plot_distribution_contrast(dev_df: pd.DataFrame) -> None:
         dev_df.loc[anom_mask, "error_observation_rate"],
         ax=ax,
         color=paper_style.RED,
-        label="Anomaly (Ghostwork)",
+        label="Anomaly (Failed)",
         fill=True,
         alpha=0.3,
         linewidth=1.5,
@@ -171,7 +171,7 @@ def plot_distribution_contrast(dev_df: pd.DataFrame) -> None:
         legend=False,
     )
     ax.set_xticks([0, 1])
-    ax.set_xticklabels(["Normal (Resolved)", "Anomaly (Ghostwork)"])
+    ax.set_xticklabels(["Normal (Resolved)", "Anomaly (Failed)"])
     ax.set_xlabel("")
     ax.set_ylabel("Stalled / Repetitive Turns")
     ax.set_title("Workflow Thrashing Turns", fontsize=8, pad=3)
@@ -292,7 +292,7 @@ def plot_latent_manifold(dev_df: pd.DataFrame, feature_cols: list[str]) -> None:
 
 
 def main() -> None:
-    print("=== Step 1: Loading Development Partition (Train + Val strictly) ===")
+    print("=== Step 1: Loading Development Partition (Train only) ===")
     dev_df, feature_cols = load_development_data()
     print(f"Development samples: {len(dev_df)} (Normal: {(dev_df['label'] == 0).sum()}, Anomaly: {(dev_df['label'] == 1).sum()})")
 

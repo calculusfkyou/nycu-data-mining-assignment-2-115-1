@@ -43,6 +43,17 @@ OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 SEEDS = [42, 123, 456, 789, 2026]
 
 
+def measure_scoring(model, data):
+    """Median of 20 warmed batch score calls, divided by batch size (not request latency)."""
+    model.score_samples(data)
+    durations = []
+    for _ in range(20):
+        t0 = time.perf_counter()
+        scores = model.score_samples(data)
+        durations.append(time.perf_counter() - t0)
+    return scores, float(np.median(durations) * 1000 / len(data))
+
+
 def run_benchmark() -> pd.DataFrame:
     # Load frozen data splits
     train_df = pd.read_csv("Dataset/train.csv")
@@ -58,9 +69,9 @@ def run_benchmark() -> pd.DataFrame:
     X_test = test_df[feature_cols].values
     y_test = test_df["label"].values
 
-    # Supervised training pool: train normal + val set (for Tier 3 fair supervised training)
-    X_train_sup = np.vstack([X_train_normal, X_val])
-    y_train_sup = np.concatenate([np.zeros(len(X_train_normal)), y_val])
+    # All fitting uses the shared training partition; validation is calibration only.
+    X_train_sup = train_df[feature_cols].values
+    y_train_sup = train_df['label'].values
 
     results = []
     preds_dict = {"instance_id": test_df["instance_id"], "label": y_test}
@@ -74,9 +85,7 @@ def run_benchmark() -> pd.DataFrame:
         t1_model.fit(X_train_normal)
         t1_train_time = time.perf_counter() - t0
 
-        t0 = time.perf_counter()
-        t1_scores = t1_model.score_samples(test_df)
-        t1_latency = ((time.perf_counter() - t0) / len(test_df)) * 1000  # ms/sample
+        t1_scores, t1_latency = measure_scoring(t1_model, test_df)
         t1_preds = t1_model.predict(test_df)
 
         results.append({
@@ -90,6 +99,7 @@ def run_benchmark() -> pd.DataFrame:
             "Recall": recall_score(y_test, t1_preds, zero_division=0),
             "Latency_ms": t1_latency,
             "Train_Time_s": t1_train_time,
+            "Threshold_tau": 1.0,
         })
 
         # ----------------------------------------------------------------------
@@ -102,9 +112,7 @@ def run_benchmark() -> pd.DataFrame:
 
         t2_model.tune_threshold(X_val, y_val, beta=2.0)
 
-        t0 = time.perf_counter()
-        t2_scores = t2_model.score_samples(X_test)
-        t2_latency = ((time.perf_counter() - t0) / len(test_df)) * 1000
+        t2_scores, t2_latency = measure_scoring(t2_model, X_test)
         t2_preds = t2_model.predict(X_test)
 
         results.append({
@@ -131,9 +139,7 @@ def run_benchmark() -> pd.DataFrame:
 
         t3_model.tune_threshold(X_val, y_val, beta=2.0)
 
-        t0 = time.perf_counter()
-        t3_scores = t3_model.score_samples(X_test)
-        t3_latency = ((time.perf_counter() - t0) / len(test_df)) * 1000
+        t3_scores, t3_latency = measure_scoring(t3_model, X_test)
         t3_preds = t3_model.predict(X_test)
 
         results.append({
@@ -150,6 +156,14 @@ def run_benchmark() -> pd.DataFrame:
             "Threshold_tau": t3_model.threshold,
         })
 
+        pd.DataFrame({"instance_id": test_df.instance_id, "label": y_test,
+                      "T1_score": t1_scores, "T1_pred": t1_preds,
+                      "T2_score": t2_scores, "T2_pred": t2_preds,
+                      "T3_score": t3_scores, "T3_pred": t3_preds}).to_csv(
+                          OUTPUTS_DIR / f'test_predictions_seed_{seed}.csv', index=False)
+        pd.DataFrame({"instance_id": val_df.instance_id, "label": y_val,
+                      "T2_score": t2_model.score_samples(X_val)}).to_csv(
+                          OUTPUTS_DIR / f'val_predictions_seed_{seed}.csv', index=False)
         if seed == 42:
             preds_dict["T1_score"] = t1_scores
             preds_dict["T1_pred"] = t1_preds

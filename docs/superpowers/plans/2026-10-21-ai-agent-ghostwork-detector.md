@@ -1,3 +1,5 @@
+> Historical plan: team metadata, protocol assumptions, and results here are superseded by `docs/HW2_AUDIT.md` and the root README. Retained only for change history.
+
 # AI Agent Ghostwork Detector Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

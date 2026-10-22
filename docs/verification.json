@@ -1,0 +1,19 @@
+{
+  "checks_passed": 1190,
+  "technical_verification": "pass",
+  "remaining_human_items": [
+    "Confirm member contributions",
+    "Team review and 8-minute live rehearsal",
+    "Verify public repository access",
+    "Upload to E3 and retain receipt"
+  ],
+  "contributions_pending": [
+    "Tun-Chieh Yang",
+    "Jia-Cheng Wu",
+    "Min-Quan Wang",
+    "Wei-Chia Chang",
+    "Chun-Ting Hou"
+  ],
+  "external_submission_performed": false,
+  "grade_claimed": false
+}

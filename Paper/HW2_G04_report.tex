@@ -1,0 +1,215 @@
+\documentclass[11pt]{article}
+\ifdefined\JUDGE
+  \usepackage[review]{acl}
+  \makeatletter\acl@anonymizefalse\makeatother
+\else
+  \usepackage[preprint]{acl}
+\fi
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.1}
+\input{generated/numbers}
+\title{Screening Coding-Agent Task Failures with Normal-Only Reconstruction}
+\ifdefined\JUDGE
+\author{Team G04, Data Mining (Fall 2026), NYCU}
+\else
+\author{\input{generated/authors}}
+\fi
+\begin{document}
+\maketitle
+\begin{abstract}
+Release engineers need to identify unreliable coding-agent patches before integration. We study task-end failure screening on 284 public SWE-agent trajectories from SWE-bench Lite, representing execution logs and patch structure with 24 features. An autoencoder fitted only on 32 successful training runs achieves test average precision (AP) $0.978\pm0.004$ and $F_2=0.948\pm0.006$ over five initialization seeds. Its AP gap to supervised XGBoost is not significant under a paired test ($p=0.449$). Controlled feature masking improves AP over patch-only inputs by 0.0143, while contamination of three training rows lowers AP by 0.0099. These gains require caution: failures constitute 92.6\% of the test set, and the autoencoder falsely flags 75\% of its 12 successes. We analyze three errors, reconstruct a flagged sample's feature contributions, and show why high AP alone does not establish a useful release gate.
+\end{abstract}
+
+\section{Introduction}
+Coding agents edit repositories through commands, editor actions, and test executions \citep{yang2024sweagent}. A finished execution need not resolve its assigned issue. Our stakeholder is a release engineer deciding which completed agent patches require additional inspection before integration. A high score requests human review; a low score never replaces tests or authorizes deployment.
+
+Our application belongs to \textbf{Category 4: Text / Logs}: irregular command and observation sequences have heterogeneous vocabulary, repository conventions, and error semantics. We aggregate these into tabular features so that a small normal-only model can be inspected. The question is: \emph{Do workflow features help identify unresolved tasks beyond final patch structure, and does a normal-only detector offer a useful alert trade-off?}
+
+The detection unit is one \emph{completed} trajectory and its final patch, not a prefix. Normal means resolved according to the official execution results; anomalous means unresolved, including budget termination. For example, the successful \texttt{scikit-learn-14894} run takes 25 steps despite 19 error-like observations, whereas unresolved \texttt{sympy-15345} takes 11 steps with zero such observations. These counterexamples motivate multivariate screening instead of treating an error string as proof of failure. The label does not establish deceptive intent or an explicit false completion claim.
+
+Our contributions are (1) a reproducible shared-partition, three-tier comparison; (2) controlled contamination, feature-mask, and threshold experiments; and (3) traceable error, attribution, and operational analyses that expose the limits of a high-AP detector. Sections~\ref{sec:results}--\ref{sec:analysis} quantify each contribution.
+
+\section{Related Work}
+\label{sec:related}
+SWE-bench \citep{jimenez2024swebench} collects 2,294 real GitHub issues from 12 Python repositories and evaluates language-model-generated patches using execution tests. Its original best model resolves only 1.96\% of issues. This is supervised \emph{evaluation} of issue resolution, not training a failure monitor. SWE-agent \citep{yang2024sweagent} instead studies interactive, tool-using language-model agents: its agent-computer interface achieves 12.5\% pass@1 on full SWE-bench and 87.7\% on HumanEvalFix. These results concern different evaluation sets and must not be compared numerically to our screening AP.
+
+Deep SVDD \citep{ruff2018deepsvdd} learns a normal representation with a one-class hypersphere objective, demonstrating anomaly detection on MNIST, CIFAR-10, and adversarial stop signs. It provides a contrasting normality assumption: compactness around a center rather than reconstruction. We choose a small autoencoder because additive per-feature reconstruction errors directly explain alerts; its flexibility can also reconstruct failures, which our ablation examines. Isolation or one-class distance models remain relevant alternatives, not tested superiority claims.
+
+XGBoost \citep{chen2016xgboost} is a supervised boosted-tree system for structured features. We use its public implementation as Tier~3 to learn discriminative interactions from labeled training failures, rather than present our SWE-bench result as a result of the 2016 paper. Tier~1 is our own transparent two-feature heuristic. Unlike issue-solving benchmarks, we ask whether a completed run deserves extra review, without making additional LLM calls.
+
+\section{Task Definition and Data}
+\label{sec:data}
+\paragraph{Source and labels.}
+We use the public \texttt{20240402\_sweagent\_gpt4} Lite evaluation run.\footnote{\url{https://github.com/SWE-bench/experiments/tree/main/evaluation/lite/20240402_sweagent_gpt4}}
+The official results list 284 generated runs and 16 with no generation; all 284 have cached trajectories. Labels are membership in the official \texttt{resolved} list, checked by instance ID. There are 54 successes (19.01\%) and 230 failures (80.99\%), or 1:4.26. The 190 voluntary submissions contain 140 failures; 94 budget-terminated submissions contain 90 failures. We do not infer that every failure claimed success. Benchmark tests can miss semantic errors, and non-resolution can include execution issues; these are label limitations.
+
+Failures are \emph{common} here, unlike classical rare-event anomaly detection. ``Anomaly'' means departure from a successful reference, not statistical rarity. Always predicting failure obtains 81.0\% accuracy on the complete dataset; test prevalence is even higher. We report AP (often called PR-AUC, computed as average precision, not trapezoidal area), ROC-AUC, and $F_1/F_2$, with an always-alert comparator.
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+& \multicolumn{2}{c}{Normal (32)} & \multicolumn{2}{c}{Failure (50)}\\
+Feature & Mean & SD & Mean & SD\\\midrule
+\csname @@input\endcsname generated/stats.tex 
+\bottomrule
+\end{tabular}
+\caption{Raw feature summary on the training partition only. Counts are per run; cost is USD.}
+\label{tab:stats}
+\end{table}
+
+\paragraph{Representation.}
+We extract 16 workflow features: step and command counts, tool diversity and entropy, longest \emph{consecutive} repetition, error count/rate/streak, stalled observations, reproduction-script indicator, test-command count, last-observation error flag, cost, sent/received tokens, and tokens per step. Eight patch features measure characters, added/removed lines, changed files, empty patch, test-string indicator, edit ratio, and hunk count. Raw \texttt{exit\_status}, resolution, and instance/repository IDs are excluded from inputs. No forced-termination indicator enters the patch-only comparison. Empty patch indicators preserve missing-output information; genuine zeros remain. Both regex indicators are noisy: error matches include expected reproduction failures or quoted code, and the test indicator matches strings anywhere in the diff, not only changed file paths. Raw hashes and source URLs appear in \texttt{Dataset/provenance.json}; selectable features and split IDs are committed.
+
+\section{Exploratory Feature Analysis}
+\label{sec:eda}
+Only the 82-row \emph{training} partition is used for EDA (32 normal, 50 failures). The autoencoder later fits on its normal subset only. Figure~\ref{fig:eda} contrasts distributions, and Table~\ref{tab:sep} quantifies separation with KS and Wasserstein distance after standardizing on training rows. KS $p$-values are descriptive and uncorrected across features, not proof of predictive benefit.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_training_compact.pdf}
+\caption{Training-only distributions of received-token count and patch character count, shown as $\log(1+x)$ boxplots (outliers omitted). Classes overlap, especially for patch length.}
+\label{fig:eda}
+\end{figure}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Feature & Std. $W$ & KS & $p$\\\midrule
+\csname @@input\endcsname generated/separability.tex 
+\bottomrule\end{tabular}
+\caption{Training separability; $W$ is dimensionless after scaling.}
+\label{tab:sep}
+\end{table}
+
+Received tokens separate most strongly ($W=0.957$, KS $0.505$), followed by cost ($W=0.802$), suggesting resource-intensive failure patterns; patch length alone is less informative. The saved Spearman matrix identifies exact redundancy between step and command counts (one action per step), as well as correlated token/cost features. We retain the fixed representation to audit that redundancy rather than select columns on test performance; this can over-weight activity volume. Standardization prevents raw token magnitudes from dominating MSE. Log transforms and deduplication are plausible next experiments, not claimed improvements.
+
+We test three hypotheses: \textbf{H1}, workflow features improve ranking beyond patch structure; \textbf{H2}, fitting weights on failures erodes successful-reference separation; \textbf{H3}, validation $F_2$ calibration trades more alerts for fewer missed failures than $F_1$. These are exploratory hypotheses in a revised analysis, not preregistered discoveries.
+
+\section{Method}
+\label{sec:method}
+Figure~\ref{fig:pipeline} summarizes six checkpoints. Inputs $x\in\mathbb{R}^{24}$ are standardized using only successful training rows, $\tilde{x}_d=(x_d-\mu_d)/\sigma_d$. The 24--16--6--16--24 autoencoder uses LayerNorm and ReLU in hidden layers and a linear output, minimizing successful-training reconstruction MSE. The bottleneck limits memorization, although only 32 normal rows make overfitting plausible. LayerNorm supports small batches; a fixed compact architecture avoids a broad search on the tiny validation set.
+\begin{equation}
+ s(x)=\frac{1}{24}\sum_{d=1}^{24}(\tilde{x}_d-f_\theta(\tilde{x})_d)^2.
+\end{equation}
+Scores are dimensionless standardized squared errors. We search 91 validation-score percentiles from 5 to 95, choose the first maximum of validation $F_2$, and alert if $s(x)\geq\tau$. Seed~42 yields $\tau=\SampleTau$. Weights and scaler never use validation labels. This is semi-supervised calibration, not entirely label-free learning.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig0_pipeline.pdf}
+\caption{Tier~2: task-end feature vector, normal-training standardization, reconstruction, MSE score, validation-only calibration, and human review alert. No automatic release decision is evaluated.}
+\label{fig:pipeline}
+\end{figure*}
+
+A false negative means an unresolved patch avoids extra review; a false positive wastes review on a resolved run. $F_2=5TP/(5TP+4FN+FP)$ weights FN more heavily, but is \emph{not} a dollar-optimal threshold. The illustrative \$1,200 missed-failure and \$30 review costs in Section~\ref{sec:analysis} imply a different objective; our threshold experiment tests the narrower $F_2$ motivation.
+
+Tier~1 scores $0.5e/3+0.5r/5$ from error count $e$ and consecutive-tool streak $r$, alerting at 1. These transparent scale choices are fixed heuristics, not validated optimal cutoffs. Tier~3 fits supervised XGBoost on the shared mixed training partition; its failure probability is calibrated over thresholds 0.10--0.90 in steps of 0.01 using validation $F_2$. Its scaler is fitted only on mixed training rows. Supervision is an explicit advantage, not a guaranteed upper bound.
+
+\section{Experimental Setup}
+\label{sec:setup}
+The fixed split has train 82 (32 normal/50 failure), validation 40 (10/30), and test 162 (12/150), or 28.87/14.08/57.04\% of all runs. The original test membership is preserved. During this audit, 50 failures previously assigned to development validation were moved into training so Tier~3 and contamination experiments no longer fit on validation rows. Every method shares these IDs, labels, and evaluation metrics; Tier~2 fits only the 32 normal training rows. Splits are by independent issue/run, not windows of a time series. Shared repositories remain across splits, so this is not unseen-repository generalization.
+
+The test set was inspected in an earlier draft and rerun after correctness repairs; we cannot claim a pristine once-only holdout. No new architecture or threshold objective was chosen to maximize this revised test score. Independent fresh runs are needed for confirmatory evidence.
+
+We retain fixed engineering settings, with no hyperparameter search: AdamW learning rate 0.005, weight decay $10^{-4}$, 150 epochs, batch 16; XGBoost 100 trees, depth 3, learning rate 0.05. The only search is the stated validation thresholds. Runs use an AuthenticAMD CPU, one thread, Python 3.11.9, PyTorch 2.14.1, scikit-learn 1.9.1, and XGBoost 3.2.0; the processor identifier is saved with outputs. Seeds are 42, 123, 456, 789, 2026. SD uses $n-1$; seeds vary initialization on one split and do not measure dataset uncertainty. XGBoost has zero seed variation with its deterministic default sampling.
+
+AP evaluates ranking but must be compared to test failure prevalence, 150/162=0.926. ROC-AUC measures success/failure discrimination without that prior baseline. $F_2$ emphasizes missed failures; $F_1$ provides a balanced threshold summary. We report wall-clock training including initialization, plus median warmed batched scoring time (20 repeats) divided by 162. This is throughput, not single-request end-to-end latency, and excludes feature extraction and human review.
+
+\section{Results}
+\label{sec:results}
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{@{}lcccccc@{}}\toprule
+Method & AP & ROC-AUC & $F_1$ & $F_2$ & ms/sample & Train (s)\\\midrule
+\csname @@input\endcsname generated/main.tex 
+\bottomrule\end{tabular}
+\caption{Five seeds, same test IDs, mean $\pm$ sample SD. Bold: best among the three tiers, not evidence of significance. Timing is warmed batch throughput; training includes initialization. Always alert is an additional prevalence comparator, not a fitted tier.}
+\label{tab:main}
+\end{table*}
+
+Table~\ref{tab:main} shows Tier~2 AP $\OurAP$ vs. Tier~1 0.962 and Tier~3 0.980. The paired seed $t$-test gives $p=0.000723$ against Tier~1 and $p=\SupervisedP$ against Tier~3. Paired test-row bootstrap intervals (1,000 resamples, seed~42 model) for AP differences are $[0.0019,0.0417]$ and $[-0.0147,0.0206]$, respectively. These answer different uncertainty questions; neither proves equivalence to Tier~3. Figure~\ref{fig:roc} shows seed~42 curves, not seed means. The supervised model can learn failure interactions directly; the autoencoder only models success, explaining why it need not beat XGBoost's ranking.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figures/fig_pr_compact.pdf}
+\caption{Seed~42 precision--recall curves; dotted line is failure prevalence. Legend AP values are computed from the plotted scores; ROC-AUC is reported in Table~\ref{tab:main}.}
+\label{fig:roc}\end{figure}
+
+High AP is partly a consequence of failure prevalence. Always alert has higher $F_2$ (0.984) than every fitted method; Tier~2 instead spares some reviews. Its mean confusion counts are TP 142.4, FN 7.6, FP 9, TN 3, with failure recall 0.949 and success false-alarm rate 0.750. With just 12 test successes, one case changes FPR by 8.3 percentage points. This does not validate a safe automatic gate.
+
+\paragraph{Controlled contamination (H2).}
+Replace 0, 1, 2, or 3 of the 32 normal fitting rows with \emph{training-partition} failures. Actual fractions are 0, 3.125, 6.25, 9.375\%; 1\% is unrepresentable at this size. Nested seeded anomaly subsets, row count, architecture, optimizer, and the clean-normal scaler are held fixed; validation is reserved for recalibration. Table~\ref{tab:contam} shows the 9.375\% AP drop of 0.0099 exceeds clean seed SD 0.0039 by 2.5 times. H2 is supported in this protocol, plausibly because failures become reconstructible; it does not establish a universal contamination boundary.
+\begin{table}[t]\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}\toprule
+Replaced & AP & $\Delta$AP & $F_2$\\\midrule
+\csname @@input\endcsname generated/contamination.tex 
+\bottomrule\end{tabular}
+\caption{Weight-contamination ablation; scaler fixed to clean normals.}
+\label{tab:contam}\end{table}
+
+\paragraph{Feature masks (H1).}
+After normal-only scaling, zero inactive coordinates but retain all 24 input/output units and the same network. This isolates feature availability without changing model capacity. Full vs. patch-only AP improves by 0.0143, exceeding either seed SD (Table~\ref{tab:features}); H1 is supported for ranking. However, patch-only $F_2$ is \emph{higher} by 0.006, within its SD 0.013. Thus workflow features improve ranking, not every decision metric. Process-only trails full AP by 0.0031, within full-model SD; complementarity is modest, not decisive.
+\begin{table}[t]\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}\toprule
+Active inputs & AP & $\Delta$AP & $F_2$\\\midrule
+\csname @@input\endcsname generated/features.tex 
+\bottomrule\end{tabular}
+\caption{Single-factor masking, fixed 24-dimensional architecture. Full/process/patch activate 24/16/8 coordinates.}
+\label{tab:features}\end{table}
+
+\paragraph{Threshold rule (H3).}
+Reuse identical weights and scores and change only calibration. Validation-optimal $F_1$ and $F_2$ choose identical thresholds for every seed, yielding identical mean FN 7.6 and FP 9: H3 is \emph{not supported}. The 95th percentile of validation-normal scores yields FN 144 and FP 0, illustrating costly under-alerting when only ten validation successes calibrate a tail threshold. These outcomes appear in the saved threshold-ablation table; ranking AP is unchanged by construction.
+
+\section{Analysis}
+\label{sec:analysis}
+\paragraph{Three concrete errors.}
+Table~\ref{tab:cases} reports the seed~42 model with $\tau=\SampleTau$; $s(x)-\tau$ distinguishes a boundary miss from a low-score miss. Full IDs are \texttt{scikit-learn\_\_scikit-learn-14894} (1), \texttt{django\_\_django-14155} (2), and \texttt{sympy\_\_sympy-15345} (3). All three end with a recorded \texttt{submit} action; raw final-action/diff excerpts are saved for inspection.
+\begin{table}[t]\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrr@{}}\toprule
+Case & Steps & Errors & Added & $s(x)$ & $s-\tau$\\\midrule
+\csname @@input\endcsname generated/cases.tex 
+\bottomrule\end{tabular}
+\caption{Actual test errors. Steps/errors/added lines are raw counts, scores dimensionless.}
+\label{tab:cases}\end{table}
+
+Case~1 is a successful SVM sparse-matrix patch flagged despite resolution: 19 of 25 observations match our broad error regex. Expected error reproduction can therefore resemble failure; the aggregate cannot distinguish recovery from persistent defects. Case~2 modifies Django's \texttt{ResolverMatch} handling of partial functions, with 15 added lines but no matched errors. Its score is only 0.0065 below threshold, so calibration uncertainty could change the alert; that alone cannot diagnose the unresolved semantic requirement. Case~3 changes SymPy's Mathematica printer, adds two lines, and also contains no matched errors, yet fails the official evaluation with a score 0.1128 below threshold. It is \emph{not} an empty-patch or proven premature-abort case. These errors expose a shared blind spot: syntactically quiet edits can remain semantically incomplete, while noisy successful debugging triggers alerts. First fixes should distinguish expected from unresolved errors and verify task-specific behavior on new runs; making the network larger cannot supply missing semantic evidence.
+
+\paragraph{Why one sample is flagged.}
+For \texttt{django\_\_django-11630}, $s=3.8673>\tau$, and 14 stalled observations contribute 85.04\% of squared reconstruction error; absence of a reproduction script contributes 5.89\% (Figure~\ref{fig:attr}). Feature contributions sum to 100\%, and their mean squared errors recover the reported score. Repeated observations are unusual relative to successful training runs and justify opening the trace, but do not establish causation or a failed patch. An engineer should inspect commands and tests rather than treat the explanation as a verdict.
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figures/fig_attr_compact.pdf}
+\caption{Seed~42 flagged failure: top four additive reconstruction contributions, not causal importance. The complete raw values are saved with the attribution table.}
+\label{fig:attr}\end{figure}
+
+\paragraph{Operational translation.}
+Consider an \emph{illustrative}, not measured deployment: 500 tasks/month, 80\% failure, \$1,200 per missed failure, and 0.5 review hours at \$60/hour per alert. Apply each seed's test recall and FPR to 400 failures and 100 successes. Tier~1 projects 114.7 escapes and 327.0 reviews; Tier~2 projects 20.3 escapes and 454.7 reviews, including 75 false alerts. Review time rises from 163.5 to 227.4 hours. Total scenario cost (escapes plus \emph{all} alerts) drops from \$147,410 to \$37,962; this is a conditional model, not observed savings. Reviewing all 500 costs only \$15,000 with no unreviewed failures under the idealized assumption that review catches every defect. Thus even this cost model favors universal review over our detector. At lower deployment prevalence, precision and optimal thresholds change further. A realistic next study needs measured review capacity, reviewer sensitivity, and local prevalence.
+
+\section{Conclusion and Limitations}
+\label{sec:conclusion}
+Workflow features improve failure ranking beyond patch-only inputs by 0.0143 AP in our controlled experiment. Normal-only reconstruction reaches $\OurAP$ AP and $\OurFtwo$ $F_2$, with no significant AP gap to supervised XGBoost; it does not establish equivalence. Contamination reduces AP by 0.0099, while $F_2$ and $F_1$ calibration give identical decisions. High failure prevalence and 75\% success FPR mean the current evidence supports trace triage research, not autonomous release approval.
+
+The most consequential lesson is to compare a detector with an always-alert policy and count every review. Future work should first evaluate error recovery and task semantics, then collect fresh model/repository runs with adequate successful examples. Coverage is restricted to one old GPT-4 agent run, and benchmark/extraction noise and shared repositories limit transfer. Test reuse during repairs prevents confirmatory claims. We have not measured prefix detection, live latency, privacy compliance, or production outcomes. Changes to agent tools or token budgets require new calibration; retain code/log access controls, monitor local FPR and score drift, and re-evaluate on a new labeled window before changing the gate.
+
+\section*{Contributions of Each Member}
+\begin{itemize}
+\input{generated/contributions}
+\end{itemize}
+\paragraph{AI Usage Statement.}
+Codex (GPT-6.1 Sol) audited the protocol, revised feature extraction and scripts, ran local experiments, checked references, and drafted report/slide revisions. Earlier repository materials attribute plotting and formatting assistance to Claude and Gemini; their exact versions and scope remain unconfirmed. Member contributions and team verification are pending confirmation; this draft does not attest to work that has not been confirmed.
+\clearpage
+\bibliography{custom}
+\end{document}

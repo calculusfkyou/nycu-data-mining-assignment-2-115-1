@@ -40,3 +40,13 @@ Thumbs.db
 # Large raw cache (processed real datasets will be committed in Dataset/)
 Dataset/raw/
 guide_text.txt
+
+# Local build/verification intermediates
+tmp/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.xdv
+*.synctex.gz
