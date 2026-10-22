@@ -32,6 +32,7 @@ import pandas as pd
 from sklearn.metrics import average_precision_score, roc_auc_score
 
 from Model.models_v2 import KnnNormalDistanceDetector
+from Model.experiment_v2 import compute_metrics
 from tools.build_text_embeddings import compute_channel_distance, compute_dual_distance
 
 
@@ -212,6 +213,26 @@ def run_error_case_analysis() -> Dict[str, Any]:
     return case_studies
 
 
+def fast_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
+    tn = int(np.sum((y_true == 0) & (y_pred == 0)))
+    fp = int(np.sum((y_true == 0) & (y_pred == 1)))
+    fn = int(np.sum((y_true == 1) & (y_pred == 0)))
+    tp = int(np.sum((y_true == 1) & (y_pred == 1)))
+
+    fpr = float(fp / (fp + tn)) if (fp + tn) > 0 else 0.0
+    rec = float(tp / (tp + fn)) if (tp + fn) > 0 else 0.0
+    spec = float(tn / (tn + fp)) if (tn + fp) > 0 else 0.0
+    bal_acc = 0.5 * (rec + spec)
+    unfl_succ = float(tn / (tn + fn)) if (tn + fn) > 0 else float("nan")
+
+    return {
+        "balanced_accuracy": bal_acc,
+        "fpr": fpr,
+        "failure_recall": rec,
+        "unflagged_success_fraction": unfl_succ,
+    }
+
+
 def run_stratified_paired_bootstrap(
     n_bootstraps: int = 2000,
     seed: int = 2026,
@@ -251,8 +272,6 @@ def run_stratified_paired_bootstrap(
             "fpr": [],
             "failure_recall": [],
             "unflagged_success_fraction": [],
-            "roc_auc": [],
-            "average_precision": [],
             "diff_bal_acc_vs_t2": [],
             "diff_fpr_vs_t2": [],
         }
@@ -271,20 +290,16 @@ def run_stratified_paired_bootstrap(
 
         # Compute for T2 first
         t2_p = model_preds[t2_name][boot_idx]
-        t2_s = model_scores[t2_name][boot_idx]
-        t2_m = compute_metrics(y_b, t2_s, t2_p)
+        t2_m = fast_metrics(y_b, t2_p)
 
         for m in models:
             m_p = model_preds[m][boot_idx]
-            m_s = model_scores[m][boot_idx]
-            m_m = compute_metrics(y_b, m_s, m_p)
+            m_m = fast_metrics(y_b, m_p)
 
             bootstrap_metrics[m]["balanced_accuracy"].append(m_m["balanced_accuracy"])
             bootstrap_metrics[m]["fpr"].append(m_m["fpr"])
             bootstrap_metrics[m]["failure_recall"].append(m_m["failure_recall"])
             bootstrap_metrics[m]["unflagged_success_fraction"].append(m_m["unflagged_success_fraction"])
-            bootstrap_metrics[m]["roc_auc"].append(m_m["roc_auc"])
-            bootstrap_metrics[m]["average_precision"].append(m_m["average_precision"])
 
             # Differences vs T2
             bootstrap_metrics[m]["diff_bal_acc_vs_t2"].append(m_m["balanced_accuracy"] - t2_m["balanced_accuracy"])

@@ -4,7 +4,92 @@ Team **G04**. Real SWE-agent GPT-4 trajectories from SWE-bench Lite; no generate
 
 This repository studies **task-end screening before integration**, not early/prefix prediction, proven deception detection, or a production release gate. The report follows the supplied HW1 ACL author layout with all five members and student IDs. Member contributions are **pending confirmation**, as requested.
 
-## Deliverables
+## HW2 v2: Detecting Coding-Agent Failure with Local NLP Representations
+
+**Date:** 2026-10-23.  
+**Research Question:** On identical coding-agent tasks, can text/code representations of actions, observations, and patches identify failures more effectively than 24 tabular statistical features, specifically reducing false alarms on successful tasks?
+
+### 1. Methodology & Protocol Summary
+- **Dataset:** All 284 authentic SWE-agent GPT-4 trajectories from SWE-bench Lite (54 resolved/success $y=0$, 230 unresolved/failure $y=1$; 81.0% failure prevalence).
+- **Representations:**
+  - **R0 Legacy:** 24 process and output tabular features.
+  - **R0-Clean:** 23 clean features (redundant `num_tool_calls` removed, log1p on 16 skewed features, normal-only median/IQR scaling).
+  - **R1:** Character TF-IDF (ngrams 3–5, min_df=2, sublinear TF, max 20,000 features, L2 normalized, strictly fold-fitting).
+  - **R2:** Local frozen `sentence-transformers/all-MiniLM-L6-v2` (384-dim, step-chunked, run-level mean).
+  - **R3:** Dual-channel MiniLM (log) + `microsoft/codebert-base` (patch, 768-dim diff-hunk chunked), equal-weight channel distance $d = (d_{\text{log}} + d_{\text{patch}}) / 2$.
+- **Evaluation Protocol:**
+  - 5-fold stratified outer cross-validation (`seed=42`).
+  - Inner validation split (25% of training partition, `seed=100+fold`, effective ~60/20/20) for hyperparameter and threshold selection.
+  - Frozen validation threshold policy: empirical validation $\text{FPR} \le 20\%$ maximizing failure recall.
+  - Full out-of-fold (OOF) prediction across all 284 instances ($N=284$).
+  - 2,000-resample stratified paired bootstrap confidence intervals (`seed=2026`).
+
+### 2. Main Benchmark Results (Pooled Out-Of-Fold, N=284)
+
+| Model | Representation | Type | Balanced Acc | FPR (False Alarms) | Failure Recall | Unflagged Success % | ROC-AUC | AP |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| **Always Alert** | — | Context | 0.500 | 1.000 (54/54) | **1.000** (230/230) | N/A | 0.500 | 0.810 |
+| **Never Alert** | — | Context | 0.500 | **0.000** (0/54) | 0.000 (0/230) | 19.0% (54/284) | 0.500 | 0.810 |
+| **T1 Heuristic** | Process rules | Heuristic | 0.526 | 0.204 (11/54) | 0.257 (59/230) | 20.1% (43/214) | 0.551 | 0.835 |
+| **T2 Primary** | **R3 (MiniLM+CodeBERT)** | **kNN Normal Distance** | **0.481** | **0.259** (14/54) | **0.222** (51/230) | **18.3%** (40/219) | **0.502** | **0.811** |
+| **T3 Reference** | R3 Concat | Supervised Logistic | 0.596 | 0.352 (19/54) | 0.543 (125/230) | 25.0% (35/140) | 0.609 | 0.871 |
+| **NLP Control** | R1 (TF-IDF Concat) | Supervised Logistic | 0.652 | 0.352 (19/54) | 0.657 (151/230) | 30.7% (35/114) | 0.707 | 0.916 |
+| **Tabular Control** | R0-Clean | **Inductive ECOD** | **0.657** | **0.130** (7/54) | **0.443** (102/230) | **26.9%** (47/175) | **0.708** | **0.906** |
+| **Tabular Control** | R0-Clean | Isolation Forest | 0.635 | 0.148 (8/54) | 0.417 (96/230) | 25.6% (46/180) | 0.706 | 0.908 |
+| **Tabular Control** | R0-Clean | **Conditional Residual** | **0.675** | **0.185** (10/54) | **0.535** (123/230) | **29.1%** (44/151) | **0.718** | **0.914** |
+| **Legacy Control** | R0 Legacy | Autoencoder (normal-only) | 0.651 | 0.185 (10/54) | 0.487 (112/230) | 27.2% (44/162) | 0.700 | 0.906 |
+| **Legacy Control** | R0 Legacy | XGBoost (supervised) | 0.646 | 0.278 (15/54) | 0.570 (131/230) | 28.3% (39/138) | 0.697 | 0.898 |
+
+*Prevalence baseline for Average Precision (AP) is 0.810 (230/284).*
+
+### 3. Key Findings & Hypothesis Testing
+
+1. **H1 Rejected (Frozen Encoders do NOT beat Tabular Features):**
+   - Under identical kNN normal distance and validation tuning, R0-clean achieves Balanced Accuracy = 0.641 vs. R3 Dual = 0.481 (2,000-sample paired bootstrap difference: $\Delta = +0.160$, 95% CI $[+0.095, +0.228]$).
+   - Inductive ECOD on R0-clean significantly outperforms T2 ($\Delta\text{BalAcc} = +0.176$, 95% CI $[+0.114, +0.240]$) while significantly reducing false alarms ($\Delta\text{FPR} = -0.130$, 95% CI $[-0.241, -0.037]$).
+2. **H2 Supported (Patch Carries More Signal Than Log):**
+   - Channel ablation: Patch-only CodeBERT ($\text{BalAcc} = 0.594$, $\text{FPR} = 0.185$) markedly outperforms Log-only MiniLM ($\text{BalAcc} = 0.456$, $\text{FPR} = 0.296$).
+   - Averaging uninformative log distance with patch distance diluted discriminative power (Dual R3 dropped to $\text{BalAcc} = 0.481$).
+3. **Practical Deployment Gate Evaluation (T2 Primary):**
+   - Failure Recall: 22.2% (Gate: $\ge 90\%$) $\to$ **FAILED**
+   - False Positive Rate: 25.9% (Gate: $\le 20\%$) $\to$ **FAILED**
+   - Unflagged Success Fraction: 18.3% (Gate: $\ge 80\%$) $\to$ **FAILED**
+   - Unflagged Coverage: 77.1% (Gate: $\ge 5\%$) $\to$ **PASSED**
+   - **Verdict:** T2 fails 3 out of 4 deployment gates concurrently. Neither frozen NLP embeddings nor tabular anomaly detectors can reliably serve as automated release gates without human review.
+
+### 4. Reproducing v2 Experiments
+
+```powershell
+# 1. Trajectory audit and text normalization
+uv run python tools/audit_trajectories.py
+uv run python -m pytest tests/test_normalize_text.py
+
+# 2. Frozen splits and manifests
+uv run python tools/generate_v2_manifests.py
+uv run python -m pytest tests/test_splits_and_manifests.py
+
+# 3. Local embedding extraction (MiniLM & CodeBERT)
+uv run python tools/build_text_embeddings.py
+
+# 4. Main benchmark experiment suite
+uv run python Model/experiment_v2.py
+
+# 5. Controlled ablations (Representations, Channels, Contamination)
+uv run python Model/ablations_v2.py
+
+# 6. Deep error analysis, case studies, and bootstrap CIs
+uv run python Model/error_analysis_v2.py
+
+# 7. Generate publication-grade figures
+uv run python Model/figures_v2.py
+
+# 8. Run full verification suite
+uv run python Model/verify_v2.py
+```
+
+---
+
+## Deliverables (v1 Legacy Context)
 
 - `HW2_G04_report.pdf`: official named report, six body pages plus references.
 - `HW2_G04_report_anonymized.pdf`: review-mode draft with Team G04 and no member identifiers.

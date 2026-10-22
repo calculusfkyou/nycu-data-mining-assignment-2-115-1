@@ -1,0 +1,6 @@
+Gate,Target,Observed,Passed
+Failure Recall >= 90%,>= 0.90,0.222,False
+False Positive Rate <= 20%,<= 0.20,0.259,False
+Unflagged Success Fraction >= 80%,>= 0.80,0.183,False
+Unflagged Coverage >= 5%,>= 0.05,0.771,True
+ALL GATES CONCURRENTLY MET,All True,False,False

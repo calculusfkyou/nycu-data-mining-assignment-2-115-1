@@ -29,7 +29,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import precision_recall_curve, roc_curve
+from sklearn.metrics import average_precision_score, precision_recall_curve, roc_auc_score, roc_curve
 
 
 OUTPUTS_DIR = Path("Model/outputs/v2")
