@@ -1,0 +1,577 @@
+{
+  "total_instances_expected": 284,
+  "total_instances_audited": 284,
+  "resolved_count": 54,
+  "unresolved_count": 230,
+  "sha256_all_matched": true,
+  "sha256_mismatch_count": 0,
+  "missing_file_count": 0,
+  "evaluator_leakage_found": false,
+  "leakage_detections": [],
+  "top_level_keys_consistent": true,
+  "step_keys_consistent": true,
+  "detailed_sample_10_resolved": [
+    {
+      "instance_id": "astropy__astropy-14995",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "2bb11a019c8dbc8499270489c9705bc532a6954427e3e0a86af741c7aed48285",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 17,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1331,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-10914",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "63fe2bb66de1cae87d02d5bd088a8d25e0787334f3c47d98ee0d6e22b9fcfb57",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 8,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1649,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11039",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "0e744e7ff3324a3b54cc2d637483cdf8373181811b8297cd03fa2b9f962c39f2",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 31,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted (exit_cost)",
+      "has_submission": true,
+      "submission_length": 659,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11099",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "fe2ac3f6073ddbb96870d3f481b13a51d97d08e7872215c26a89ad385fa2c40a",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 18,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 3686,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11133",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "e74e5e2a7d181e3553adb65dc990c792744a4b8b4374256e8b78f435e10274aa",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 14,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 974,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11583",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "b8a921078554616382cf4efdaac22947aef7911f26d63b6e01453c2fa2e46494",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 8,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 837,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-12286",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "ab57526f20e95df8c1b3615de74abca1564182dd66c982eecc8a477b337281bf",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 9,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 824,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-12453",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "82ac50d3cd61d4fe29331f5c2538abd04553225441a134e169030daba955c3af",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 10,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1026,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-12983",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "52a47e70bd04b12bf61b58f865c6fe53a17f014e92cfc3b58c373dcfc65d7fcd",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 13,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1165,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-13230",
+      "is_resolved": true,
+      "label": 0,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "9c6adc2175eb4e490c090eba58a92001b94ce5e49e65d678807c9799b3d67c33",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 15,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 754,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    }
+  ],
+  "detailed_sample_10_unresolved": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "a5e793f1ae461352e2b85fcbf144fc8faecdc44a7be5c27e6ebc29a6b3237975",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 36,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted (exit_cost)",
+      "has_submission": true,
+      "submission_length": 1843,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "astropy__astropy-14182",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "abad451493e83bf25e9c5c9faeacbce8e3d8682f7902257e68431128060aac4e",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 33,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted (exit_cost)",
+      "has_submission": true,
+      "submission_length": 2224,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "astropy__astropy-14365",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "423a1ff8704de67821827fa79da0e25c483a4c1b87bb9badeb46dfdf18dd0944",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 10,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 475,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "astropy__astropy-6938",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "7d8a4c020a36b1ca39783123c992218323c8833019f4e1138d15692e54ce75ee",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 36,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted (exit_cost)",
+      "has_submission": true,
+      "submission_length": 2275,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "astropy__astropy-7746",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "f4930df615f057473629d5af3c739d3fb950e9dfba805cfe8eb69a333aa8b0ea",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 22,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1035,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-10924",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "e5d8a438918aae0ec641aac94d2f7b577d77cdd11fd80197a9a3bf6e0e591ba3",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 22,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 1153,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11001",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "720cdf0e0b3925e933a9f15be09f4b7c0d9f58ff2cc580dc2176cf547fa1cccb",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 16,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 3284,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11019",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "99bd495da259f4a7ed5242489d846c5a86ad795e7e6079b7faf4237aab286a11",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 17,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 2028,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11049",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "15390dae00903083dae35ec449904e81827bec80735574752c827dcc43c7dda6",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 21,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 621,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    },
+    {
+      "instance_id": "django__django-11179",
+      "is_resolved": false,
+      "label": 1,
+      "file_exists": true,
+      "sha256_match": true,
+      "actual_sha256": "e501207e96510c86ee732f9cfc2cedb0e8e6726afcf0f7162a67aabf916a221c",
+      "top_keys": [
+        "environment",
+        "trajectory",
+        "history",
+        "info"
+      ],
+      "num_steps": 16,
+      "step_keys": [
+        "action",
+        "observation",
+        "response",
+        "state",
+        "thought"
+      ],
+      "exit_status": "submitted",
+      "has_submission": true,
+      "submission_length": 2108,
+      "has_actions": true,
+      "has_observations": true,
+      "evaluator_leak_suspects": []
+    }
+  ]
+}
