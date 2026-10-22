@@ -209,6 +209,8 @@ def plot_ablations() -> None:
     rep_df = pd.read_csv(TABLES_DIR / "ablation_representations.csv")
     chan_df = pd.read_csv(TABLES_DIR / "ablation_channels.csv")
     contam_df = pd.read_csv(TABLES_DIR / "ablation_contamination.csv")
+    # Keep the fixed clean-threshold comparison separate from recalibration.
+    contam_df = contam_df[contam_df["threshold_mode"] == "clean_tau"]
 
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 5))
 

@@ -1,7 +1,7 @@
 # HW2 v2：以本機 NLP 表徵偵測 coding-agent 失敗
 
-日期：2026-10-23。狀態：新實驗規格，尚未實作或產生 v2 結果。
-本文件取代舊實驗設計的方向；現有 PDF、投影片、CSV 與驗證紀錄仍是 v1，不能當作 v2 成果。
+日期：2026-10-23。狀態：v2 已實作並產生結果；目前提交檔已依實際 OOF 證據更新。
+本文件記錄 v2 設計；實作差異、污染對照修正與證據限制見 docs/HW2_AUDIT.md。現有 PDF、投影片與提交 ZIP 已更新為 v2。
 
 ## 1. 要回答的問題與設計決策
 
@@ -141,7 +141,7 @@ embedding 看起來接近不等於 code 正確；真正的 patch 語意錯誤仍
 
 ## 9. 交付與停止條件
 
-預定新增檔案（目前尚未存在，以下不是可執行指令）：
+原始規劃的檔案配置（目前已實作，現行重現指令見 README）：
 
 - `configs/experiment_v2.json`：一次凍結 models、revision、seed、grids、chunking、metrics。
 - `Dataset/v2/splits.json`、`text_manifest.jsonl`：文字來源、可見時間稽核、原文 hash 與 fold IDs。

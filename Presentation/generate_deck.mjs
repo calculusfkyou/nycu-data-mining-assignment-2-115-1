@@ -27,9 +27,9 @@ for(const [i,c] of content.entries()){
   }
   c.lines.forEach((line,j)=>text(s,line,64,442+j*49,1152,48,24,false,j===2?navy:ink));
  } else if(c.image){
-  if(i===4){
-   s.images.add({blob:new Uint8Array(await fs.readFile(path.join(root,c.image))),contentType:'image/png',fit:'contain',position:{left:64,top:152,width:1152,height:242},alt:c.title});
-   c.lines.forEach((line,j)=>text(s,line,64,414+j*44,1152,44,24));
+  if(i===6){
+   s.images.add({blob:new Uint8Array(await fs.readFile(path.join(root,c.image))),contentType:'image/png',fit:'contain',position:{left:64,top:152,width:1152,height:310},alt:c.title});
+   c.lines.forEach((line,j)=>text(s,line,64,478+j*49,1152,44,24));
   }else{
    s.images.add({blob:new Uint8Array(await fs.readFile(path.join(root,c.image))),contentType:'image/png',fit:'contain',position:{left:64,top:155,width:710,height:470},alt:c.title});
    c.lines.forEach((line,j)=>text(s,line,806,166+j*112,410,104,24));

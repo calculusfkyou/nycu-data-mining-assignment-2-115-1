@@ -1,186 +1,187 @@
 [
   {
-    "title": "Screening coding-agent task failures",
+    "title": "Can local text embeddings detect agent failures?",
     "lines": [
-      "Normal-only reconstruction on real SWE-bench Lite trajectories",
-      "Team G04 | Data Mining, NYCU | Fall 2026",
-      "Tun-Chieh Yang · Jia-Cheng Wu · Min-Quan Wang",
-      "Wei-Chia Chang · Chun-Ting Hou"
+      "Team G04 \u00b7 NYCU Data Mining HW2",
+      "284 real SWE-agent runs from SWE-bench Lite",
+      "MiniLM logs + CodeBERT patches, computed locally",
+      "Frozen encoders lose to simple numeric controls"
     ],
-    "seconds": 25,
+    "seconds": 30,
+    "notes": "Task-end failure screening. No generated trajectories or new LLM API calls. Official resolution labels are the target. Source: Dataset/evaluation_results.json. Full author list and student IDs appear in the report.",
     "image": null,
-    "table": null,
-    "notes": "Open with the release engineer deciding which completed patch needs extra inspection. This is task-end screening, not early prediction. Repository: https://github.com/calculusfkyou/nycu-data-mining-assignment-2-115-1"
+    "table": null
   },
   {
-    "title": "Which completed patches need extra review?",
+    "title": "The decision is whether a completed run needs review",
     "lines": [
-      "User: release engineer reviewing coding-agent patches",
-      "Alert: open the execution trace and run targeted tests",
-      "Normal = officially resolved; failure = not resolved",
-      "A low score does not authorize an automatic release"
+      "Normal reference: 54 officially resolved tasks",
+      "Failure label: 230 unresolved tasks (81.0%)",
+      "Errors, large patches and high cost do not prove failure",
+      "Failure is common here, which limits the anomaly framing"
     ],
     "seconds": 40,
+    "notes": "Category 4: Text / Logs. Labels do not establish deception, reward hacking or false completion. No prefix prediction or autonomous release has been tested. SWE-bench and SWE-agent sources are in Paper/custom.bib.",
     "image": null,
-    "table": null,
-    "notes": "The detector is an experimental triage signal. Failure labels do not establish deceptive intent or an explicit false completion claim. Source: SWE-bench ICLR 2024, https://proceedings.iclr.cc/paper_files/paper/2024/hash/edac78c3e300629acfe6cbe9ca88fb84-Abstract-Conference.html"
+    "table": null
   },
   {
-    "title": "Failures are common in this dataset",
+    "title": "Training-only analysis shows overlapping behavior",
     "lines": [
-      "284 real runs: 54 resolved / 230 unresolved",
-      "Category 4: Text / Logs → 24 aggregate features",
-      "Test: 150 failures / 162 runs (92.6%)",
-      "High AP needs a prevalence baseline (0.926)",
-      "No false-completion intent is inferred from the label"
+      "EDA uses outer fold 0 training rows only",
+      "32 successful and 138 failed training runs",
+      "Long tails motivate log1p and robust scaling",
+      "Remove duplicated command count from numeric features"
     ],
-    "seconds": 40,
+    "seconds": 35,
+    "notes": "No held-out row enters these boxplots. Numeric control has 23 columns, including 4 binary flags. The test-string flag is patch-wide and the command heuristic is noisy. Source: Paper/figures/v2/eda and v2_stats.tex.",
+    "image": "Paper/figures/v2/eda.png",
+    "table": null
+  },
+  {
+    "title": "Local encoders preserve more of the recorded text",
+    "lines": [
+      "MiniLM: chunk logs, average within and across steps",
+      "CodeBERT: chunk diff hunks, pool token representations",
+      "Normalize 384-D log and 768-D patch vectors",
+      "T2: mean distance to k nearby successful training runs"
+    ],
+    "seconds": 45,
+    "notes": "Encoders remain frozen. Log chunks:224 tokens,32 overlap. Patch chunks:480 tokens,64 overlap. Log and patch cosine distances have equal weight. k in {1,3,5}; only successful training rows form the reference. Pooling loses ordering and does not verify correctness.",
     "image": null,
-    "table": null,
-    "notes": "Of 300 Lite tasks, 16 have no generation; 284 generated trajectories are retained. 190 voluntary submissions include 140 failures; 94 budget-terminated submissions include 90 failures. Source: Dataset/evaluation_results.json and provenance.json. The application deviates from classical rare-event AD and this is a limitation."
+    "table": null
   },
   {
-    "title": "Training logs suggest workflow signals",
+    "title": "Every method shares five outer folds",
     "lines": [
-      "EDA: training rows only (32 successes + 50 failures)",
-      "Tokens received: W = 0.957; KS = 0.505",
-      "Costs, steps and tokens overlap and correlate",
-      "Hypothesis: workflow features improve ranking"
+      "Approx. 60% training, 20% validation, 20% outer test",
+      "Validation selects model and threshold; never fits weights",
+      "Choose recall under validation FPR <=20%",
+      "284 out-of-fold predictions per model and seed",
+      "Prior data inspection makes this exploratory evaluation"
     ],
-    "seconds": 40,
-    "image": "EDA/figures/fig1_distribution_contrast.png",
-    "table": null,
-    "notes": "W is standardized Wasserstein distance. Error patterns can be expected reproduction attempts; do not equate observed tracebacks with final failure. Summary statistics and Spearman matrix are computed only on training rows. Source: EDA/tables/feature_separability.csv."
-  },
-  {
-    "title": "Normal-only reconstruction gives an alert score",
-    "lines": [
-      "Fit scaler and network on 32 successful training runs",
-      "24 → 16 → 6 → 16 → 24; LayerNorm + ReLU",
-      "Score = mean standardized squared reconstruction error",
-      "Validation F2 cutoff: τ = 0.1758 for seed 42",
-      "s ≥ τ requests human review"
-    ],
-    "seconds": 50,
-    "image": "Model/figures/fig0_pipeline.png",
-    "table": null,
-    "notes": "Explain the six stages. AdamW lr .005, weight decay 1e-4, 150 epochs, batch 16. F2 weights false negatives more but is not the dollar-optimal objective. All features require the completed trajectory and final patch. Source: Model/models.py and Model/tables/all_seed_runs.csv."
-  },
-  {
-    "title": "Three tiers share disjoint fitting and calibration data",
-    "lines": [
-      "Train 82 (32 normal / 50 failures) | Val 40 (10 / 30)",
-      "Test 162 (12 / 150), same IDs for every tier",
-      "T1: fixed error/repetition heuristic",
-      "T2: normal-only autoencoder | T3: supervised XGBoost",
-      "Five seeds; CPU; test was inspected in an earlier draft"
-    ],
-    "seconds": 40,
+    "seconds": 45,
+    "notes": "Only around 32 successful training and 10 successful validation runs per fold. Empirical validation FPR is not a test guarantee. Shared repositories remain; additional held-out-repository sensitivity is limited. Deterministic methods run once, random methods have seeds42,123,456.",
     "image": null,
-    "table": null,
-    "notes": "The original test IDs were preserved during repairs. Fifty development failures moved to training. Validation never enters weight fitting. Test reuse is disclosed; these results require new runs for confirmation. No architecture search was performed. XGBoost defaults are deterministic across seeds. Sources: split_ids.json, environment.json. XGBoost: https://doi.org/10.1145/2939672.2939785"
+    "table": null
   },
   {
-    "title": "High AP does not establish a useful release gate",
+    "title": "Numeric controls outperform the embedding detector",
     "lines": [
-      "T2 vs T3: paired seed p = 0.449; no equivalence claim",
-      "Mean T2: 142.4 TP / 7.6 FN / 9 FP / 3 TN",
-      "75% false-alarm rate on only 12 successful test runs",
-      "Always alert has higher F2; T2 spares some reviews"
+      "Seed 42 pooled counts; no independent deployment test",
+      "ECOD minus T2 balanced accuracy: +0.176",
+      "Paired conditional 95% interval: [0.114, 0.240]"
     ],
     "seconds": 55,
+    "notes": "All numbers derive from main_results.csv and bootstrap_ci.csv. Bootstrap resamples paired OOF instances within class2000times; shared training folds limit interpretation. Conditional residual is a secondary comparison. No method meets all operational gates.",
     "image": null,
     "table": [
       [
         "Method",
-        "AP",
-        "ROC-AUC",
-        "F2",
-        "ms/sample"
+        "Bal. acc.",
+        "FPR",
+        "Recall",
+        "Unflagged OK"
       ],
       [
-        "T1 heuristic",
-        "0.962 ± 0.000",
-        "0.691",
-        "0.751 ± 0.000",
-        "0.0001"
+        "T2: embeddings",
+        "0.481",
+        "0.259",
+        "0.222",
+        "18.3%"
       ],
       [
-        "T2 autoencoder",
-        "0.978 ± 0.004",
-        "0.782",
-        "0.948 ± 0.006",
-        "0.0018"
+        "T3: supervised",
+        "0.596",
+        "0.352",
+        "0.543",
+        "25.0%"
       ],
       [
-        "T3 XGBoost",
-        "0.980 ± 0.000",
-        "0.794",
-        "0.940 ± 0.000",
-        "0.0034"
+        "TF-IDF supervised",
+        "0.652",
+        "0.352",
+        "0.657",
+        "30.7%"
       ],
       [
-        "Always alert",
-        "0.926",
-        "0.500",
-        "0.984",
-        "—"
+        "ECOD variant",
+        "0.657",
+        "0.130",
+        "0.443",
+        "26.9%"
+      ],
+      [
+        "Conditional",
+        "0.675",
+        "0.185",
+        "0.535",
+        "29.1%"
       ]
-    ],
-    "notes": "Timing is median warmed batch scoring divided by 162, not single-request end-to-end latency. Train seconds: T1 essentially zero, T2 .641 ± .866, T3 .013 ± .001. Paired row bootstrap AP gap T2 minus T3: [-.0147,.0206], seed 42 model, 1000 resamples. Seeds characterize optimization variation on one split. Source: main_results_table.csv, significance_tests.csv, practical_impact.csv."
+    ]
   },
   {
-    "title": "Ablations isolate three different decisions",
+    "title": "The confusion matrices expose the missed failures",
     "lines": [
-      "H1: full AP 0.9783 vs patch-only 0.9639 (+0.0143)",
-      "Patch-only F2 is slightly higher: no universal dominance",
-      "H2: 3/32 contaminated rows lower AP by 0.0099",
-      "H3: F1 and F2 choose identical cutoffs in every seed"
-    ],
-    "seconds": 55,
-    "image": "Model/figures/fig5_ablation_curves.png",
-    "table": null,
-    "notes": "Feature masks preserve all 24 coordinates and network shape. Contamination replaces 0,1,2,3 rows for 0,3.125,6.25,9.375%, holding sample size and clean scaler fixed. The 9.375% AP drop exceeds baseline seed SD .0039 by 2.5x. A Normal95 validation threshold misses 144 of 150 failures with zero false alarms. Sources: ablation_runs.csv and summary tables. H1 ranking supported; H2 supported here; H3 not supported."
-  },
-  {
-    "title": "Noisy successes and quiet failures overlap",
-    "lines": [
-      "FP: scikit-learn-14894 | 25 steps, 19 errors | s=1.5674",
-      "FN: django-14155 | 9 steps, 0 errors | s=0.1694",
-      "FN: sympy-15345 | 11 steps, 0 errors | s=0.0630",
-      "τ=0.1758; semantic correctness is missing from counts"
+      "T2: 179 of 230 failures receive no alert",
+      "Only 40 of 219 unflagged runs actually succeed",
+      "Better numeric scores still leave many failures unflagged"
     ],
     "seconds": 50,
-    "image": "Model/figures/fig6_feature_attribution.png",
-    "table": null,
-    "notes": "Full IDs: scikit-learn__scikit-learn-14894, django__django-14155, sympy__sympy-15345. Scores minus tau: +1.3916,-.0065,-.1128. Patches add 8,15,2 lines respectively and all end in submit; do not claim aborts or empty patches. The separate flagged django__django-11630 has s=3.8673 and 14 stalled observations contributing 85.04% of reconstruction error; this supports trace inspection, not a causal verdict. Sources: failure_cases.csv, case_excerpts.json, feature_attribution_flagged_sample.csv."
+    "notes": "Rows are actual success/failure. Columns are no alert/alert. Cell text is raw count; color is row fraction. T2 TN40FP14FN179TP51;ECOD TN47FP7FN128TP102;conditional TN44FP10FN107TP123. Prediction absence of alert is not a correctness guarantee.",
+    "image": "Paper/figures/v2/confusion.png",
+    "table": null
   },
   {
-    "title": "Under these assumed costs, reviewing all wins",
+    "title": "Patch vectors help, but dual-channel averaging hurts",
     "lines": [
-      "Illustration: 500 tasks; 80% fail; $1,200 per escape",
-      "Every alert costs 0.5 h × $60/h (including true alerts)",
-      "T1: 114.7 escapes, 327.0 reviews → $147,410",
-      "T2: 20.3 escapes, 454.7 reviews → $37,962",
-      "Review all: $15,000, assuming perfect review"
+      "Numeric kNN: balanced accuracy 0.641",
+      "Patch-only encoder: 0.594",
+      "Dual encoder: 0.481; log-only: 0.456",
+      "H1 unsupported; patch addition helps logs, not patch-only"
     ],
-    "seconds": 45,
-    "image": null,
-    "table": null,
-    "notes": "These are conditional projections, not measured production savings. T2 consumes 227.4 review hours vs T1 163.5. Perfect review is a strong scenario assumption; real reviewer sensitivity and capacity are unknown. At low deployment prevalence, precision changes. Source: practical_impact.csv. Contrast with prior work: SWE-agent solves issues; Deep SVDD uses one-class compactness; our work audits task-end trace screening. Sources: https://proceedings.neurips.cc/paper_files/paper/2024/hash/5a7c947568c1b1328ccc5230172e1e7c-Abstract-Conference.html and https://proceedings.mlr.press/v80/ruff18a.html"
+    "seconds": 50,
+    "notes": "All use kNN and validation model selection. Distances differ across representations, so this comparison includes geometry. Patch embeddings may encode surface similarity rather than functional correctness. Equal averaging is one tested fusion rule, not proof all text encoders fail.",
+    "image": "Paper/figures/v2/representations.png",
+    "table": null
   },
   {
-    "title": "Workflow signals help ranking; deployment remains unproven",
+    "title": "Contamination does not show a consistent penalty",
     "lines": [
-      "Next: expected-error recovery and task-semantic checks",
-      "Fresh agents/repos and more successes are needed",
-      "No prefix prediction, live gate or production validation",
-      "Member contributions: pending confirmation (all five)",
-      "Codex audited code, experiments, references and artifacts"
+      "Fixed reference size; training failures replace successes",
+      "Freeze each clean fold\u2019s chosen k and threshold",
+      "Also report validation-only recalibration",
+      "Zero-contamination reproduces the primary detector"
     ],
     "seconds": 40,
+    "notes": "Corrected after detecting a mismatched k=3 control in the earlier v2 draft. Fitting IDs and exact replacement fractions are archived. Three replacement seeds. H3 is not established if effects are small or nonmonotonic. Source:contamination_fitting_ids.json and ablation_contamination.csv.",
+    "image": "Paper/figures/v2/contamination.png",
+    "table": null
+  },
+  {
+    "title": "Near-normal vectors can still describe failed patches",
+    "lines": [
+      "FP django-13230: score .11276, threshold .10865",
+      "FN sympy-12454: score .02483, threshold .07315",
+      "Boundary FP sympy-24213: margin +.00018",
+      "Distances identify similarity, not the semantic cause"
+    ],
+    "seconds": 50,
+    "notes": "Full IDs and raw SHA256s are in case_studies.json. Nearest reference log/patch distances respectively .20290/.00655, .04656/.00311, .14414/.00251. The saved leave-one-out values use a fixed nearest reference, not full kNN rescoring; do not call them complete score attribution.",
     "image": null,
-    "table": null,
-    "notes": "Team G04: Tun-Chieh Yang (315553010), Jia-Cheng Wu (314554059), Min-Quan Wang (315553008), Wei-Chia Chang (315553011), Chun-Ting Hou (315554022). Each member contribution is pending confirmation at the user’s request. Earlier materials mention Claude/Gemini but versions and scope remain unconfirmed. Do not imply team verification has already occurred. Full reproduction and source links are in README. Close with the research question: full workflow features improve AP over patch-only, but the alert trade-off is not a proven operational win."
+    "table": null
+  },
+  {
+    "title": "These detectors cannot justify automatic release",
+    "lines": [
+      "No model meets the predeclared practical gates",
+      "Next: fresh agent runs and task-conditioned evidence",
+      "Encoding 284 runs took about 895 seconds on CPU",
+      "All five member contributions remain pending confirmation"
+    ],
+    "seconds": 40,
+    "notes": "Gates:recall>=90%,FPR<=20%,unflagged success>=80%,coverage>=5%. Encoder memory reported ~1.19GiB by extractor profiling; not a whole-process-tree memory guarantee. Actual live rehearsal and E3 upload remain outstanding. AI assistance and all five author IDs appear in the report.",
+    "image": null,
+    "table": null
   }
 ]

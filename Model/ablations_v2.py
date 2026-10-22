@@ -310,65 +310,8 @@ def run_ablations() -> None:
     # ABLATION 3: NORMAL REFERENCE CONTAMINATION
     # =========================================================================
     print("\n--- Ablation 3: Normal Reference Contamination ---")
-    contam_fractions = [0.0, 0.05, 0.10]
-    contam_seeds = [42, 123, 456]
-    contam_rows = []
-
-    for p in contam_fractions:
-        for c_seed in contam_seeds:
-            oof_scores_clean_tau = np.zeros(284, dtype=np.float32)
-            oof_preds_clean_tau = np.zeros(284, dtype=int)
-            oof_scores_recalib_tau = np.zeros(284, dtype=np.float32)
-            oof_preds_recalib_tau = np.zeros(284, dtype=int)
-
-            for fold_info in outer_folds:
-                train_idx = [id_to_idx[i] for i in fold_info["train_instance_ids"]]
-                val_idx = [id_to_idx[i] for i in fold_info["val_instance_ids"]]
-                test_idx = [id_to_idx[i] for i in fold_info["test_instance_ids"]]
-                train_normal_idx = [id_to_idx[i] for i in fold_info["train_normal_instance_ids"]]
-                train_anomaly_idx = [i for i in train_idx if all_labels[i] == 1]
-
-                y_val = all_labels[val_idx]
-                n_norm = len(train_normal_idx)
-                n_contam = int(np.floor(n_norm * p))
-
-                # Inject failures using nested sampling
-                rng = np.random.RandomState(c_seed)
-                contam_order = rng.permutation(train_anomaly_idx)
-                injected_failures = contam_order[:n_contam].tolist()
-
-                # Contaminated normal reference
-                ref_norm_idx = train_normal_idx[: n_norm - n_contam] + injected_failures
-                assert len(ref_norm_idx) == n_norm
-
-                r3_contam_log = all_log_embeds[ref_norm_idx]
-                r3_contam_patch = all_patch_embeds[ref_norm_idx]
-                r3_contam_empty = all_patch_empty[ref_norm_idx]
-
-                knn_contam = KnnNormalDistanceDetector(k=3, metric="dual")
-                knn_contam.fit_embeddings(r3_contam_log, r3_contam_patch, r3_contam_empty)
-
-                v_scores = knn_contam.score_dual(all_log_embeds[val_idx], all_patch_embeds[val_idx], all_patch_empty[val_idx])
-                recalib_tau, _ = select_validation_threshold(y_val, v_scores)
-
-                t_scores = knn_contam.score_dual(all_log_embeds[test_idx], all_patch_embeds[test_idx], all_patch_empty[test_idx])
-
-                # Clean tau (from clean uncorrupted fold)
-                clean_tau = 0.5  # median threshold baseline or clean validation threshold
-                # Recalibrated tau
-                oof_scores_recalib_tau[test_idx] = t_scores
-                oof_preds_recalib_tau[test_idx] = (t_scores >= recalib_tau).astype(int)
-
-            m_recalib = compute_metrics(all_labels, oof_scores_recalib_tau, oof_preds_recalib_tau)
-            contam_rows.append({
-                "p_contamination": p,
-                "seed": c_seed,
-                "threshold_mode": "recalibrated_tau",
-                **m_recalib,
-            })
-            print(f"Contam p={p:.2f}, seed={c_seed} | BalAcc: {m_recalib['balanced_accuracy']:.3f} | FPR: {m_recalib['fpr']:.3f} | Recall: {m_recalib['failure_recall']:.3f}")
-
-    pd.DataFrame(contam_rows).to_csv(TABLES_DIR / "ablation_contamination.csv", index=False)
+    from Model.contamination_v2 import main as run_controlled_contamination
+    run_controlled_contamination()
     print("Ablations complete.")
 
 

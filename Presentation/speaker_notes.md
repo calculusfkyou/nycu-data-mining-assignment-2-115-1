@@ -1,45 +1,45 @@
-# Eight-minute rehearsal guide
+# V2 eight-minute rehearsal guide
 
-## 1. Screening coding-agent task failures (25 s)
+## 1. Can local text embeddings detect agent failures? (30 seconds)
 
-Open with the release engineer deciding which completed patch needs extra inspection. This is task-end screening, not early prediction. Repository: https://github.com/calculusfkyou/nycu-data-mining-assignment-2-115-1
+Task-end failure screening. No generated trajectories or new LLM API calls. Official resolution labels are the target. Source: Dataset/evaluation_results.json. Full author list and student IDs appear in the report.
 
-## 2. Which completed patches need extra review? (40 s)
+## 2. The decision is whether a completed run needs review (40 seconds)
 
-The detector is an experimental triage signal. Failure labels do not establish deceptive intent or an explicit false completion claim. Source: SWE-bench ICLR 2024, https://proceedings.iclr.cc/paper_files/paper/2024/hash/edac78c3e300629acfe6cbe9ca88fb84-Abstract-Conference.html
+Category 4: Text / Logs. Labels do not establish deception, reward hacking or false completion. No prefix prediction or autonomous release has been tested. SWE-bench and SWE-agent sources are in Paper/custom.bib.
 
-## 3. Failures are common in this dataset (40 s)
+## 3. Training-only analysis shows overlapping behavior (35 seconds)
 
-Of 300 Lite tasks, 16 have no generation; 284 generated trajectories are retained. 190 voluntary submissions include 140 failures; 94 budget-terminated submissions include 90 failures. Source: Dataset/evaluation_results.json and provenance.json. The application deviates from classical rare-event AD and this is a limitation.
+No held-out row enters these boxplots. Numeric control has 23 columns, including 4 binary flags. The test-string flag is patch-wide and the command heuristic is noisy. Source: Paper/figures/v2/eda and v2_stats.tex.
 
-## 4. Training logs suggest workflow signals (40 s)
+## 4. Local encoders preserve more of the recorded text (45 seconds)
 
-W is standardized Wasserstein distance. Error patterns can be expected reproduction attempts; do not equate observed tracebacks with final failure. Summary statistics and Spearman matrix are computed only on training rows. Source: EDA/tables/feature_separability.csv.
+Encoders remain frozen. Log chunks:224 tokens,32 overlap. Patch chunks:480 tokens,64 overlap. Log and patch cosine distances have equal weight. k in {1,3,5}; only successful training rows form the reference. Pooling loses ordering and does not verify correctness.
 
-## 5. Normal-only reconstruction gives an alert score (50 s)
+## 5. Every method shares five outer folds (45 seconds)
 
-Explain the six stages. AdamW lr .005, weight decay 1e-4, 150 epochs, batch 16. F2 weights false negatives more but is not the dollar-optimal objective. All features require the completed trajectory and final patch. Source: Model/models.py and Model/tables/all_seed_runs.csv.
+Only around 32 successful training and 10 successful validation runs per fold. Empirical validation FPR is not a test guarantee. Shared repositories remain; additional held-out-repository sensitivity is limited. Deterministic methods run once, random methods have seeds42,123,456.
 
-## 6. Three tiers share disjoint fitting and calibration data (40 s)
+## 6. Numeric controls outperform the embedding detector (55 seconds)
 
-The original test IDs were preserved during repairs. Fifty development failures moved to training. Validation never enters weight fitting. Test reuse is disclosed; these results require new runs for confirmation. No architecture search was performed. XGBoost defaults are deterministic across seeds. Sources: split_ids.json, environment.json. XGBoost: https://doi.org/10.1145/2939672.2939785
+All numbers derive from main_results.csv and bootstrap_ci.csv. Bootstrap resamples paired OOF instances within class2000times; shared training folds limit interpretation. Conditional residual is a secondary comparison. No method meets all operational gates.
 
-## 7. High AP does not establish a useful release gate (55 s)
+## 7. The confusion matrices expose the missed failures (50 seconds)
 
-Timing is median warmed batch scoring divided by 162, not single-request end-to-end latency. Train seconds: T1 essentially zero, T2 .641 ± .866, T3 .013 ± .001. Paired row bootstrap AP gap T2 minus T3: [-.0147,.0206], seed 42 model, 1000 resamples. Seeds characterize optimization variation on one split. Source: main_results_table.csv, significance_tests.csv, practical_impact.csv.
+Rows are actual success/failure. Columns are no alert/alert. Cell text is raw count; color is row fraction. T2 TN40FP14FN179TP51;ECOD TN47FP7FN128TP102;conditional TN44FP10FN107TP123. Prediction absence of alert is not a correctness guarantee.
 
-## 8. Ablations isolate three different decisions (55 s)
+## 8. Patch vectors help, but dual-channel averaging hurts (50 seconds)
 
-Feature masks preserve all 24 coordinates and network shape. Contamination replaces 0,1,2,3 rows for 0,3.125,6.25,9.375%, holding sample size and clean scaler fixed. The 9.375% AP drop exceeds baseline seed SD .0039 by 2.5x. A Normal95 validation threshold misses 144 of 150 failures with zero false alarms. Sources: ablation_runs.csv and summary tables. H1 ranking supported; H2 supported here; H3 not supported.
+All use kNN and validation model selection. Distances differ across representations, so this comparison includes geometry. Patch embeddings may encode surface similarity rather than functional correctness. Equal averaging is one tested fusion rule, not proof all text encoders fail.
 
-## 9. Noisy successes and quiet failures overlap (50 s)
+## 9. Contamination does not show a consistent penalty (40 seconds)
 
-Full IDs: scikit-learn__scikit-learn-14894, django__django-14155, sympy__sympy-15345. Scores minus tau: +1.3916,-.0065,-.1128. Patches add 8,15,2 lines respectively and all end in submit; do not claim aborts or empty patches. The separate flagged django__django-11630 has s=3.8673 and 14 stalled observations contributing 85.04% of reconstruction error; this supports trace inspection, not a causal verdict. Sources: failure_cases.csv, case_excerpts.json, feature_attribution_flagged_sample.csv.
+Corrected after detecting a mismatched k=3 control in the earlier v2 draft. Fitting IDs and exact replacement fractions are archived. Three replacement seeds. H3 is not established if effects are small or nonmonotonic. Source:contamination_fitting_ids.json and ablation_contamination.csv.
 
-## 10. Under these assumed costs, reviewing all wins (45 s)
+## 10. Near-normal vectors can still describe failed patches (50 seconds)
 
-These are conditional projections, not measured production savings. T2 consumes 227.4 review hours vs T1 163.5. Perfect review is a strong scenario assumption; real reviewer sensitivity and capacity are unknown. At low deployment prevalence, precision changes. Source: practical_impact.csv. Contrast with prior work: SWE-agent solves issues; Deep SVDD uses one-class compactness; our work audits task-end trace screening. Sources: https://proceedings.neurips.cc/paper_files/paper/2024/hash/5a7c947568c1b1328ccc5230172e1e7c-Abstract-Conference.html and https://proceedings.mlr.press/v80/ruff18a.html
+Full IDs and raw SHA256s are in case_studies.json. Nearest reference log/patch distances respectively .20290/.00655, .04656/.00311, .14414/.00251. The saved leave-one-out values use a fixed nearest reference, not full kNN rescoring; do not call them complete score attribution.
 
-## 11. Workflow signals help ranking; deployment remains unproven (40 s)
+## 11. These detectors cannot justify automatic release (40 seconds)
 
-Team G04: Tun-Chieh Yang (315553010), Jia-Cheng Wu (314554059), Min-Quan Wang (315553008), Wei-Chia Chang (315553011), Chun-Ting Hou (315554022). Each member contribution is pending confirmation at the user’s request. Earlier materials mention Claude/Gemini but versions and scope remain unconfirmed. Do not imply team verification has already occurred. Full reproduction and source links are in README. Close with the research question: full workflow features improve AP over patch-only, but the alert trade-off is not a proven operational win.
+Gates:recall>=90%,FPR<=20%,unflagged success>=80%,coverage>=5%. Encoder memory reported ~1.19GiB by extractor profiling; not a whole-process-tree memory guarantee. Actual live rehearsal and E3 upload remain outstanding. AI assistance and all five author IDs appear in the report.
