@@ -1,0 +1,81 @@
+{
+  "experiment_version": "v2",
+  "date": "2026-10-23",
+  "dataset": {
+    "name": "SWE-agent GPT-4 Trajectories (SWE-bench Lite)",
+    "total_samples": 284,
+    "normal_samples_y0": 54,
+    "anomaly_samples_y1": 230,
+    "label_definition": {
+      "0": "resolved (task success, normal reference)",
+      "1": "unresolved (task failure, anomaly)"
+    }
+  },
+  "seeds": {
+    "outer_cv_seed": 42,
+    "inner_val_seed_base": 100,
+    "optimization_seeds": [42, 123, 456],
+    "bootstrap_seed": 2026,
+    "bootstrap_samples": 2000,
+    "contamination_seeds": [42, 123, 456]
+  },
+  "encoders": {
+    "log_encoder": {
+      "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimension": 384,
+      "max_content_tokens": 224,
+      "overlap_tokens": 32,
+      "max_sequence_tokens": 256
+    },
+    "patch_encoder": {
+      "model_name": "microsoft/codebert-base",
+      "dimension": 768,
+      "max_content_tokens": 480,
+      "overlap_tokens": 64,
+      "max_sequence_tokens": 512
+    }
+  },
+  "representations": {
+    "R0": "24 legacy tabular process and output features",
+    "R0_clean": "23 clean tabular features (num_tool_calls removed, log1p on non-negative skewed features, normal-only median/IQR scaling)",
+    "R1": "Character TF-IDF (ngrams 3-5, min_df=2, sublinear_tf=True, max_features=20000, L2 normalized, fitting-only)",
+    "R2": "MiniLM-L6-v2 frozen log representations (384-dim)",
+    "R3": "Dual-channel MiniLM + CodeBERT (equal-weight channel distance d=(d_log+d_patch)/2)"
+  },
+  "grids": {
+    "knn_k_candidates": [1, 3, 5],
+    "logistic_c_candidates": [0.01, 0.1, 1.0, 10.0],
+    "isolation_forest_n_estimators": 200,
+    "shallow_dae": {
+      "hidden_dims": [16, 4, 16],
+      "input_dim": 23,
+      "masking_rate": 0.1,
+      "lr": 0.001,
+      "weight_decay": 0.0001,
+      "epochs": 150,
+      "batch_size": 16
+    },
+    "conditional_baseline": {
+      "ridge_alpha": 10.0,
+      "logistic_c": 0.1,
+      "behavior_features_count": 15,
+      "patch_targets_count": 8
+    }
+  },
+  "threshold_policy": {
+    "max_val_fpr": 0.20,
+    "objective": "maximize failure recall subject to empirical validation FPR <= 20%",
+    "tie_breaker": "higher threshold",
+    "model_selection": "balanced accuracy on validation fold at chosen threshold, tiebreak on smaller k or C"
+  },
+  "practical_deployment_gates": {
+    "min_failure_recall": 0.90,
+    "max_fpr": 0.20,
+    "min_unflagged_success_fraction": 0.80,
+    "min_coverage": 0.05
+  },
+  "secondary_experiments": {
+    "enable_shallow_dae": true,
+    "enable_conditional_baseline": true
+  }
+}
