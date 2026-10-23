@@ -4,7 +4,7 @@ Team **G04**. Current report, slides and submission ZIP use the **v2 local NLP e
 
 ## Current deliverables
 
-- `HW2_G04_report.pdf`: named ACL report, five body pages plus a separate references page.
+- `HW2_G04_report.pdf`: named ACL report, six body pages plus a separate references page.
 - `HW2_G04_report_anonymized.pdf`: Team G04 review build without member identities.
 - `HW2_G04_presentation.pptx`: 11 editable slides with embedded figures and 480-second speaker budgets.
 - `HW2_G04.zip`: exactly the named report and presentation, no parent folder.

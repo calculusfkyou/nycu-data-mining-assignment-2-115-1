@@ -121,6 +121,7 @@ Detector ($\tau$ mode) & Contam.\ $r/n_{\text{ref}}$ & BA$\pm$SD & $\Delta\mathr
 \caption{AD-specific normal-reference contamination across 3 seeds (\texttt{42, 123, 456}) at fixed $n_{\text{ref}}\in\{32,33\}$.}
 \label{tab:contam}\end{table}
 
+\Needspace{5\baselineskip}
 \paragraph{Ablation 1: Representation \& channel variance decomposition (H1 \& H2).}
 Table~\ref{tab:ablation} and Figure~\ref{fig:ablation}(a) hold $k$-NN and validation calibration fixed. \textbf{H1 is refuted:} \texttt{R0-clean} numeric $k$-NN reaches $\mathrm{BA}=0.641$ ($\Delta\mathrm{BA}=+0.159$, $p=0.005$), beating all text/code $k$-NN variants. \textbf{H2 is supported for patch utility, but equal-weight fusion fails:} \texttt{CodeBERT} patch-only $k$-NN reaches $\mathrm{BA}=0.594$ ($\Delta\mathrm{BA}=+0.113$ over \texttt{R3}, $p=0.012$; $+0.138$ over \texttt{R2} log-only $0.456$; and $0.620/0.592$ on \texttt{Claude-3-Opus}). Variance decomposition of Eq.~\eqref{eq:dual_dist} across all 284 OOF queries reveals the exact mechanism: \texttt{CodeBERT} patch distances occupy a narrow anisotropic cone ($d_{\text{patch}}=0.0092\pm 0.0051$, $\mathrm{Var}(\tfrac{1}{2}d_{\text{patch}})=6.56\times 10^{-6}$), whereas \texttt{MiniLM} log distances have $15.6\times$ larger mean and $56.0\times$ larger variance ($d_{\text{log}}=0.1433\pm 0.0383$, $\mathrm{Var}(\tfrac{1}{2}d_{\text{log}})=3.67\times 10^{-4}$). Thus, noisy log distances contribute $\mathbf{98.24\%}$ of unweighted variance in $d(x,r)$, drowning out the patch channel.
 

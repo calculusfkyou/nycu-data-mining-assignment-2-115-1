@@ -317,7 +317,9 @@ def main():
     save(fig, 'pipeline')
 
     # Figure 3: 4-Panel Confusion Matrix Figure (confusion.pdf)
-    fig, axs = plt.subplots(1, 4, figsize=(6.85, 1.42))
+    # Reserve explicit space for square cells; long titles must not squeeze them.
+    fig, axs = plt.subplots(1, 4, figsize=(6.85, 1.72))
+    fig.subplots_adjust(left=0.12, right=0.995, bottom=0.23, top=0.78, wspace=0.35)
     cm_models = [
         ('knn_R3_T2', 'T2: Dual encoder\n(BA 0.481, FPR 0.259)'),
         ('supervised_R3_logistic_T3', 'T3: Encoder logistic\n(BA 0.596, FPR 0.352)'),
@@ -329,22 +331,30 @@ def main():
         cm = np.array([[r.tn, r.fp], [r.fn, r.tp]], int)
         frac = cm / cm.sum(axis=1, keepdims=True)
         ax.imshow(frac, vmin=0, vmax=1, cmap='Blues')
+        ax.set_xticks([0.5], minor=True)
+        ax.set_yticks([0.5], minor=True)
+        ax.grid(which='minor', color='white', linewidth=1.2)
+        ax.tick_params(which='both', length=0)
+        for spine in ax.spines.values():
+            spine.set_visible(False)
         for i in range(2):
             for j in range(2):
                 pct = 100.0 * frac[i, j]
                 ax.text(
                     j, i, f"{cm[i, j]}\n({pct:.0f}%)",
-                    ha='center', va='center', fontsize=7.8, fontweight='bold',
+                    ha='center', va='center', fontsize=7.0, fontweight='bold',
                     color='white' if frac[i, j] > 0.5 else '#15283B'
                 )
         ax.set_xticks([0, 1], ['No alert', 'Alert'])
         ax.set_yticks([0, 1], ['Success\n(n=54)', 'Failure\n(n=230)'] if idx == 0 else ['', ''])
-        ax.tick_params(labelsize=7.0)
-        ax.set_title(title, fontsize=7.6)
-        ax.set_xlabel('Predicted decision', fontsize=7.0)
+        ax.tick_params(labelsize=6.8, pad=4)
+        name, metrics = title.split('\n')
+        ax.set_title(name, fontsize=7.5, pad=21)
+        ax.text(0.5, 1.07, metrics.strip('()'), transform=ax.transAxes,
+                ha='center', va='bottom', fontsize=6.7, color='#435465')
         if idx == 0:
             ax.set_ylabel('Actual class', fontsize=7.0)
-    fig.tight_layout(pad=0.25)
+    fig.text(0.56, 0.015, 'Predicted decision', ha='center', fontsize=7.0)
     save(fig, 'confusion')
 
     # Figure 4: 2-Panel Ablation Figure (ablations.pdf)
@@ -359,10 +369,10 @@ def main():
     ax1.axvline(0.50, ls='--', c='#8B0000', lw=0.9, label='Random (0.50)')
     ax1.set_yticks(y_pos, rep_short, fontsize=7.4)
     ax1.set_xlim(0.25, 0.78)
-    ax1.set_xlabel('5-fold Balanced Accuracy (mean $\\pm$ SD)', fontsize=8.0)
-    ax1.set_title('(a) kNN Representation & Channel Ablation', fontsize=8.5)
+    ax1.set_xlabel('Balanced accuracy (5-fold mean $\\pm$ SD)', fontsize=7.5)
+    ax1.set_title('(a) Representation and channel ablation', fontsize=8.0)
     ax1.invert_yaxis()
-    ax1.legend(fontsize=7.0, loc='lower right')
+    # Keep the BA=0.50 chance line visible without a legend covering the bars.
 
     for mode, label, color, marker in [
         ('clean_tau', 'T2: Fixed clean $\\tau$', '#0E2439', 'o'),
@@ -375,10 +385,10 @@ def main():
     ax2.axhline(0.50, ls='--', c='#8B0000', lw=0.8)
     ax2.set_xticks([0, 5, 10], ['0% (0/32)', '5% (1/32)', '10% (3/32)'])
     ax2.set_ylim(0.44, 0.70)
-    ax2.set_xlabel('Nominal (actual) normal-reference contamination', fontsize=8.0)
-    ax2.set_ylabel('Balanced Accuracy (mean $\\pm$ SD)', fontsize=8.0)
-    ax2.set_title('(b) AD-Specific Reference Contamination', fontsize=8.5)
-    ax2.legend(fontsize=6.8, loc='center right')
+    ax2.set_xlabel('Requested replacement (actual count)', fontsize=7.5)
+    ax2.set_ylabel('Balanced accuracy', fontsize=7.5)
+    ax2.set_title('(b) Reference contamination', fontsize=8.0)
+    ax2.legend(fontsize=6.2, loc='center right', frameon=False)
     fig.tight_layout(pad=0.45)
     save(fig, 'ablations')
 
@@ -417,23 +427,33 @@ def main():
     fn_ref = r2_map['sympy__sympy-13647']
     fn_dists = [compute_channel_distance(v, fn_ref) for v in fn_steps]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.85, 1.50))
-    ax1.plot(range(1, len(fp_dists) + 1), fp_dists, marker='o', ms=3.5, lw=1.3, color='#C0392B', label='FP django-13230 ($d_{\\mathrm{log}}$=0.203)')
-    ax1.plot(range(1, len(fn_dists) + 1), fn_dists, marker='s', ms=3.5, lw=1.3, color='#1F618D', label='FN sympy-12454 ($d_{\\mathrm{log}}$=0.047)')
+    fig = plt.figure(figsize=(6.85, 1.82))
+    # Separate axes leave a dedicated gutter for feature names and legends.
+    ax1 = fig.add_axes([0.075, 0.25, 0.37, 0.50])
+    ax2 = fig.add_axes([0.73, 0.25, 0.255, 0.57])
+    ax1.plot(range(1, len(fp_dists) + 1), fp_dists, marker='o', ms=3.0, lw=1.2, color='#C0392B', label='FP django-13230')
+    ax1.plot(range(1, len(fn_dists) + 1), fn_dists, marker='s', ms=3.0, lw=1.2, color='#1F618D', label='FN sympy-12454')
     ax1.set_xlabel('Trajectory step index $t$', fontsize=8.0)
-    ax1.set_ylabel('Step cosine distance $(1-\\cos)/2$', fontsize=8.0)
-    ax1.set_title('(a) T2 Step-to-Reference Log Distance Profile', fontsize=8.5)
-    ax1.legend(fontsize=7.0, loc='lower right')
+    ax1.set_ylabel('Step distance $(1-\\cos)/2$', fontsize=7.5)
+    ax1.tick_params(labelsize=7)
+    ax1.set_xticks([1, 5, 10, 15])
+    ax1.set_ylim(0.10, 0.40)
+    ax1.set_axisbelow(True)
+    ax1.grid(axis='y', color='#E6EBEF', linewidth=0.5)
+    fig.text(0.075, 0.96, '(a) T2 step-to-reference distance', fontsize=8, va='top')
+    ax1.legend(fontsize=6.3, loc='lower left', bbox_to_anchor=(0, 1.01),
+               ncol=2, borderaxespad=0, handlelength=1.4, columnspacing=0.8,
+               frameon=False)
 
     top_f = diag['ecod_flagged_attribution']['top_features'][:6]
     other_pct = 100.0 - sum(x['pct'] for x in top_f)
     f_labels = [
-        'patch_char_length (2,310)',
-        'patch_lines_added (64)',
-        'patch_files_changed (3)',
-        'patch_edit_ratio (1.00)',
-        'repeated_tool_streak (15)',
-        'stalled_turns (14)',
+        'Patch characters (2,310)',
+        'Lines added (64)',
+        'Files changed (3)',
+        'Edit ratio (1.00)',
+        'Repeated tool streak (15)',
+        'Stalled turns (14)',
         'Other 17 features',
     ]
     f_pcts = [x['pct'] for x in top_f] + [other_pct]
@@ -442,12 +462,17 @@ def main():
     ax2.barh(y_f, f_pcts, color=f_colors, height=0.62, edgecolor='#15283B', linewidth=0.5)
     for idx_f, val_p in enumerate(f_pcts):
         ax2.text(val_p + 0.8, idx_f, f'{val_p:.1f}%', va='center', fontsize=6.8)
-    ax2.set_yticks(y_f, f_labels, fontsize=7.2)
-    ax2.set_xlim(0, 62)
-    ax2.set_xlabel('Share of total ECOD score $s(x)=45.21$ (%)', fontsize=8.0)
-    ax2.set_title('(b) Additive Tail Attribution (django-11630, TP)', fontsize=8.5)
+    ax2.set_yticks(y_f, f_labels, fontsize=6.8)
+    ax2.tick_params(axis='y', length=0)
+    ax2.tick_params(axis='x', labelsize=7)
+    ax2.set_xlim(0, 70)
+    ax2.set_xticks([0, 20, 40, 60])
+    ax2.set_xlabel('ECOD score contribution (%)', fontsize=7.5)
+    ax2.set_axisbelow(True)
+    ax2.grid(axis='x', color='#E6EBEF', linewidth=0.5)
+    fig.text(0.54, 0.96, '(b) ECOD tail attribution', fontsize=8, va='top')
+    fig.text(0.54, 0.85, 'TP django-11630; total score 45.21', fontsize=6.8, color='#435465')
     ax2.invert_yaxis()
-    fig.tight_layout(pad=0.45)
     save(fig, 'interpretability')
 
     # Reusable content for the 11-slide / 480-second presentation builder
