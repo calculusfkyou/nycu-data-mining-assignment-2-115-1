@@ -3,184 +3,183 @@
     "title": "Can local text embeddings detect agent failures?",
     "lines": [
       "Team G04 \u00b7 NYCU Data Mining HW2",
-      "284 real SWE-agent runs from SWE-bench Lite",
+      "284 SWE-agent GPT-4 runs + 271 untouched Claude-3-Opus runs",
       "MiniLM logs + CodeBERT patches, computed locally",
-      "Frozen encoders lose to simple numeric controls"
+      "Frozen encoders lose to simple numeric controls (BA 0.481 vs 0.657)"
     ],
     "seconds": 30,
-    "notes": "Task-end failure screening. No generated trajectories or new LLM API calls. Official resolution labels are the target. Source: Dataset/evaluation_results.json. Full author list and student IDs appear in the report.",
+    "notes": "Task-end failure screening on SWE-bench Lite. Zero new LLM API calls. Official execution verdicts define ground truth. Full author list and student IDs appear in the report.",
     "image": null,
     "table": null
   },
   {
     "title": "The decision is whether a completed run needs review",
     "lines": [
-      "Normal reference: 54 officially resolved tasks",
-      "Failure label: 230 unresolved tasks (81.0%)",
+      "Normal reference: 54 officially resolved tasks (19.0%)",
+      "Failure label: 230 unresolved tasks (81.0%), including 17 silent failures (6.0%)",
       "Errors, large patches and high cost do not prove failure",
-      "Failure is common here, which limits the anomaly framing"
+      "High failure prevalence limits classical rare-anomaly assumptions"
     ],
     "seconds": 40,
-    "notes": "Category 4: Text / Logs. Labels do not establish deception, reward hacking or false completion. No prefix prediction or autonomous release has been tested. SWE-bench and SWE-agent sources are in Paper/custom.bib.",
+    "notes": "Category 4: Text / Logs. Task-end screening matches PR integration queues. We also isolate the rare 6.0% silent semantic failure subtype.",
     "image": null,
     "table": null
   },
   {
     "title": "Training-only analysis shows overlapping behavior",
     "lines": [
-      "EDA uses outer fold 0 training rows only",
-      "32 successful and 138 failed training runs",
-      "Long tails motivate log1p and robust scaling",
-      "Remove duplicated command count from numeric features"
+      "EDA uses outer fold 0 training rows only (32 normal, 138 failure)",
+      "Tokens received separates strongly (W = 0.999, KS = 0.520)",
+      "Exact redundancy (Spearman 1.000) removes duplicate tool-call count",
+      "Heavy right tails motivate log1p and normal-only median/IQR scaling"
     ],
     "seconds": 35,
-    "notes": "No held-out row enters these boxplots. Numeric control has 23 columns, including 4 binary flags. The test-string flag is patch-wide and the command heuristic is noisy. Source: Paper/figures/v2/eda and v2_stats.tex.",
+    "notes": "No held-out row enters these boxplots or Wasserstein/KS statistics. Source: Paper/figures/v2/eda and v2_stats.tex.",
     "image": "Paper/figures/v2/eda.png",
     "table": null
   },
   {
-    "title": "Local encoders preserve more of the recorded text",
+    "title": "Six-stage primary pipeline with frozen encoders",
     "lines": [
-      "MiniLM: chunk logs, average within and across steps",
-      "CodeBERT: chunk diff hunks, pool token representations",
-      "Normalize 384-D log and 768-D patch vectors",
-      "T2: mean distance to k nearby successful training runs"
+      "MiniLM: 224-token log chunks, overlap 32, step + run mean pooling",
+      "CodeBERT: 480-token diff hunks, overlap 64, token-weighted pooling",
+      "Normal-only reference bank (~32 resolved runs per fold)",
+      "T2 score: mean dual cosine distance to k in {1,3,5} nearest normals"
     ],
     "seconds": 45,
-    "notes": "Encoders remain frozen. Log chunks:224 tokens,32 overlap. Patch chunks:480 tokens,64 overlap. Log and patch cosine distances have equal weight. k in {1,3,5}; only successful training rows form the reference. Pooling loses ordering and does not verify correctness.",
-    "image": null,
+    "notes": "Encoders remain frozen. Validation selects k and threshold tau under empirical FPR <= 20% maximizing recall.",
+    "image": "Paper/figures/v2/pipeline.png",
     "table": null
   },
   {
-    "title": "Every method shares five outer folds",
+    "title": "Strict 5-fold CV plus untouched confirmatory holdout",
     "lines": [
-      "Approx. 60% training, 20% validation, 20% outer test",
-      "Validation selects model and threshold; never fits weights",
-      "Choose recall under validation FPR <=20%",
-      "284 out-of-fold predictions per model and seed",
-      "Prior data inspection makes this exploratory evaluation"
+      "Primary: 5 stratified outer folds (N=284, ~60/20/20% train/val/test)",
+      "Confirmatory: 271 untouched SWE-agent Claude-3-Opus trajectories",
+      "Both zero-shot cross-agent transfer and locked 5-fold replication",
+      "Paired fold t-tests and 2,000-resample stratified paired bootstrap CIs"
     ],
     "seconds": 45,
-    "notes": "Only around 32 successful training and 10 successful validation runs per fold. Empirical validation FPR is not a test guarantee. Shared repositories remain; additional held-out-repository sensitivity is limited. Deterministic methods run once, random methods have seeds42,123,456.",
+    "notes": "Addresses prior test inspection on GPT-4 by evaluating frozen models once on the untouched 271 Claude-3-Opus holdout.",
     "image": null,
     "table": null
   },
   {
     "title": "Numeric controls outperform the embedding detector",
     "lines": [
-      "Seed 42 pooled counts; no independent deployment test",
-      "ECOD minus T2 balanced accuracy: +0.176",
-      "Paired conditional 95% interval: [0.114, 0.240]"
+      "Seed 42 OOF across 284 GPT-4 runs and 271 untouched Opus runs",
+      "ECOD beats T2 by +0.176 BA (p = 0.0037, 95% CI [+0.114, +0.240])",
+      "Findings replicate on untouched Claude-3-Opus holdout (0.645 vs 0.542)"
     ],
     "seconds": 55,
-    "notes": "All numbers derive from main_results.csv and bootstrap_ci.csv. Bootstrap resamples paired OOF instances within class2000times; shared training folds limit interpretation. Conditional residual is a secondary comparison. No method meets all operational gates.",
+    "notes": "All numbers derive from main_results.csv, bootstrap_ci.csv, and confirmatory_claude3opus_oof.csv.",
     "image": null,
     "table": [
       [
         "Method",
-        "Bal. acc.",
+        "GPT-4 BA",
         "FPR",
         "Recall",
-        "Unflagged OK"
+        "Opus Holdout BA"
       ],
       [
-        "T2: embeddings",
+        "T1: Heuristic",
+        "0.526",
+        "0.204",
+        "0.257",
+        "0.501 / 0.508"
+      ],
+      [
+        "T2: Dual encoder",
         "0.481",
         "0.259",
         "0.222",
-        "18.3%"
+        "0.542 / 0.536"
       ],
       [
-        "T3: supervised",
+        "T3: Supervised",
         "0.596",
         "0.352",
         "0.543",
-        "25.0%"
+        "0.691 / 0.711"
       ],
       [
-        "TF-IDF supervised",
-        "0.652",
-        "0.352",
-        "0.657",
-        "30.7%"
-      ],
-      [
-        "ECOD variant",
+        "Inductive ECOD",
         "0.657",
         "0.130",
         "0.443",
-        "26.9%"
+        "0.645 / 0.645"
       ],
       [
-        "Conditional",
+        "Conditional res.",
         "0.675",
         "0.185",
         "0.535",
-        "29.1%"
+        "0.672 / 0.708"
       ]
     ]
   },
   {
     "title": "The confusion matrices expose the missed failures",
     "lines": [
-      "T2: 179 of 230 failures receive no alert",
-      "Only 40 of 219 unflagged runs actually succeed",
-      "Better numeric scores still leave many failures unflagged"
+      "T2: 179 of 230 failures receive no alert (recall 22.2%)",
+      "Only 40 of 219 unflagged T2 runs actually succeed (18.3%)",
+      "Conditional residual catches 47.1% of rare silent failures vs 0% for T1"
     ],
     "seconds": 50,
-    "notes": "Rows are actual success/failure. Columns are no alert/alert. Cell text is raw count; color is row fraction. T2 TN40FP14FN179TP51;ECOD TN47FP7FN128TP102;conditional TN44FP10FN107TP123. Prediction absence of alert is not a correctness guarantee.",
+    "notes": "T2 TN 40 FP 14 FN 179 TP 51; ECOD TN 47 FP 7 FN 128 TP 102; Conditional TN 44 FP 10 FN 107 TP 123.",
     "image": "Paper/figures/v2/confusion.png",
     "table": null
   },
   {
-    "title": "Patch vectors help, but dual-channel averaging hurts",
+    "title": "Mechanistic ablation: log variance drowns out patch signal",
     "lines": [
-      "Numeric kNN: balanced accuracy 0.641",
-      "Patch-only encoder: 0.594",
-      "Dual encoder: 0.481; log-only: 0.456",
-      "H1 unsupported; patch addition helps logs, not patch-only"
+      "Numeric kNN reaches 0.641 BA; CodeBERT patch-only reaches 0.594",
+      "Dual encoder drops to 0.481; MiniLM log-only is 0.456",
+      "CodeBERT anisotropy compresses patch distances (mean 0.009 vs log 0.143)",
+      "Log distance drives 98.2% of unweighted fusion variance"
     ],
     "seconds": 50,
-    "notes": "All use kNN and validation model selection. Distances differ across representations, so this comparison includes geometry. Patch embeddings may encode surface similarity rather than functional correctness. Equal averaging is one tested fusion rule, not proof all text encoders fail.",
+    "notes": "Checked directly in embedding distance data: d_log variance is 56x larger than d_patch variance.",
     "image": "Paper/figures/v2/representations.png",
     "table": null
   },
   {
-    "title": "Contamination does not show a consistent penalty",
+    "title": "Contamination & threshold policy ablations",
     "lines": [
-      "Fixed reference size; training failures replace successes",
-      "Freeze each clean fold\u2019s chosen k and threshold",
-      "Also report validation-only recalibration",
-      "Zero-contamination reproduces the primary detector"
+      "Clean failure and normal dual distances overlap (0.077 vs 0.073)",
+      "10% contamination shifts failure scores by only -0.00014 (H3 refuted)",
+      "F2 and $-cost rules collapse to flagging 95-100% of runs under 81% skew",
+      "Always-alert ($15,000/mo) beats all detectors unless failure rate < 2.5%"
     ],
     "seconds": 40,
-    "notes": "Corrected after detecting a mismatched k=3 control in the earlier v2 draft. Fitting IDs and exact replacement fractions are archived. Three replacement seeds. H3 is not established if effects are small or nonmonotonic. Source:contamination_fitting_ids.json and ablation_contamination.csv.",
+    "notes": "Threshold ablation table compares FPR<=20%, max-BA, max-F1, and max-F2/min-cost rules.",
     "image": "Paper/figures/v2/contamination.png",
     "table": null
   },
   {
-    "title": "Near-normal vectors can still describe failed patches",
+    "title": "Error case studies and additive feature attribution",
     "lines": [
-      "FP django-13230: score .11276, threshold .10865",
-      "FN sympy-12454: score .02483, threshold .07315",
-      "Boundary FP sympy-24213: margin +.00018",
-      "Distances identify similarity, not the semantic cause"
+      "FP django-13230 (s=.1128 > tau=.1087): 9 errors inflate d_log (.2029)",
+      "FN sympy-12454 (s=.0248 < tau=.0731): quiet 1-line edit looks normal",
+      "Boundary FP sympy-24213 (margin +.00018): 11-normal val step noise",
+      "ECOD additive tail attribution highlights patch size and stalled turns"
     ],
     "seconds": 50,
-    "notes": "Full IDs and raw SHA256s are in case_studies.json. Nearest reference log/patch distances respectively .20290/.00655, .04656/.00311, .14414/.00251. The saved leave-one-out values use a fixed nearest reference, not full kNN rescoring; do not call them complete score attribution.",
-    "image": null,
+    "notes": "Full IDs, SHA-256s, raw feature values, and repository overlap counts are reported in Table 6 and Figure 5.",
+    "image": "Paper/figures/v2/interpretability.png",
     "table": null
   },
   {
-    "title": "These detectors cannot justify automatic release",
+    "title": "Takeaways, deployment limits, and next steps",
     "lines": [
-      "No model meets the predeclared practical gates",
-      "Next: fresh agent runs and task-conditioned evidence",
-      "Encoding 284 runs took about 895 seconds on CPU",
+      "No method meets all four practical release gates on GPT-4 or Opus",
+      "Variance-standardized channel weighting and test-execution verification next",
+      "CPU extraction takes 3.15 s/run vs 0.012 ms/run for Inductive ECOD",
       "All five member contributions remain pending confirmation"
     ],
     "seconds": 40,
-    "notes": "Gates:recall>=90%,FPR<=20%,unflagged success>=80%,coverage>=5%. Encoder memory reported ~1.19GiB by extractor profiling; not a whole-process-tree memory guarantee. Actual live rehearsal and E3 upload remain outstanding. AI assistance and all five author IDs appear in the report.",
+    "notes": "Gates: recall>=90%, FPR<=20%, unflagged success>=80%, coverage>=5%. AI assistance and all five author IDs appear in the report.",
     "image": null,
     "table": null
   }

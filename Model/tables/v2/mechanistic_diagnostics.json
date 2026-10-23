@@ -1,0 +1,233 @@
+{
+  "channel_variance": {
+    "d_log_mean": 0.14334956216560282,
+    "d_log_sd": 0.03830070985250414,
+    "d_patch_mean": 0.009160035785654901,
+    "d_patch_sd": 0.005121440578040996,
+    "d_dual_mean": 0.07625479897562887,
+    "d_dual_sd": 0.019500165940500216,
+    "d_dual_fail_mean": 0.07696664299653924,
+    "d_dual_fail_sd": 0.019357062802065846,
+    "d_dual_norm_mean": 0.07322287073841802,
+    "d_dual_norm_sd": 0.019997301262567713,
+    "var_half_log": 0.0003667360938014269,
+    "var_half_patch": 6.557288398601222e-06,
+    "cov_half_log_patch": 3.481544753508243e-06,
+    "var_dual": 0.0003802564717070446,
+    "log_variance_share_pct": 98.24339548696112
+  },
+  "contamination_mechanism": {
+    "0.05": {
+      "knn_injected_hit_rate_mean": 0.09624413145539906,
+      "knn_injected_hit_rate_sd": 0.020329234830620622,
+      "fail_score_shift_mean": 1.2200490534765673e-05,
+      "norm_score_shift_mean": 0.0006129838033686153
+    },
+    "0.1": {
+      "knn_injected_hit_rate_mean": 0.3110328638497653,
+      "knn_injected_hit_rate_sd": 0.07587463079292951,
+      "fail_score_shift_mean": -0.0001389432022230067,
+      "norm_score_shift_mean": 0.0004303716596357322
+    }
+  },
+  "enriched_cases": {
+    "highest_fp": {
+      "description": "False Positive (Resolved run flagged as failure)",
+      "found": true,
+      "instance_id": "django__django-13230",
+      "sha256": "9c6adc2175eb4e490c090eba58a92001b94ce5e49e65d678807c9799b3d67c33",
+      "official_label": 0,
+      "prediction": 1,
+      "score": 0.11275921,
+      "tau": 0.1086522564291954,
+      "margin_to_tau": 0.0041069535708045946,
+      "nearest_normal_reference_id": "django__django-11133",
+      "nearest_normal_sha256": "e74e5e2a7d181e3553adb65dc990c792744a4b8b4374256e8b78f435e10274aa",
+      "dual_distance_to_nearest": 0.10472555458545685,
+      "log_distance_to_nearest": 0.2028995156288147,
+      "patch_distance_to_nearest": 0.006551593542098999,
+      "num_steps": 15,
+      "patch_is_empty": false,
+      "most_distant_step_index": 14,
+      "step_action_excerpt": "submit\n",
+      "step_obs_excerpt": "\ndiff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..29edf84803 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/v",
+      "patch_excerpt": "\ndiff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..29edf84803 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/v",
+      "leave_one_out_score_delta": 0.002383485436439514,
+      "outer_fold": 3,
+      "repo": "django",
+      "fold_normal_ref_count": 32,
+      "same_repo_normal_ref_count": 16,
+      "same_repo_normal_refs": [
+        "django__django-11039",
+        "django__django-11099",
+        "django__django-11133",
+        "django__django-11583",
+        "django__django-12286",
+        "django__django-12453",
+        "django__django-13658",
+        "django__django-14672",
+        "django__django-14752",
+        "django__django-14855",
+        "django__django-14915",
+        "django__django-14999",
+        "django__django-15213",
+        "django__django-15347",
+        "django__django-16046",
+        "django__django-16873"
+      ],
+      "num_error_observations": 9,
+      "error_observation_rate": 0.6,
+      "tokens_received": 3151,
+      "total_cost_usd": 2.0900600000000003,
+      "stalled_turn_count": 1,
+      "reproduce_script_created": 0,
+      "patch_char_length": 754,
+      "patch_lines_added": 8,
+      "patch_lines_removed": 0,
+      "patch_touches_tests": 0
+    },
+    "lowest_fn": {
+      "description": "False Negative (Unresolved run missed as success)",
+      "found": true,
+      "instance_id": "sympy__sympy-12454",
+      "sha256": "9e86fe02ca396ce9f7a0f1f7966fe0079db918982a1b7aee1ea52cb37587f071",
+      "official_label": 1,
+      "prediction": 0,
+      "score": 0.024832577,
+      "tau": 0.0731456726789474,
+      "margin_to_tau": -0.04831309567894739,
+      "nearest_normal_reference_id": "sympy__sympy-13647",
+      "nearest_normal_sha256": "3e28bcef2794a42058e046c39e10957dbb87fc431ca02cdb4d3e0845209d6311",
+      "dual_distance_to_nearest": 0.024832576513290405,
+      "log_distance_to_nearest": 0.04655778408050537,
+      "patch_distance_to_nearest": 0.0031073689460754395,
+      "num_steps": 11,
+      "patch_is_empty": false,
+      "most_distant_step_index": 10,
+      "step_action_excerpt": "submit\n",
+      "step_obs_excerpt": "\ndiff --git a/sympy/matrices/matrices.py b/sympy/matrices/matrices.py\nindex 90ea232faf..c600fe88e2 100644\n--- a/sympy/matrices/matrices.py\n+++ b/sympy/matrices/matrices.py\n@@ -1112,7 +1112,7 @@ def is",
+      "patch_excerpt": "\ndiff --git a/sympy/matrices/matrices.py b/sympy/matrices/matrices.py\nindex 90ea232faf..c600fe88e2 100644\n--- a/sympy/matrices/matrices.py\n+++ b/sympy/matrices/matrices.py\n@@ -1112,7 +1112,7 @@ def is",
+      "leave_one_out_score_delta": 0.0038097351789474487,
+      "outer_fold": 1,
+      "repo": "sympy",
+      "fold_normal_ref_count": 32,
+      "same_repo_normal_ref_count": 5,
+      "same_repo_normal_refs": [
+        "sympy__sympy-13480",
+        "sympy__sympy-13647",
+        "sympy__sympy-13971",
+        "sympy__sympy-16988",
+        "sympy__sympy-24152"
+      ],
+      "num_error_observations": 3,
+      "error_observation_rate": 0.2727272727272727,
+      "tokens_received": 834,
+      "total_cost_usd": 1.00418,
+      "stalled_turn_count": 1,
+      "reproduce_script_created": 1,
+      "patch_char_length": 450,
+      "patch_lines_added": 1,
+      "patch_lines_removed": 1,
+      "patch_touches_tests": 0
+    },
+    "borderline_error": {
+      "description": "Borderline Error (Closest to decision threshold)",
+      "found": true,
+      "instance_id": "sympy__sympy-24213",
+      "sha256": "7c0853e4f051dc01a125d002863456e17673985b57859785b8a9c61f54c5195d",
+      "official_label": 0,
+      "prediction": 1,
+      "score": 0.0733241,
+      "tau": 0.0731456726789474,
+      "margin_to_tau": 0.00017842732105260994,
+      "nearest_normal_reference_id": "sympy__sympy-13480",
+      "nearest_normal_sha256": "d50c842ae0c1346ebad7c35c4b426d115940fe249c475d09db829d2b2f4f146f",
+      "dual_distance_to_nearest": 0.07332409918308258,
+      "log_distance_to_nearest": 0.14414098858833313,
+      "patch_distance_to_nearest": 0.0025072097778320312,
+      "num_steps": 16,
+      "patch_is_empty": false,
+      "most_distant_step_index": 15,
+      "step_action_excerpt": "submit\n",
+      "step_obs_excerpt": "\ndiff --git a/sympy/physics/units/unitsystem.py b/sympy/physics/units/unitsystem.py\nindex a436880c4b..5705c821c2 100644\n--- a/sympy/physics/units/unitsystem.py\n+++ b/sympy/physics/units/unitsystem.py\n",
+      "patch_excerpt": "\ndiff --git a/sympy/physics/units/unitsystem.py b/sympy/physics/units/unitsystem.py\nindex a436880c4b..5705c821c2 100644\n--- a/sympy/physics/units/unitsystem.py\n+++ b/sympy/physics/units/unitsystem.py\n",
+      "leave_one_out_score_delta": 0.0010112076997756958,
+      "outer_fold": 1,
+      "repo": "sympy",
+      "fold_normal_ref_count": 32,
+      "same_repo_normal_ref_count": 5,
+      "same_repo_normal_refs": [
+        "sympy__sympy-13480",
+        "sympy__sympy-13647",
+        "sympy__sympy-13971",
+        "sympy__sympy-16988",
+        "sympy__sympy-24152"
+      ],
+      "num_error_observations": 11,
+      "error_observation_rate": 0.6875,
+      "tokens_received": 1700,
+      "total_cost_usd": 1.63326,
+      "stalled_turn_count": 2,
+      "reproduce_script_created": 1,
+      "patch_char_length": 692,
+      "patch_lines_added": 1,
+      "patch_lines_removed": 1,
+      "patch_touches_tests": 0
+    }
+  },
+  "ecod_flagged_attribution": {
+    "instance_id": "django__django-11630",
+    "outer_fold": 4,
+    "total_score": 45.2123550152668,
+    "top_features": [
+      {
+        "feature": "patch_char_length",
+        "score": 3.5263605246161616,
+        "raw_value": 2310.0,
+        "pct": 7.799550639256503
+      },
+      {
+        "feature": "patch_lines_added",
+        "score": 3.5263605246161616,
+        "raw_value": 64.0,
+        "pct": 7.799550639256503
+      },
+      {
+        "feature": "patch_num_files_changed",
+        "score": 3.5263605246161616,
+        "raw_value": 3.0,
+        "pct": 7.799550639256503
+      },
+      {
+        "feature": "patch_edit_ratio",
+        "score": 3.5263605246161616,
+        "raw_value": 0.9999998437500244,
+        "pct": 7.799550639256503
+      },
+      {
+        "feature": "max_repeated_tool_streak",
+        "score": 2.833213344056216,
+        "raw_value": 15.0,
+        "pct": 6.266458234921689
+      },
+      {
+        "feature": "stalled_turn_count",
+        "score": 2.833213344056216,
+        "raw_value": 14.0,
+        "pct": 6.266458234921689
+      },
+      {
+        "feature": "tokens_received",
+        "score": 2.833213344056216,
+        "raw_value": 4969.0,
+        "pct": 6.266458234921689
+      },
+      {
+        "feature": "num_steps",
+        "score": 2.4277482359480516,
+        "raw_value": 32.0,
+        "pct": 5.369656668245387
+      }
+    ]
+  }
+}

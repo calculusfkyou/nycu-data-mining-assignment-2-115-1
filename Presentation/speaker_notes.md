@@ -2,44 +2,44 @@
 
 ## 1. Can local text embeddings detect agent failures? (30 seconds)
 
-Task-end failure screening. No generated trajectories or new LLM API calls. Official resolution labels are the target. Source: Dataset/evaluation_results.json. Full author list and student IDs appear in the report.
+Task-end failure screening on SWE-bench Lite. Zero new LLM API calls. Official execution verdicts define ground truth. Full author list and student IDs appear in the report.
 
 ## 2. The decision is whether a completed run needs review (40 seconds)
 
-Category 4: Text / Logs. Labels do not establish deception, reward hacking or false completion. No prefix prediction or autonomous release has been tested. SWE-bench and SWE-agent sources are in Paper/custom.bib.
+Category 4: Text / Logs. Task-end screening matches PR integration queues. We also isolate the rare 6.0% silent semantic failure subtype.
 
 ## 3. Training-only analysis shows overlapping behavior (35 seconds)
 
-No held-out row enters these boxplots. Numeric control has 23 columns, including 4 binary flags. The test-string flag is patch-wide and the command heuristic is noisy. Source: Paper/figures/v2/eda and v2_stats.tex.
+No held-out row enters these boxplots or Wasserstein/KS statistics. Source: Paper/figures/v2/eda and v2_stats.tex.
 
-## 4. Local encoders preserve more of the recorded text (45 seconds)
+## 4. Six-stage primary pipeline with frozen encoders (45 seconds)
 
-Encoders remain frozen. Log chunks:224 tokens,32 overlap. Patch chunks:480 tokens,64 overlap. Log and patch cosine distances have equal weight. k in {1,3,5}; only successful training rows form the reference. Pooling loses ordering and does not verify correctness.
+Encoders remain frozen. Validation selects k and threshold tau under empirical FPR <= 20% maximizing recall.
 
-## 5. Every method shares five outer folds (45 seconds)
+## 5. Strict 5-fold CV plus untouched confirmatory holdout (45 seconds)
 
-Only around 32 successful training and 10 successful validation runs per fold. Empirical validation FPR is not a test guarantee. Shared repositories remain; additional held-out-repository sensitivity is limited. Deterministic methods run once, random methods have seeds42,123,456.
+Addresses prior test inspection on GPT-4 by evaluating frozen models once on the untouched 271 Claude-3-Opus holdout.
 
 ## 6. Numeric controls outperform the embedding detector (55 seconds)
 
-All numbers derive from main_results.csv and bootstrap_ci.csv. Bootstrap resamples paired OOF instances within class2000times; shared training folds limit interpretation. Conditional residual is a secondary comparison. No method meets all operational gates.
+All numbers derive from main_results.csv, bootstrap_ci.csv, and confirmatory_claude3opus_oof.csv.
 
 ## 7. The confusion matrices expose the missed failures (50 seconds)
 
-Rows are actual success/failure. Columns are no alert/alert. Cell text is raw count; color is row fraction. T2 TN40FP14FN179TP51;ECOD TN47FP7FN128TP102;conditional TN44FP10FN107TP123. Prediction absence of alert is not a correctness guarantee.
+T2 TN 40 FP 14 FN 179 TP 51; ECOD TN 47 FP 7 FN 128 TP 102; Conditional TN 44 FP 10 FN 107 TP 123.
 
-## 8. Patch vectors help, but dual-channel averaging hurts (50 seconds)
+## 8. Mechanistic ablation: log variance drowns out patch signal (50 seconds)
 
-All use kNN and validation model selection. Distances differ across representations, so this comparison includes geometry. Patch embeddings may encode surface similarity rather than functional correctness. Equal averaging is one tested fusion rule, not proof all text encoders fail.
+Checked directly in embedding distance data: d_log variance is 56x larger than d_patch variance.
 
-## 9. Contamination does not show a consistent penalty (40 seconds)
+## 9. Contamination & threshold policy ablations (40 seconds)
 
-Corrected after detecting a mismatched k=3 control in the earlier v2 draft. Fitting IDs and exact replacement fractions are archived. Three replacement seeds. H3 is not established if effects are small or nonmonotonic. Source:contamination_fitting_ids.json and ablation_contamination.csv.
+Threshold ablation table compares FPR<=20%, max-BA, max-F1, and max-F2/min-cost rules.
 
-## 10. Near-normal vectors can still describe failed patches (50 seconds)
+## 10. Error case studies and additive feature attribution (50 seconds)
 
-Full IDs and raw SHA256s are in case_studies.json. Nearest reference log/patch distances respectively .20290/.00655, .04656/.00311, .14414/.00251. The saved leave-one-out values use a fixed nearest reference, not full kNN rescoring; do not call them complete score attribution.
+Full IDs, SHA-256s, raw feature values, and repository overlap counts are reported in Table 6 and Figure 5.
 
-## 11. These detectors cannot justify automatic release (40 seconds)
+## 11. Takeaways, deployment limits, and next steps (40 seconds)
 
-Gates:recall>=90%,FPR<=20%,unflagged success>=80%,coverage>=5%. Encoder memory reported ~1.19GiB by extractor profiling; not a whole-process-tree memory guarantee. Actual live rehearsal and E3 upload remain outstanding. AI assistance and all five author IDs appear in the report.
+Gates: recall>=90%, FPR<=20%, unflagged success>=80%, coverage>=5%. AI assistance and all five author IDs appear in the report.

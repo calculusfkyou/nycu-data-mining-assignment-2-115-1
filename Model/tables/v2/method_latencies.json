@@ -1,0 +1,62 @@
+{
+  "always_alert": {
+    "train_s": 0.0,
+    "infer_ms": 0.0,
+    "embed_ms": 0.0
+  },
+  "never_alert": {
+    "train_s": 0.0,
+    "infer_ms": 0.0,
+    "embed_ms": 0.0
+  },
+  "heuristic_T1": {
+    "train_s": 4.00003045797348e-07,
+    "infer_ms": 0.0021131576463710843,
+    "embed_ms": 0.0
+  },
+  "knn_R3_T2": {
+    "train_s": 5.6599994422867894e-05,
+    "infer_ms": 0.691535087912997,
+    "embed_ms": 3150.7
+  },
+  "supervised_R3_logistic_T3": {
+    "train_s": 0.017612099996767938,
+    "infer_ms": 0.0033947366510370842,
+    "embed_ms": 3150.7
+  },
+  "supervised_R1_logistic": {
+    "train_s": 34.40986809998867,
+    "infer_ms": 92.05942543855615,
+    "embed_ms": 0.0
+  },
+  "inductive_ecod_R0_clean": {
+    "train_s": 0.002719200012506917,
+    "infer_ms": 0.011999999977680937,
+    "embed_ms": 0.0
+  },
+  "isolation_forest_R0_clean": {
+    "train_s": 0.24014949999400415,
+    "infer_ms": 0.2555447368139172,
+    "embed_ms": 0.0
+  },
+  "conditional_residual_R0_clean": {
+    "train_s": 0.018615900014992803,
+    "infer_ms": 0.011368421327093975,
+    "embed_ms": 0.0
+  },
+  "shallow_dae_R0_clean": {
+    "train_s": 2.2333508000010625,
+    "infer_ms": 0.017296491454257386,
+    "embed_ms": 0.0
+  },
+  "legacy_ae_R0": {
+    "train_s": 0.6494855000055395,
+    "infer_ms": 0.005884210144071595,
+    "embed_ms": 0.0
+  },
+  "legacy_xgboost_R0": {
+    "train_s": 0.3043749999778811,
+    "infer_ms": 0.019098245518347413,
+    "embed_ms": 0.0
+  }
+}

@@ -1,0 +1,1632 @@
+{
+  "run": "20240402_sweagent_claude3opus",
+  "count": 271,
+  "trajectories": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-12907.traj",
+      "sha256": "aeb77e46ef0440f04dbd32737d9c4a579d6fbff1679ee4f34887dd9f11911700",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "astropy__astropy-14182",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-14182.traj",
+      "sha256": "5101ba9cd0e5065352e53733b7c2ac03046efeacf1b43257c25382acedfe3c29",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "astropy__astropy-14365",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-14365.traj",
+      "sha256": "dbb7fc5698e63c603e98d42c657fd21a148fbd1cd05a6d3572fdbf3620415ac5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "astropy__astropy-14995",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-14995.traj",
+      "sha256": "7da7fc6dcc1a7d810032ed8102eef22dbec8f87c560639fd5511dfa40ccd29a6",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "astropy__astropy-6938",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-6938.traj",
+      "sha256": "8b002f632da79a591b5cc4bc74e0bce3f516375852a8b541321cbe3bf8789923",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "astropy__astropy-7746",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/astropy__astropy-7746.traj",
+      "sha256": "35759cc26b968300ae52c50380696acc7eb9f916d8306d8eb9cfec32be54d36a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-10914",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-10914.traj",
+      "sha256": "5d697fdf434dc1e88b7f5111f74b4e09a31054e8b1e8e457ecb587ee069342b9",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-10924",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-10924.traj",
+      "sha256": "37363cd6a7348fcbb95e39d1efffb8acb422b11a00900b4ed7cef9cd63da5147",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11001",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11001.traj",
+      "sha256": "82a6e30931e9cf8416bcde702fec111269f2f53b3348547090c44b23ed506856",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11019",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11019.traj",
+      "sha256": "4f7c924b7fe368c9de2c90fb3f945c0724e8b4327afcc46fa8549ccd50c6e69f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11039",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11039.traj",
+      "sha256": "c7bfd35d2013f4a371ac67eb20a1040e588e0d4dbf3770f4c6b8c2c4f9d6c8df",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11049",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11049.traj",
+      "sha256": "739f128447b13aef8eabced095899262b9fcc015236727b6d892a717ae98f252",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11099",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11099.traj",
+      "sha256": "a73fba7acce514b793e97f055b3805d6f4535efd2c8678fdf753bb65777470a0",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-11133",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11133.traj",
+      "sha256": "0d7783d5fe717f8628a838a3567f06130a8f2d17610762b2d2e4bbc57afa68f4",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-11179",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11179.traj",
+      "sha256": "5e2fee291eeac8ad9154c44157212a632f1928222783f3a91d6305d13077840b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11283",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11283.traj",
+      "sha256": "1172ac13fe2e3b24470473a66147293848c1c2d16b9ed330c208b5f0750e21db",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11422",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11422.traj",
+      "sha256": "3e6fef25acf57c0d663eef116932a31d03d03726cac66f9cd39c17a33846a8cc",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11564",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11564.traj",
+      "sha256": "68451a619b1b75fee189c7e44f77fdbf7c4dc907168907677329fc3eae4d8126",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11583",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11583.traj",
+      "sha256": "42969cb5ba1a718ba0b6a934a957a739a35fbbe107487d20810ef2670845866b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11620",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11620.traj",
+      "sha256": "d49cc47f63dda7f11b6e4af56715cb9c9aebd0a60db595fc44c4b257713ca19f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11630",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11630.traj",
+      "sha256": "520f50c56bba9dee9fd5f88075e8128d6002a06104bb2088a53941b5913d6b9c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11742",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11742.traj",
+      "sha256": "1dcae5f0a6c583981bd76900520a5966b34040c21b4a050c95f5e0084038de22",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11797",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11797.traj",
+      "sha256": "4ed5656ff8128e48bf21eb988a0f6725a6a441b115ca3ab3c5f38aa38416f2f7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11815",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11815.traj",
+      "sha256": "880244f44e0311b196a17628145313588ef307f2af53e263d7db1677c1c1b7c2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11848",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11848.traj",
+      "sha256": "5ba07e0bc5e0cdf01581b2dc9ab7dc88733037616c9f4af428ba117a61100045",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11905",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11905.traj",
+      "sha256": "5d60ae78f02fa00755426b70e8d5ad4b1be89454f6239f335a11246e6d8e3bee",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11910",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11910.traj",
+      "sha256": "4f7a6d3217649448598a2142cea1c4e9395de82324bbbf63220889d3f898c05a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11964",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11964.traj",
+      "sha256": "f02a2ca1be470c16a0f595ddd76cdbdeb39381daef906e46ec7057494ba7cd58",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-11999",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-11999.traj",
+      "sha256": "d6388a690b8ab9a48cb54218aabbc2534840b23b3c4c9356f1fa20c888387e82",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12113",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12113.traj",
+      "sha256": "d3290a577c800668d08b4cbdb6f146a7aa34cc180385586003b12899ec5c81b7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12125",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12125.traj",
+      "sha256": "215f16f4657cca81af65d5b728f761bb86ff8f3d9228ea88f139772c85efc004",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12184",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12184.traj",
+      "sha256": "34fd97494c8461e8212a718cbfe6442da15a55c11250c8fd24d3986cc7b7e036",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12284",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12284.traj",
+      "sha256": "1b46b2ab95cc09f3f3de163eb68e4c177d876e726dce3e1e84406a84fb1e327b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12286",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12286.traj",
+      "sha256": "99fe0912df1bda3827d0ce347af113a99925a367979949ab1dc5b59d4e46ff0d",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-12308",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12308.traj",
+      "sha256": "b98582926047104e0917700280617e5dcb9fdda242a8f15be72c8d7d614b563c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12453",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12453.traj",
+      "sha256": "b042ac48902b36fbed3742f2b2de33da8f125ed084fcac9c14be8641d7e83cc0",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-12470",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12470.traj",
+      "sha256": "4e8d5e98cea65a198f9406411cefa726cd68029842497ec2b04a0e0652699eef",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12497",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12497.traj",
+      "sha256": "567e686ea4be6a635ab8861617655cdacb3002e7e10a8f0a5a52b1d05e4218d3",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12589",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12589.traj",
+      "sha256": "5044036a68862c9ddb765bf0b3ae705c7870021f70bad1d86d46879f209bee0a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12700",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12700.traj",
+      "sha256": "f28377fe028d56f40cc55f6235032ddd854b202af7f76cfb5c1bddc9b5658ce0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12708",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12708.traj",
+      "sha256": "229fa9a481e78b78dd64a8a997c95ddbd13cf77c14da661014a2a7561ce82531",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12747",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12747.traj",
+      "sha256": "fa103ae61665804f87aaf95541edb00ba05de2c21ef17419c93288e4f1d50e8e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12908",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12908.traj",
+      "sha256": "7e796a9cacd4d6809209f984c5e5f4c91858c82156656a6a70102ebc8656fb23",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12915",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12915.traj",
+      "sha256": "52d1f692cb32d20a1612ce4c8efa8bb69af6088685613b770afc01161dde06c0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-12983",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-12983.traj",
+      "sha256": "b58e8df35114421efa15963bd64be6de9d6e32fda8a80ce37b2686713ac432e7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13028",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13028.traj",
+      "sha256": "28679559a1b0f1d7111e52f0da0cad367909dac7df3726d3787b26705ed6df72",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13033",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13033.traj",
+      "sha256": "8bbad97eb49770bb06f8c55bda44cbdbff361a0b4522cf42a5851e83b17c5de8",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13158",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13158.traj",
+      "sha256": "0a3d1bb4ac6e27e3a4d7b1fed5c7e215fd203b9b6ce8a9aac407689f74a8e68f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13220",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13220.traj",
+      "sha256": "b5c19986848dc603a91ce5bf200dedb751ba4349f76972bd4807e29314fdafba",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13230",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13230.traj",
+      "sha256": "9adce060cc01fefe46687ecbca4810051f89660a4b4bd3cc1c5bc6f44526a1ad",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-13265",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13265.traj",
+      "sha256": "efb5be7719a2880d7424adad63c26b123f8f70d382fab9f1b8fd153ac8b4b966",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13321",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13321.traj",
+      "sha256": "4b165e2a4d59065cb555adfb8d60129660f525e66b3969785d4fd0b28d16d736",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13401",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13401.traj",
+      "sha256": "5d07fa7281655dd7560c20f117fc733b17c8ad6fedd41f4523398226a73c1573",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13447",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13447.traj",
+      "sha256": "6488a8e818ab37c2bac4a38632afc076fc4d9a5f65dadc5884c82a9dcf9d09ad",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-13551",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13551.traj",
+      "sha256": "3f790f3f333f53c65273ee6d08ea1adcf27b7cddfa0e8ea90f32c32db719f95d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13590",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13590.traj",
+      "sha256": "7741a7520a7397a9997a9e52e4d1b4fbf8423cc76e1200e65108c5eba03881c2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13658",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13658.traj",
+      "sha256": "e6d08a6fa27343c0fd92bfac989361248ae7f8ed024fe62531b1871f5e65ddb9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13660",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13660.traj",
+      "sha256": "aba5f15d0cdc4d8a629e990ccf6d7aad241fca127a97746c78261f51f1b0431b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13710",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13710.traj",
+      "sha256": "2295eb6e76ff2128a093052cd0b894adfda886645cbd399a918bd7033494f584",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-13757",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13757.traj",
+      "sha256": "c0f486ff8079ec3d598e49f0e4432f511a408316d1f541c29a027b372218cf0f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13768",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13768.traj",
+      "sha256": "a4aac8739ea92337737b59e18200293dc1044e95083d20f57c555754df22f172",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13925",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13925.traj",
+      "sha256": "345e7d07217ba7ebcc3cef367b0bd0377ab6b648d8d1975cef0351c96d1cf832",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-13933",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13933.traj",
+      "sha256": "864f84c1a2fc367136cdcdf034c0666468e21050fc30d018341398c61ee803c7",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-13964",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-13964.traj",
+      "sha256": "fae3af92feedb6b9106dd96cb695f263ebc1130919386029810a8194376edcce",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14016",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14016.traj",
+      "sha256": "3166759cb4e74630bcf90928e5401fc14f9ca4a5c9f00da04b3bfc50b104ffaf",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14017",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14017.traj",
+      "sha256": "e846560f42d6663528323b1d9a0a19dd49da4acf006c336eb26f046537d70a6d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14155",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14155.traj",
+      "sha256": "9f50b42bdff8f3f7ee00f4f15daa49ee974e196c68961c282de3aa109eb9a38b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14238",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14238.traj",
+      "sha256": "0913b86fd197873881eaa7c794e5c2e04cfaac2c90b0f042b77a44c9af13de68",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14382",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14382.traj",
+      "sha256": "bb0d78942a9ab3ec2275103f15c12d8a075045e3ceb5db53bef2a0dd8a52a795",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-14534",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14534.traj",
+      "sha256": "2b6fdc1ea98f3c73ff11e92f306e116fe27e17f52f34b26b47211dad2b34ee9b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14580",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14580.traj",
+      "sha256": "694331befb30181a7262ba239a621fa2969aa15b8b8cafaab68f748729eb435a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14608",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14608.traj",
+      "sha256": "393b4e27c3b2acbaef6ced772473e2f9fb0414bf5e81cfc33a34214ce42746fb",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14667",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14667.traj",
+      "sha256": "3e948d55bb72a790249027a495b5c0f3f44648f3576aa3d09ee4cf1471b13417",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14672",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14672.traj",
+      "sha256": "7dccee709bceaa193adecd584445d5e3425eff8e391fc12ade20096b8d4c0211",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14730",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14730.traj",
+      "sha256": "5e86f041bdb0180395bae5c5edfe6c03b9b2f3218721f39109c9f24b903deedd",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14752",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14752.traj",
+      "sha256": "ee20e2ca20317f98b0203f7fda5726f85a09f7cd2eacc92ce05251e1d33b0da1",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-14787",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14787.traj",
+      "sha256": "b156f90f0f866ed782a3fbcca2b967dd97696ca6aea1ad3c4039f012d77aee89",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14855",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14855.traj",
+      "sha256": "6c60a20fa1f3b130e191a4865c04a01f0d6226d2808500b8811826796ffe0d99",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14915",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14915.traj",
+      "sha256": "73a9a5a8dfb1f822a6f3791e13739d11358327db99c622886d696d887085e57a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14997",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14997.traj",
+      "sha256": "1ba7d771cf7a085e6a81aaf46f66394464ff22e68bc22baac143ac27b3520d9a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-14999",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-14999.traj",
+      "sha256": "6a05ef1e5d98d2e8601331fe2c861163898139fe2d87cc3844ea6b075da714b1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15061",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15061.traj",
+      "sha256": "41cc6fcf00a97ba93891b50620ba9e9b17bec96eed6e5fc43bb3aee30d121d0c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15202",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15202.traj",
+      "sha256": "5934d9e412e3995204e01d9d650cd82e7473857f9b4532ccae05acd86cb7d852",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15213",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15213.traj",
+      "sha256": "39fc530b82125e259dbbb4c469740fd2f5f2a460879cc4f7c1b644a7fa4588b9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15252",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15252.traj",
+      "sha256": "daf3e6c73a54d772091a6cf7897dd4798ad691cf49e7cb949aa87202a1f88eda",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15320",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15320.traj",
+      "sha256": "15805793a676a9103302816172e0634fedf090b2a9b3ca3c65b173ac846858c5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15347",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15347.traj",
+      "sha256": "d265ec2a45633e7848e5e8c5193f6a8c0e3eb73ac2a586aa7423c767237bd944",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-15388",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15388.traj",
+      "sha256": "efef2fb0b59882568d22a07835761455b3e0e5b8fe9f686bb60a9bf685168536",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15400",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15400.traj",
+      "sha256": "0440240ae79fec466a2761058fd93eb324f8e554a1d91bd60e97b7231449efe9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15498",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15498.traj",
+      "sha256": "192fb596e81b3e4eb8533de3a227124cba442492f2c57c78d5a6e4b34f2934b4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15695",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15695.traj",
+      "sha256": "fb9c639211ebe3159cd34b2b30717493844b8bf407fea8bff6cba4e5745eb9fd",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15738",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15738.traj",
+      "sha256": "68d69713afdf25e1be8c891b67513a4a48805a3c78299673449138d462300dba",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15781",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15781.traj",
+      "sha256": "0b3a274d5a120252e4871e11f1eb577262f168a948109ddd4fd1c08af96b61ee",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15789",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15789.traj",
+      "sha256": "149a0913804c22fe362fba0880ce91b73ca5265cbd2f63104ab820b0caccc696",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-15790",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15790.traj",
+      "sha256": "62953a5479c4089b6c40a9c67b644ad1593bd3cdc0723e7609ea272dde7ab66c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15814",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15814.traj",
+      "sha256": "8a5e14985e36aa9891c1a0b7f35f22d900bc97248006a94b8d8fc9ab7ba806f2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15819",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15819.traj",
+      "sha256": "465d570f4f324ab9ab417133c44f1b639817195410bc2149f1178720748b5c24",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15851",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15851.traj",
+      "sha256": "596ff4158279d7457fbc720bd831a7db2d20fa99b888877142d165451f182f39",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-15902",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15902.traj",
+      "sha256": "4d6c7b5c927ad417e6c3c9aab760fb137217ed35f6e192fa342bf5e4c6df0302",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-15996",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-15996.traj",
+      "sha256": "fc8d7ec9ee88f3c4b75540c3a3b4180caa8f4420f9771d29a49aacc010d079c5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16041",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16041.traj",
+      "sha256": "86f4982eeb935eee57801030ea7cb6b0900a77b474f2dc403767053da47ed6e6",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16046",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16046.traj",
+      "sha256": "450274dc8486ad114db79e4264a00b7a441a0f2633b95ac54dcb92ab6fd9fdd8",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-16139",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16139.traj",
+      "sha256": "3883e44e9e09ac58a3e8c85cb977402c6b22b2fdeac4c0cc3d458c6d6f6ed8c2",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-16229",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16229.traj",
+      "sha256": "ae2bc68dcabacfbe94bcc88eda77360eee36e7266c815fd50a7da42a92359335",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16255",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16255.traj",
+      "sha256": "bca89fcab5018ed11af244cce9a383837fab8ab796bae4b5707991c459a00692",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16379",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16379.traj",
+      "sha256": "03c63f02ff5dfd8e4e05e900a7ae27ab575adbc3b701ffcf8b98662503fe4bb7",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-16400",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16400.traj",
+      "sha256": "00dbbcc1af91ede438dfec08f1cab3d561458e73b3ee3f3ea6dd85e8b51545be",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16408",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16408.traj",
+      "sha256": "8d81376369a410f0caec675f00f531255aa20c43521869e5598cc6c3ba43df2b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16527",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16527.traj",
+      "sha256": "831aef1dc360d368f7f95f13dcbc83532225625ab2fe053b049c62062a11772d",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-16595",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16595.traj",
+      "sha256": "d5ae9c56f12f3093736047d841d5eb279c6d2b53c5d1f5d1e4b3e23ec892f28b",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "django__django-16816",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16816.traj",
+      "sha256": "acba6e9d0cc3171b52fb864cc77b3bdd730efef8025c53f91bd4aa09b38f06db",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16873",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16873.traj",
+      "sha256": "7d03263786bbf67ea375a2e2098b31221789bc49ce8a4c2ec7310ab02deac9f1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-16910",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-16910.traj",
+      "sha256": "31fa7c289cda1f92018afd260b50db13ca210cd5312185938f620d2dd7441ad6",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-17051",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-17051.traj",
+      "sha256": "2391ec316821e7e5b84cc49985d4452484d39fff862f47402d54a4c8b9900a08",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "django__django-17087",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/django__django-17087.traj",
+      "sha256": "4944aed6ccc8ad2d7fab8f17e901100e41b2d27a10878443bda748c731253da2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-18869",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-18869.traj",
+      "sha256": "c4db76e80092484dd2c202d395df936a9ca119ccbb5952345f9354a21672e3d9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-22711",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-22711.traj",
+      "sha256": "ef36719f0a617ce80198a828486764345c4771362e726770822b198e26ac020b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-22835",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-22835.traj",
+      "sha256": "9f06f49baf9cbe7df8835cb3258859b409e943bb309c3cbfb377db653cfe13e1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23299",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23299.traj",
+      "sha256": "6270bf1f350d064b98606bf92c06151c68d9898b03c12aa55aa0251011896b13",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23314",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23314.traj",
+      "sha256": "bdcbd83d7e716e20d4acf494a85eae9dbd71a48d968c284acd088ac4f36b65e6",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23562",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23562.traj",
+      "sha256": "540a745cddc8a3d702c28bec070c32bf36628cd02c099839db02f262baae952e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23913",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23913.traj",
+      "sha256": "c04a1616d04378dd0bd051b13bd7b82de6b2033ce59ec61a03ebf6163c97e279",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23964",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23964.traj",
+      "sha256": "a329c24dfd88e61e18fc4cf90c28cc915adbcd2fb8c81ab68e9b6332e439adc1",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23987",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-23987.traj",
+      "sha256": "2614d030e46a1b333abac6c37a81735a0abf85269072aa7650f61de96152bcbb",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-24149",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-24149.traj",
+      "sha256": "623d54aadadfbc92b7faeb57f3849db411d48eb4e10f1bf012b8d4075e755688",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-24334",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-24334.traj",
+      "sha256": "9e56eaf7e75c9fcaf15d2589d095502d0d3abaf31f4723c1f0bcce2425bfadca",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25079",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25079.traj",
+      "sha256": "22d1bb7e6ad2da48411df72ce5b5ad7bee0107aa12e9becfb1f9173d8bf3a5d2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25311",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25311.traj",
+      "sha256": "5694b1ac5ef3e003b2a13cd89b1ec773ccef3bf46e5e85a26a79f4a8da97d7f3",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25332",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25332.traj",
+      "sha256": "e5a8d3725e6f39c4f73d262a227590d01d1a8999ac2366c758ca160062bd2bda",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25433",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25433.traj",
+      "sha256": "ef88b5a556bbbbefc6d4adba3f8edca14eaf9323bdfcaf30aee11aaa27e42308",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25442",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25442.traj",
+      "sha256": "142c5abf78460b2f05895db46e81eec09c3aea3469a521688dfc217266b050b2",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25498",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-25498.traj",
+      "sha256": "96652b447e06aacb6d963e4d3fba966d3ee7c849acd2fd850c88361793bfe40b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-26011",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/matplotlib__matplotlib-26011.traj",
+      "sha256": "6599315fd0aac082d885261e09349cb52ba0bad0f0510b2358e3899af029967f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "mwaskom__seaborn-3010",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/mwaskom__seaborn-3010.traj",
+      "sha256": "4c965e759d1362a09a55fe82275140b9cdc761b0e5b8686862bf2ff5ef89e82c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pallets__flask-4045",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pallets__flask-4045.traj",
+      "sha256": "5533f491f0acf18ee69b8ccb56dd67876b3c5c0178ea03ec3345593da64250d3",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pallets__flask-4992",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pallets__flask-4992.traj",
+      "sha256": "f33865c153805fc6d534dc3c7d19ad8c470bfa4b5f41bccdae6e844f60e3a718",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pallets__flask-5063",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pallets__flask-5063.traj",
+      "sha256": "28a7479e48bbae77e27a5a16a569ed21b9a4836034d62efe2d94c9decb990389",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "psf__requests-1963",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/psf__requests-1963.traj",
+      "sha256": "99c01d0f690116f0dc350d960e1db9579aee1271fff32d6aa44305326d4b8ff4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "psf__requests-2148",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/psf__requests-2148.traj",
+      "sha256": "84422326a1ba12b0fcc93fd9bff74a6ceb3d6a757a185db324199ca556e41766",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "psf__requests-2317",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/psf__requests-2317.traj",
+      "sha256": "57c147ccb39940f506b6f0f2e11a1d3bb2ae7bae26f2548dc013a9081d3011ac",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "psf__requests-2674",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/psf__requests-2674.traj",
+      "sha256": "5d6c3e68fd51fe178dc6de134175ad97363f97b513ef6380235ab2fbb2d63044",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "psf__requests-3362",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/psf__requests-3362.traj",
+      "sha256": "6e6c9f3022d502fb31f9f532c65bd0a13847dca5986a3d0286d885c4e7a03ee0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pydata__xarray-3364",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pydata__xarray-3364.traj",
+      "sha256": "48fe7e5b3d8548c098c5eab059f2f3605cce3dcfb1443e993b9b2bf68fc02b1b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pydata__xarray-4094",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pydata__xarray-4094.traj",
+      "sha256": "7907deb1f76ec4293f16a95f7444a4e4d4bca16388fd60691aa24d26af463cb4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pydata__xarray-4248",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pydata__xarray-4248.traj",
+      "sha256": "c3705e03b788544bf99da377cf09f35f528d259457a09748d38c25f5b659e4e0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pydata__xarray-4493",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pydata__xarray-4493.traj",
+      "sha256": "c2b88e39bfb173f20faed8edca8ec4aa1b35c8f21793c8afb3527368c41cc08d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pydata__xarray-5131",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pydata__xarray-5131.traj",
+      "sha256": "f689e0e69819c20716ca28ffa258d3dc1b1e81cc0700e085deb9fed7a8b46295",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pylint-dev__pylint-5859",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pylint-dev__pylint-5859.traj",
+      "sha256": "79fbd8f0ee8a7c043f3a847dfa7e9363e87d53fb5a1a11f2bf1e31f04ed222da",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pylint-dev__pylint-6506",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pylint-dev__pylint-6506.traj",
+      "sha256": "a9c37e76e4cc31b629ac6e6659cd61226927b7ff74203b5e07e48f2d98fadf07",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7080",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pylint-dev__pylint-7080.traj",
+      "sha256": "ed20387f30f408341c215c421bfdac3826038d525de032dc5a254f2e717d12e4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7993",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pylint-dev__pylint-7993.traj",
+      "sha256": "f527d88ae1814fdf0f58b8c3dc3736528a6d7ee76e41be70cd435c664459b15a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-11143",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-11143.traj",
+      "sha256": "4e2fb7485f5398f097d5458555b6ee4548c0f2922352e14f8384dbd9476d947b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5103",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-5103.traj",
+      "sha256": "bf78ee43f1d2457ce2faae0d8e9785ae4663fa37dea221e995dd8f32a13c559b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5221",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-5221.traj",
+      "sha256": "a736f69b2e5104edea1dbcb136c14ec9521055ae445b33b50100c5f8e15044a2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5227",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-5227.traj",
+      "sha256": "bc2cfdd0f544030c3d59eb7858bb32533d04e28e8e61d64df9f8169014a5b109",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5495",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-5495.traj",
+      "sha256": "923d499e093e264f874ec6cdfad4ceefa229c2faae29812720f3400a3e5cf32b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5692",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-5692.traj",
+      "sha256": "b172afe39eaf90de999a2cf3f9c31ec7347d4e1c5c1e99fede650b2cae75e837",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-6116",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-6116.traj",
+      "sha256": "409b4082598601938e0a403f79ca1f2ab4d665fa2f5586e3ad4ca69728265bc4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7168",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-7168.traj",
+      "sha256": "28c29d1f16894f3e60e12e3e52f09c231bef7d6ff0023bc9620380ed913b8718",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7220",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-7220.traj",
+      "sha256": "c32a092cf69f0bf09123b84eb2accffdf0eb661e112547953ccf0a4184151e1d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7373",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-7373.traj",
+      "sha256": "b5d3263eed0e58ef2ba78bf9290bcbf0c008d96e2ad897bd79d34cdde83af078",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7432",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-7432.traj",
+      "sha256": "178a71f04d69546dfd435b06e926f946b61d8a7ef28e67b40f3c2f9925ff1611",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7490",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-7490.traj",
+      "sha256": "e8e46208ab3d398d79e1511abe41e5454bdbb84739af9627a01fa124d88f97c7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-8365",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-8365.traj",
+      "sha256": "00a6f16209d342c86e810a7c06539c1fca8e0360ca8e9686912846cf4637077e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-8906",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-8906.traj",
+      "sha256": "9932facdc85ce305b0b440fb1e0732152528664614da69f27ace5a9fc7e1bb47",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-9359",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/pytest-dev__pytest-9359.traj",
+      "sha256": "8267c0c220099879289fe9136bb1fac3a369acebd56d84e72487e095480263e5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-10297.traj",
+      "sha256": "ad58b3e7f6b0f073f554d553b8e48d4262f154f5536614d2e8cb8e81a3c709a1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10508",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-10508.traj",
+      "sha256": "a96e48173117a875ef1f12b199f059466677acfb1c408decd78bdae593d99a4e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10949",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-10949.traj",
+      "sha256": "2254ab1102a79dca69e18a7ec67c7e80549038cb486b3f5775e41c9b8a7fedfc",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11040",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-11040.traj",
+      "sha256": "90b8f95bc3cb71165083e85a4fc8735c28fb42a1f6b43ab15025c687f9fccec7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11281",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-11281.traj",
+      "sha256": "668e195c6cc5af35be4ee746635c68d42945d07c366f0ff75c1b210550fad044",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-12471",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-12471.traj",
+      "sha256": "ce86294be123491b89d8a0f06a77e9b06e06b079a5a02f58e5e1d8282c53b6d8",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13142",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13142.traj",
+      "sha256": "7feb44cd395155e3df7b7a0912e3d6813df7106d502062c454d54158e87a0690",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13439.traj",
+      "sha256": "0d3de55072badbaa046904c40fbdacde615ca1d4094ff52c93bd73bf44be042e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13496",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13496.traj",
+      "sha256": "cef1538a5f8512a26bf9fe228874fa70144644f430846fa92ecf879947a98a1b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13497",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13497.traj",
+      "sha256": "f6b144cc06a8bb7a49c60b2e431b352d61a97dfa69764328913b4319d4823e30",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13584",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13584.traj",
+      "sha256": "47aa74be80feb2fdc48a902250933bf4844e5bc5ee2e2263737fcdec8e922afa",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-13779",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-13779.traj",
+      "sha256": "d5e10290788edf4e5052f33820ec3413615460721eacf2bced2b2b03348445e7",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14087",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-14087.traj",
+      "sha256": "114c5d4a3bdfb888a7caa9569d0942c93f384607d9b1e3e8bbc332f33f468334",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14092",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-14092.traj",
+      "sha256": "23951bca60c0289009d263fc86859b336a0cc93bee714f4bba33b6c41218bf48",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14894",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-14894.traj",
+      "sha256": "d363e444e1b0572ea67a9fc4e724e8a2587a7154a45cc07f593c92f02921e33c",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-14983",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-14983.traj",
+      "sha256": "e6d059f429042d1946c465e4783a6b9d5f9347c67f8c07a4c8993eda9a942da0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-15512",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-15512.traj",
+      "sha256": "e2666d6da2ffddb6e11ef5be371f24d16cc63965199ba2a4b880c338bb23d0de",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-15535",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-15535.traj",
+      "sha256": "cdc7911c9f5dee9e36e70a9d43dde4cd1f6eeec83d2512cce4423ea675a9122a",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25500",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-25500.traj",
+      "sha256": "5613f8dafeb8341a2d8ab6b42d1bdca8f408818efb589dbb3e408539c9ee63a3",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25570",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-25570.traj",
+      "sha256": "5c3660036c2e1553902d4972d1f72d8696f1c13114ae83466af77a76850ce284",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25638",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-25638.traj",
+      "sha256": "67a0320f257795e00dc29ee16f9061a41e2a9a7719145ca6181b2d7b8c2b1c3b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-25747",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/scikit-learn__scikit-learn-25747.traj",
+      "sha256": "0879875058b2fd59ee47e7f54e15cc225a132fa758b9c43cfd096584300f594e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10325",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-10325.traj",
+      "sha256": "f8d3f40b98bba80a73fdc9c4aab5dd9ebef252b0f24eb52dbd7a97e71b4bc619",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10451",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-10451.traj",
+      "sha256": "1c19ec02d404010fea47e0e2bff28df905c20d2db4c17d565fe4cc74e54902cb",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-11445",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-11445.traj",
+      "sha256": "82ff0ca8383e62cfe3ce7793483108179aa4eed0aa072b266bf283a5fad4bfe5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7686",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-7686.traj",
+      "sha256": "44e7b5f8d20ddd6145dc9c7aaf259c18db155fb7e31e81d048554ea6648038ca",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7738",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-7738.traj",
+      "sha256": "2efbb7b8085fb24b5084097f92b303956faad9a62eb269e99ccc601e6240649b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7975",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-7975.traj",
+      "sha256": "eb1af22c25e0d477bde2b52049bbbc0c3e326a2fca770c4b2b20082df99088e7",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8273",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8273.traj",
+      "sha256": "f29cc01f98daaa92961b01e75a498e01af8fcb672324e0df4fb90895af2773fb",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8435",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8435.traj",
+      "sha256": "f427c359b43ecfec89387afc18c745fc69562623c436d37c153a9d1b31f08cef",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8474",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8474.traj",
+      "sha256": "f057cf107e26fe0d756dfd98601eb06aa7b528cbc93e3524e2903f6c4fec36f1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8506",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8506.traj",
+      "sha256": "65506636b966249a8a0c8b87bd043dc60918e70eb3777ce2533a3c73ca9f675b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8713",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8713.traj",
+      "sha256": "342b8648b09eedb86cdd9e26904f82fec34173623f27752843eb90155919ba28",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8801",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sphinx-doc__sphinx-8801.traj",
+      "sha256": "ca2d59d62f7ad05a0c0de1602a0c4deaba2029877124b269274bcb1f6d1dbe80",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-11400",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-11400.traj",
+      "sha256": "8cce53c7a5b0d02955c2ec28026efddb897f0f55467dea83bc0a7ec6c78679ec",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-11870",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-11870.traj",
+      "sha256": "b343615bec5992106ec7a232d59abe14c6421b68d095836f768f62ea1090cfc1",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-12171",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-12171.traj",
+      "sha256": "4b57d4cd881b65d5434e355043c25e0733ec992294cdd2da39e6af371ece89a4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-12236",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-12236.traj",
+      "sha256": "4f1b3bb4632262047a343d85d20359fbe426314bb82a4643ba0dcbfc8e74d020",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-12419",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-12419.traj",
+      "sha256": "d69c4f907345c53f5d5b00049d2dd40f569321c2634a83998d42b911d0f75f25",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-12454",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-12454.traj",
+      "sha256": "a47c84f4ab1d1c4a28410b114ad59661ea0bef17f3d65d04fcdaa8e32e926cc9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-12481",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-12481.traj",
+      "sha256": "284bdbeaf15c60a3a1551f76d78c4e03084749af7c996f328bfcb808ec3b60a2",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13031",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13031.traj",
+      "sha256": "2a86a2162455d3d6c3929e38744233d869d6178202a41e62e2e5e98caf01ffdf",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13043",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13043.traj",
+      "sha256": "5e9b28457d2c2f970413d48310f90a91665cd659c1b9021e8eb8fd45c8196f23",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13177.traj",
+      "sha256": "79499ba339e0973c26f29b8eb7bc20450fa6f509de42c4743a777f523e53119f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13437",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13437.traj",
+      "sha256": "dcedc66c38bba3480e762c8516f469ad6ed1345011ef27d95f7f9db49b155442",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13480.traj",
+      "sha256": "3546e3a86f59b249b305cb8e88d017bd0e25bf567736ddd22d6977208f73b7fa",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "sympy__sympy-13647",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13647.traj",
+      "sha256": "e65c4f314169be2408c2946d8c872758695bffaf270967677b4d5482176d6fb4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13773",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13773.traj",
+      "sha256": "3361d7cd562425ec3f883b7531675ebe4ff4b485de1a2bfa49e9888000abcc7b",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13895",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13895.traj",
+      "sha256": "7c8378e32430a8175a3bab0107f1723b8cb6823da35b0e19dcc203e5b844742c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13915",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13915.traj",
+      "sha256": "baa258184c156cf15a5e4524ae2836e0690796189d03992b1eeb4c8842d6499d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-13971",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-13971.traj",
+      "sha256": "286b21e1b193753a3e7ef767180984ca7fda833fe52a505e9bd17a2087a38284",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-14024",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14024.traj",
+      "sha256": "ed168a7f7e1828c5bddc75e30f111f372b94d56b4e1fe7ce785b3c41da6faa35",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-14308",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14308.traj",
+      "sha256": "fcf70cb9a00364c49b610a379ea7df9d2fd991da818edf8f7e5a13dc9a9e920c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-14317",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14317.traj",
+      "sha256": "ad2a4f3120866fae357fa9a7de888e0c73137c50176a5b43b1c613abe85adc94",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-14396",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14396.traj",
+      "sha256": "1b851705454a3142d7b69ef264b8e076ba852f76f304de30d0a268933e414393",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-14774",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14774.traj",
+      "sha256": "133bf759db0b58cc549a84768465f3eacc32c5726ec418c339266ccc08287007",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "sympy__sympy-14817",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-14817.traj",
+      "sha256": "974e58a9040ded0f6958b07523363d19deff59f9aec3633568d6a97bf71fbc22",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-15011",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-15011.traj",
+      "sha256": "bdee62bf14ea10bd432c46b56c7ece70828094bcf2c30c078c5df77216bb0c33",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-15308",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-15308.traj",
+      "sha256": "e6dd6bd1e868f612b66fcb331430da1f67669e57e635e88ee254b41901cd5b99",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-15345",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-15345.traj",
+      "sha256": "3a7717a1ec8055710ed89794778cfeff221c2caa54798f2a4d92e06bcfe63d4a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-15609",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-15609.traj",
+      "sha256": "9b43873f838168fe4e568e924662e52b1417bbf2ee4257d28b6c98af93520a0c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-15678",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-15678.traj",
+      "sha256": "ad8750800cab22a7d72aaaf36c199125661bb9f62e12e80ad07489109c03330e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-16106",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-16106.traj",
+      "sha256": "3b3781ec2abfdc62f5525fd68cf3d7e4200f3fb8ea7c21fa68134d6b5881da9d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-16281",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-16281.traj",
+      "sha256": "76521ba582299628e07447a0e439d2a24292565e4ba90baa4297e5838980c37e",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-16503",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-16503.traj",
+      "sha256": "c7bc1ef06ccb881d0186b0da11f39225847ee748a3a60de2bb6203dd884019ea",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-16792",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-16792.traj",
+      "sha256": "941c2ffa4b112932bc47f9fdc640a9cf7d46fe7aceaa7b02861b4c445345ea55",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-16988",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-16988.traj",
+      "sha256": "4cf2bff52b0b03d52e0a821d0b2a6bbc80f8680e071ddfc107806e6b11440097",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-17022",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-17022.traj",
+      "sha256": "8e33c33fbb5a738743b4e1eac6e6c1007b1858812ea694cb51b4e46649c33b32",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-17139",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-17139.traj",
+      "sha256": "26c32c9ddb5858f5e76a82840d7ea36a5b2f62cf2609df620c8b22f16951d7d4",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-17630",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-17630.traj",
+      "sha256": "ad0f15c8649b9f99c22f4b59ba98077d656918f42f29cb473dc21ad8a3886bd3",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-17655",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-17655.traj",
+      "sha256": "9e258cffd5e6268e54bb68756aaef9e512912ab0d5af956c66ddf4244b5146d0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18057",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18057.traj",
+      "sha256": "36670566b8dec77940351a82739d4999318c3cfc0714dfe62a8572c1750ab53a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18189",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18189.traj",
+      "sha256": "93fceae5a7caf6e99d34454ad561b70b6685cac3d151e2466954af6c94f2a7c0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18199",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18199.traj",
+      "sha256": "cbe449c056d99f7a2b60369ce1bc7098e4eeff3c560290addce246ded65f6314",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18532",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18532.traj",
+      "sha256": "cd6fa4ae39d8fb99ed4f508b6aa658e61174c31acbdb265fef6cfe557bb6c2eb",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18621",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18621.traj",
+      "sha256": "856fd230b58e3193c9683ad317e50ab117492f8c13349c0a829c900e1a82a7a8",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18698",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18698.traj",
+      "sha256": "523a6fe80c5a66be2d12a09510eea0e46f9430b1c8e09374c55da6f8e6e2d6f0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-18835",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-18835.traj",
+      "sha256": "0b2281ef392f88e5e1db11c193f4d60b25d626b64349cefea89d0b2023576552",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-19007",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-19007.traj",
+      "sha256": "e5159ff91998211b0b6cb9309f6ce75bf4f67510c6a78e4812d3b5bebff721a6",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-19254",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-19254.traj",
+      "sha256": "0ef19a313a0ae20666635d6462f8eca42f3037ce93742460b95e39ed7ed0a0e0",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-19487",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-19487.traj",
+      "sha256": "f11ba5f5533ad62191905f01316881d074fca6d47276942567e238da625bc76f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20049",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20049.traj",
+      "sha256": "62462b04123879a6a86a56c0226ff8033b52397b9216ec0cb7035341ba79b23f",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20154",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20154.traj",
+      "sha256": "076571807ec96d4ba58d070bce92563ed80b386570dd6f008688bbcaf4889f49",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20212",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20212.traj",
+      "sha256": "bb02bb2738e323fc434b816cc7a11e0e1905d574775aafb82fa541ff1a1e5e86",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20322",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20322.traj",
+      "sha256": "e5a6d29b4b71726b486ca091e3f776d1300aefc06aa4d258cd6c55b10cfcab93",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20442",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20442.traj",
+      "sha256": "ebb8f0c73490a60ecb5123cebb92adfe59a426aefdb8ae64e45c3f5c2dd2ee7d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20590",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20590.traj",
+      "sha256": "ec2901e2827cff2e33391f4c4e62bc9e99ba448983eb125a622559acc4fafa71",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-20639",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-20639.traj",
+      "sha256": "0946b9f7731f4c2b15bd05dc34c03ce88d2d079a18488a1273438fb333b4c6c5",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21055",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21055.traj",
+      "sha256": "5240ee6f06ad422af72c0b62564b3fd42b8e855861c2d48aabb72548b55bb87c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21171",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21171.traj",
+      "sha256": "0f36e26ecd3862ea13de1cebb9d134dff1e61f289e04f8a90bbf823965932fff",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21379",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21379.traj",
+      "sha256": "94ca85cbc4ebae9ba3b56bd8815fa12bff9948a6a77a816cd05bc7d58062cb42",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21612",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21612.traj",
+      "sha256": "39372d4894ce9758e006f2f047401fd88ab47ac43c03cfbf2d555bcf2ec25249",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21614",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21614.traj",
+      "sha256": "b41940660b48aaaac2daffd9a704a474d3fd46ac76c872b0db8de45200eb10dc",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21627",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21627.traj",
+      "sha256": "e4fb93d2b226f240ca0c692149527fa1c9416921269d0100d324fda78741160d",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-21847",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-21847.traj",
+      "sha256": "86be340303766f7f008e01b7d8888a31167618d9e47a7b5abf8876af8bc10465",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "sympy__sympy-22005",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-22005.traj",
+      "sha256": "97dded80f9a70b1fb35739ed8e1dbaf71867a08db508e1c6fab4e0e17781f405",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-22714",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-22714.traj",
+      "sha256": "431ef6f148c4e74b4bbfb70c719d62e29d5ee67ac117e77a75f2af734d72448a",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-22840",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-22840.traj",
+      "sha256": "cf31b5261907f7489beabe62166915f91d5d55be61b86598bb08747eba62bb59",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-23117",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-23117.traj",
+      "sha256": "974ecb1e27b075a54b79f92c8dfde5ac6290fafd60f739566d663b346a0531ab",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-23262",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-23262.traj",
+      "sha256": "b847745cf6d4b7a42f41b1784c030974c717ec637212794d78d5965f2bcb7270",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-24066",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-24066.traj",
+      "sha256": "b14fe1e4490f7cbf202709a11f744b8b2e7ce17c5219b3f94c8d8c82b42f2cb9",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-24102",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-24102.traj",
+      "sha256": "a8b34110bf6b93a5db392894e6d0e0bcf8a92055030b5ab4b566e72048b9c555",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-24152",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-24152.traj",
+      "sha256": "a42c97310d13360c851cb38979ed7c107bfb5adca7d2dbf3699a334178a78392",
+      "is_resolved": true
+    },
+    {
+      "instance_id": "sympy__sympy-24213",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-24213.traj",
+      "sha256": "f46914d3d1145e5035f57a618ba6c6829f144ef8ade5f273f0cb18f5fd174a0c",
+      "is_resolved": false
+    },
+    {
+      "instance_id": "sympy__sympy-24909",
+      "url": "https://swe-bench-submissions.s3.amazonaws.com/lite/20240402_sweagent_claude3opus/trajs/sympy__sympy-24909.traj",
+      "sha256": "8f7b40f38a80af09af69ed819179f73e4d25091c61dd6a64e222f202080b362a",
+      "is_resolved": false
+    }
+  ]
+}

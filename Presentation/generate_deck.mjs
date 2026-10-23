@@ -44,7 +44,7 @@ for(const [i,c] of content.entries()){
  console.log('Rendered slide',i+1);
 }
 const candidate=path.join(build,'candidate.pptx');await(await PresentationFile.exportPptx(p)).save(candidate);
-const skill=process.env.HW2_PRESENTATION_SKILL_DIR ?? 'C:/Users/inpir/.codex/plugins/cache/openai-primary-runtime/presentations/26.1020.11127/skills/presentations';
+const skill=process.env.HW2_PRESENTATION_SKILL_DIR ?? 'C:/Users/inpir/.codex/plugins/cache/openai-primary-runtime/presentations/26.1022.11436/skills/presentations';
 const {finalizePresentation}=await import(pathToFileURL(path.join(skill,'container_tools/artifact_tool_utils.mjs')).href);
 const final=path.join(build,'HW2_G04_presentation.pptx');
 // Finalizer requires a new path per export. Rebuilds keep a timestamped private candidate.

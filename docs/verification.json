@@ -2,12 +2,12 @@
   "experiment_version": "v2",
   "checks_passed": 1306,
   "technical_verification": "pass",
-  "body_pages": 5,
+  "body_pages": 6,
   "files": {
-    "HW2_G04_report.pdf": "e1aaa9000f62ce63f6488f68be6778ba4c5f4e29a84590e7cdc6b0d9f051b783",
-    "HW2_G04_report_anonymized.pdf": "8fd51fb9fb6da953f554d03dcc598a741aaf5d6e96a06b691ce3dd78097bc818",
-    "HW2_G04_presentation.pptx": "8c0669648a6ea2d2ea945ad09a4041c373b3e40b4450798080e9b7fbd93baf3b",
-    "HW2_G04.zip": "ddbbb4db756af5187935decba8cb28c40d584a2088a0cf24ae2288c1e1a43ba9"
+    "HW2_G04_report.pdf": "1b1fe292b2b0ec1c0ad3d113945fbd0eb6c3f3efb2c1432bf433ee4e17e89e8e",
+    "HW2_G04_report_anonymized.pdf": "1bbbf960948bb7f15ba59801d8aa5e507cab3ef29fda22b690689eb2c1f51921",
+    "HW2_G04_presentation.pptx": "46e9e592c1dfba4ddcd173d2a3d2ce52e9091fb1b54e1a0254a56947341c313e",
+    "HW2_G04.zip": "f5d652623cf4a6bcd9699b3983f6db67ffd4a13c7d57a2784c650e9d2d183c56"
   },
   "remaining_human_items": [
     "Confirm member contributions",

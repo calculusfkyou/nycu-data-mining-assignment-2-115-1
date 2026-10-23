@@ -1,7 +1,7 @@
 {
   "schemaVersion": "presentation-finalization.v1",
-  "finalSha256": "8c0669648a6ea2d2ea945ad09a4041c373b3e40b4450798080e9b7fbd93baf3b",
-  "byteCount": 167294,
+  "finalSha256": "46e9e592c1dfba4ddcd173d2a3d2ce52e9091fb1b54e1a0254a56947341c313e",
+  "byteCount": 385918,
   "packageIntegrity": {
     "chart_count": 0,
     "claim_boundary": "Structural package checks only; no slide text, notes, formulas, chart values, or native PowerPoint execution were inspected.",
@@ -19,13 +19,13 @@
     "finding_count": 0,
     "findings": [],
     "font_policy": {
-      "checked_text_script_count": 95,
+      "checked_text_script_count": 94,
       "native_font_rendering_verified": false,
       "observed_font_families": [
         "Aptos"
       ],
       "observed_font_use_counts": {
-        "Aptos": 95
+        "Aptos": 94
       },
       "passed": true,
       "performed": true
@@ -40,13 +40,13 @@
     "exitCode": 0,
     "findingCount": 0,
     "fontPolicy": {
-      "checked_text_script_count": 95,
+      "checked_text_script_count": 94,
       "native_font_rendering_verified": false,
       "observed_font_families": [
         "Aptos"
       ],
       "observed_font_use_counts": {
-        "Aptos": 95
+        "Aptos": 94
       },
       "passed": true,
       "performed": true
@@ -60,13 +60,13 @@
     "scriptFonts": {},
     "referenceSha256": null,
     "referenceFontsVerifiedInEncodedText": false,
-    "checked_text_script_count": 95,
+    "checked_text_script_count": 94,
     "native_font_rendering_verified": false,
     "observed_font_families": [
       "Aptos"
     ],
     "observed_font_use_counts": {
-      "Aptos": 95
+      "Aptos": 94
     },
     "passed": true,
     "performed": true
@@ -75,7 +75,7 @@
     "performed": true,
     "passed": true,
     "slideCount": 11,
-    "sha256": "8c0669648a6ea2d2ea945ad09a4041c373b3e40b4450798080e9b7fbd93baf3b",
+    "sha256": "46e9e592c1dfba4ddcd173d2a3d2ce52e9091fb1b54e1a0254a56947341c313e",
     "runtimeNodeModules": "C:/Users/inpir/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules",
     "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe"
   },
@@ -109,7 +109,7 @@
     "native_chart_count": 0,
     "native_powerpoint_verified": false,
     "passed": true,
-    "presentation_sha256": "8c0669648a6ea2d2ea945ad09a4041c373b3e40b4450798080e9b7fbd93baf3b",
+    "presentation_sha256": "46e9e592c1dfba4ddcd173d2a3d2ce52e9091fb1b54e1a0254a56947341c313e",
     "schema_version": "presentation-native-chart-titles.v1",
     "slide_count": 11,
     "source_text_emitted": false,
