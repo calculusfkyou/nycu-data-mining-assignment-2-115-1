@@ -148,7 +148,7 @@ def main():
         r = ab_stats.loc[key]
         delta_str = '--' if key == 'R3_dual_distance' else f"{r.delta_ba_vs_r3:+.3f} [{r.boot_ci_low:+.2f},{r.boot_ci_high:+.2f}]"
         p_str = '--' if key == 'R3_dual_distance' else f"{r.paired_t_p:.3f}"
-        ba_s = f"\\textbf{{{r.pooled_ba:.3f}}} ({r.fold_ba_mean:.2f}$\\pm${r.fold_ba_sd:.2f})" if key == 'R0_clean_euclidean' else f"{r.pooled_ba:.3f} ({r.fold_ba_mean:.2f}$\\pm${r.fold_ba_sd:.2f})"
+        ba_s = f"\\textbf{{{r.pooled_ba:.3f}}} ({r.fold_ba_mean:.3f}$\\pm${r.fold_ba_sd:.2f})" if key == 'R0_clean_euclidean' else f"{r.pooled_ba:.3f} ({r.fold_ba_mean:.3f}$\\pm${r.fold_ba_sd:.2f})"
         ab_rows.append(
             f"{label} & {ba_s} & {delta_str} & {p_str} & {r.fpr:.2f}/{r.recall:.2f} \\\\"
         )
