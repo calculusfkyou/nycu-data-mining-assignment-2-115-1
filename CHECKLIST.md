@@ -196,10 +196,10 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 12.1 | README：環境建立（含 CUDA torch）、下載資料、一鍵重跑、結果摘要表、CC BY 4.0 | ⬜ | ⬜ | 依 README 在乾淨環境重跑 | |
-| 12.2 | README 說明如何用 `data.py` 和 `visa_split.csv` 重現資料，並註明「資料集處理方式待定」 | ⬜ | ⬜ | 閱讀 README | |
-| 12.3 | 資料集仍被 ignore，沒有 commit 也沒有推上 GitHub | ⬜ | ⬜ | 同 0.8 | 最後怎麼處理由組員決定 |
-| 12.4 | 每個 commit 訊息都先經過確認 | ⬜ | ⬜ | `git log` | |
+| 12.1 | README：環境建立（含 CUDA torch）、下載資料、一鍵重跑、結果摘要表、CC BY 4.0 | ✅ | ⬜ | 依 README 在乾淨環境重跑 | `README.md`：venv + CUDA torch 安裝指令、`data.py` 下載、`reproduce.sh` 一鍵重跑（附各步驟時間）、主結果摘要表、CC BY 4.0。尚未在乾淨環境實際從頭重跑 |
+| 12.2 | README 說明如何用 `data.py` 和 `visa_split.csv` 重現資料，並註明「資料集處理方式待定」 | ✅ | ⬜ | 閱讀 README | README「Data」一節：`data.py` 下載與解壓、由官方 1cls.csv 以 seed 0 重建 `visa_split.csv`（附 md5），並註明資料集的處理方式待組員決定 |
+| 12.3 | 資料集仍被 ignore，沒有 commit 也沒有推上 GitHub | ✅ | ⬜ | 同 0.8 | 最後怎麼處理由組員決定；`git check-ignore`：data/、cache/、.venv、*.tar 都有作用；`git ls-files` 中沒有 .jpg / .tar / .npy |
+| 12.4 | 每個 commit 訊息都先經過確認 | 🔶 | ⬜ | `git log` | 本分支由我建立的 commit（55d1def 起）訊息都先經使用者確認；partner 的 commit（4547e0d–5d9d868）無法查證 |
 
 ## 13. EDA 發現的問題（計畫「EDA 發現的問題與處理方式」）
 
