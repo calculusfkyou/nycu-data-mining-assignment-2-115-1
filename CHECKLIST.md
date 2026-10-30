@@ -128,13 +128,13 @@
 | 6.3 | T2 vs T3 的 paired bootstrap 95% CI（類內重抽、1,000 次） | ⬜ | ⬜ | 閱讀 bootstrap 程式 | |
 | 6.4 | 12 類配對的 Wilcoxon 檢定（seed t-test 為補充） | ⬜ | ⬜ | 閱讀程式與輸出 | |
 | 6.5 | 解釋 T2 贏或輸 T3 的原因，以及準確度與成本的取捨 | ⬜ | ⬜ | 閱讀草稿 §7 | |
-| 6.6 | Ablation 1：Mahalanobis vs 歐氏 kNN vs cosine | ⬜ | ⬜ | 確認只改了一個因子 | |
-| 6.7 | Ablation 2：best-F2 vs best-F1 vs percentile vs 審核預算 | ⬜ | ⬜ | 確認只改了一個因子 | |
-| 6.8 | Ablation 3：污染 0 / 1 / 2%，並說明為什麼無法做到 5% / 10% | ⬜ | ⬜ | 確認混入的是 contam pool，不是 val 或 test | |
-| 6.9 | Ablation 4：max vs top-1% mean（H3） | ⬜ | ⬜ | 確認只改了一個因子 | |
-| 6.10 | Ablation 5：patch 層級 vs 全域 pooled 特徵（H2） | ⬜ | ⬜ | 確認只改了一個因子 | |
-| 6.11 | 每個 ablation 的 Δ 都有和 seed std 比較 | ⬜ | ⬜ | 檢查表格 | |
-| 6.12 | 結果變差的設定也有報告並解釋 | ⬜ | ⬜ | 閱讀草稿 | |
+| 6.6 | Ablation 1：Mahalanobis vs 歐氏 kNN vs cosine | ✅ | ⬜ | 確認只改了一個因子 | `results/stage7_ablation/ablation_summary.csv` A1：只換位置分數（同一份 200 維特徵、同 τ 規則）。12 類 PR-AUC：Mahalanobis 0.801 → 歐氏 1-NN 0.734（Δ −0.067）、cosine 1-NN 0.686（Δ −0.115），皆超過 seed std |
+| 6.7 | Ablation 2：best-F2 vs best-F1 vs percentile vs 審核預算 | ✅ | ⬜ | 確認只改了一個因子 | A2：同一個模型只換 τ 規則；PR-AUC 不變，比較 F2 / FPR / prec@1%。best-F2：recall 0.82、FPR 0.33、prec@1% 0.037；best-F1：F2 −0.128、prec@1% 0.090；val-normal p99：FPR 0.019、prec@1% 0.513、recall 0.29；審核預算（val 前 10%）：prec@1% 0.340。皆超過 seed std |
+| 6.8 | Ablation 3：污染 0 / 1 / 2%，並說明為什麼無法做到 5% / 10% | ✅ | ⬜ | 確認混入的是 contam pool，不是 val 或 test | A3：只從 contam pool 抽異常加入 train（seed 控制），val / test 不動。每類加入 4–8 張（1%）與 8–16 張（2%）；PR-AUC 0.801 → 0.797 → 0.794（Δ −0.007，未超過 seed std）。每類 pool 只有 20 張，大類別上限約 2.5%（20 / 805），所以做不到 5% / 10% |
+| 6.9 | Ablation 4：max vs top-1% mean（H3） | ✅ | ⬜ | 確認只改了一個因子 | A4：同一個模型只換聚合方式。top-1% mean 0.799（Δ −0.002）、平滑後取 max（σ = 4）0.796（Δ −0.004），皆未超過 seed std → H3 不成立 |
+| 6.10 | Ablation 5：patch 層級 vs 全域 pooled 特徵（H2） | ✅ | ⬜ | 確認只改了一個因子 | A5：同一組維度，先對全部位置平均再擬合單一高斯。PR-AUC 0.801 → 0.771（Δ −0.029，超過 seed std）；9 類 0.785 → 0.747（Δ −0.038）→ 支持 H2 |
+| 6.11 | 每個 ablation 的 Δ 都有和 seed std 比較 | ✅ | ⬜ | 檢查表格 | `ablation_summary.csv` 每個設定都有 `*_delta` 與 `*_beyond_seed_std`（|Δ| 大於 full 與該設定兩者的 seed std）；full 設定與第 6 階段的 T2 結果逐位相同（candle seed 0 已核對） |
+| 6.12 | 結果變差的設定也有報告並解釋 | 🔶 | ⬜ | 閱讀草稿 | 變差的設定已在 CSV（A1 兩種 kNN、A5 全域特徵、A3 污染）；解釋待草稿 |
 
 ## 7. §8 Analysis
 
@@ -209,6 +209,6 @@
 | 13.2 | 受影響類別的判定規則（差距 ≥ 40 個百分點）與名單在第 6 階段前寫入計畫，之後不再更改 | ✅ | ✅ | 用 `git log` 確認規則寫入時間早於第 6 階段的結果 | 名單：cashew、pcb1、pcb2；規則寫在計畫的「問題 1」；Review（2026-10-30，本機重現）：`AFFECTED_GAP_PP` 於 5d9d868 加入，尚無第 6 階段結果；本機重算名單相同（cashew、pcb1、pcb2）。計畫檔不在 repo，無法直接查證 |
 | 13.3 | `acquisition_causes()` 確認原因（亮度、旋轉 180°），只用 train/val | ✅ | ✅ | 閱讀程式與 `eda_acquisition_causes.csv` | `results/stage4_eda/eda_acquisition_causes.csv`：cashew、pcb2 異常影像曝光較亮（灰階 62.7 vs 53.1/55.8；97.7 vs 86.8/91.0）；pcb1 有 45% 異常旋轉 180°（正常約 7%），其餘原因未明；只讀 train/val 影像；Review（2026-10-30，本機重現）：數字與 CSV 一致；pcb1 正常整體旋轉比例 = 162 × 36.4% / 805 ≈ 7.3% |
 | 13.4 | 主結果表標註受影響類別，另報排除後的 9 類平均，並檢查 T1/T2/T3 排名是否改變 | 🔶 | ⬜ | 從 CSV 重算 9 類平均 | `summary.csv` 有 12 類與 9 類兩個版本；兩者排名皆為 T3 > T2 > T1 > T0，沒有改變（9 類 PR-AUC：T3 0.874、T2 0.785、T1 0.655）。表格標註待報告 |
-| 13.5 | Ablation 5（H2）與 H1 的比較同時報告 12 類與 9 類版本 | ⬜ | ⬜ | 檢查兩個版本的表格 | |
+| 13.5 | Ablation 5（H2）與 H1 的比較同時報告 12 類與 9 類版本 | 🔶 | ⬜ | 檢查兩個版本的表格 | A5 與 A1 的 12 類、9 類版本都在 `ablation_summary.csv`，結論方向一致；H1 的 12 / 9 類比較待第 8 階段 |
 | 13.6 | 熱圖最高分位置落在 mask（擴 8 px）內的比例，依類別與 tier 報告；只在 test 評估之後做 | ⬜ | ⬜ | 閱讀程式；抽幾張圖目視比對 | |
 | 13.7 | §4、§8 寫入 EDA 發現的問題；§9 的部分整理在 `progress.md` 的缺口與限制 | ⬜ | ⬜ | 閱讀草稿與 `progress.md` | 包含問題 1–5 |

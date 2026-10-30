@@ -49,13 +49,21 @@ class PaDiM:
     s_ij(x) = sqrt((f_ij - mu_ij)^T (Sigma_ij + eps I)^-1 (f_ij - mu_ij)),  s(x) = max_ij s_ij(x).
     With sigma set, the 28x28 map is first upsampled to 224x224 and Gaussian-blurred as in the PaDiM paper,
     and s(x) is the max of that smoothed map.
+
+    Ablation switches (defaults = the method above):
+      metric  "euclid" / "cosine": 1-NN distance to the train features at the same location instead of Mahalanobis
+      agg     "top1pct": s(x) = mean of the top 1 % of map values instead of the max
+      pooled  True: average the features over all locations first, i.e. one global Gaussian per image
     """
 
-    def __init__(self, n_dims=100, eps=0.01, seed=0, sigma=None, layers=("layer2", "layer3")):
+    def __init__(self, n_dims=100, eps=0.01, seed=0, sigma=None, layers=("layer2", "layer3"),
+                 metric="mahalanobis", agg="max", pooled=False):
         self.n_dims, self.eps, self.seed, self.sigma, self.layers = n_dims, eps, seed, sigma, layers
+        self.metric, self.agg, self.pooled = metric, agg, pooled
 
     def _embed(self, feats, sl):
-        return torch.cat([_up(_to_gpu(feats[l], sl, self.idx[l])) for l in self.layers], 1).flatten(2)  # (B, d, 784)
+        x = torch.cat([_up(_to_gpu(feats[l], sl, self.idx[l])) for l in self.layers], 1).flatten(2)  # (B, d, 784)
+        return x.mean(2, keepdim=True) if self.pooled else x                                         # (B, d, P)
 
     def fit(self, feats):
         sizes = [feats[l].shape[1] for l in self.layers]
@@ -63,26 +71,45 @@ class PaDiM:
         starts = np.cumsum([0] + sizes)
         self.idx = {l: dims[(dims >= a) & (dims < b)] - a for l, a, b in zip(self.layers, starts, starts[1:])}
         n = len(feats["layer2"])
-        x = torch.cat([self._embed(feats, sl) for sl in _chunks(n)])  # (N, d, 784)
+        x = torch.cat([self._embed(feats, sl) for sl in _chunks(n)])  # (N, d, P)
+        if self.metric != "mahalanobis":
+            x = F.normalize(x, dim=1) if self.metric == "cosine" else x
+            self.train = x.permute(2, 0, 1).half().cpu()                 # (P, N, d), kept off the GPU
+            return self
         self.mu = x.mean(0)
-        xc = (x - self.mu).permute(2, 0, 1)                             # (784, N, d)
+        xc = (x - self.mu).permute(2, 0, 1)                             # (P, N, d)
         cov = xc.transpose(1, 2) @ xc / (n - 1)
         cov += self.eps * torch.eye(self.n_dims, device=DEVICE)
-        self.prec = torch.linalg.inv(cov)                              # (784, d, d)
+        self.prec = torch.linalg.inv(cov)                              # (P, d, d)
         return self
 
+    def _location_scores(self, e, train):
+        if self.metric == "mahalanobis":
+            d = (e - self.mu).permute(2, 0, 1)                          # (P, B, d)
+            return ((d @ self.prec) * d).sum(-1).clamp_min(0).sqrt()     # (P, B)
+        q = e.permute(2, 0, 1)
+        if self.metric == "cosine":
+            return (1 - F.normalize(q, dim=-1) @ train.transpose(1, 2)).min(-1).values
+        return torch.cdist(q, train).min(-1).values
+
     def score(self, feats):
+        train = self.train.float().to(DEVICE) if self.metric != "mahalanobis" else None
         maps = []
         for sl in _chunks(len(feats["layer2"])):
-            d = (self._embed(feats, sl) - self.mu).permute(2, 0, 1)      # (784, B, d)
-            m = ((d @ self.prec) * d).sum(-1).clamp_min(0).sqrt()         # (784, B)
-            m = m.T.reshape(-1, 1, SIDE, SIDE)
-            if self.sigma:
+            m = self._location_scores(self._embed(feats, sl), train).T     # (B, P)
+            side = 1 if self.pooled else SIDE
+            m = m.reshape(-1, 1, side, side)
+            if self.sigma and not self.pooled:
                 m = F.interpolate(m, size=(224, 224), mode="bilinear", align_corners=False)
                 m = gaussian_blur(m, kernel_size=8 * self.sigma + 1, sigma=self.sigma)  # 4-sigma truncation
             maps.append(m[:, 0].cpu())
         maps = torch.cat(maps)
-        return maps.flatten(1).max(1).values.numpy(), maps.numpy()
+        flat = maps.flatten(1)
+        if self.agg == "top1pct":
+            s = flat.topk(max(1, int(np.ceil(0.01 * flat.shape[1]))), dim=1).values.mean(1)
+        else:
+            s = flat.max(1).values
+        return s.numpy(), maps.numpy()
 
 
 class PatchCore:
@@ -162,6 +189,8 @@ def _self_check():
         "T1 TemplateDiff": TemplateDiff().fit(images(200, False)).score(test_i),
         "T2 PaDiM": PaDiM(n_dims=32).fit(feats(200, False)).score(test_f),
         "T2 PaDiM sigma=4": PaDiM(n_dims=32, sigma=4).fit(feats(200, False)).score(test_f),
+        "T2 euclid 1-NN": PaDiM(n_dims=32, metric="euclid").fit(feats(200, False)).score(test_f),
+        "T2 top-1% mean": PaDiM(n_dims=32, agg="top1pct").fit(feats(200, False)).score(test_f),
         "T3 PatchCore": PatchCore().fit(feats(200, False)).score(test_f),
     }
     for name, (s, heat) in results.items():
@@ -169,6 +198,19 @@ def _self_check():
         print(f"{name:16s} AUROC {auroc:.3f}  heatmap {heat.shape}")
         assert auroc > 0.9, name
         assert s.shape == (100,) and heat.shape[0] == 100, name
+
+    # cosine 1-NN: a uniform +3 shift barely changes the direction of zero-mean noise, so the AUROC test above
+    # does not apply; check the distances against a brute-force computation instead
+    tr, te = feats(30, False), feats(5, True)
+    m = PaDiM(n_dims=16, metric="cosine").fit(tr)
+    _, heat = m.score(te)
+    emb = lambda f: torch.cat([_up(torch.from_numpy(np.asarray(f[l][:, m.idx[l]], np.float32))) for l in m.layers],
+                              1).flatten(2).numpy()                     # (N, d, 784)
+    a, b = emb(tr), emb(te)
+    a, b = a / np.linalg.norm(a, axis=1, keepdims=True), b / np.linalg.norm(b, axis=1, keepdims=True)
+    brute = (1 - np.einsum("bdp,ndp->bnp", b, a)).min(1).reshape(5, SIDE, SIDE)
+    assert np.abs(brute - heat).max() < 1e-2, np.abs(brute - heat).max()  # float16 storage of the train bank
+    print("T2 cosine 1-NN   matches brute force")
     print("self-check passed")
 
 

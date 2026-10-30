@@ -1,0 +1,44 @@
+configs: {'T2_padim': {'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}, 'T3_patchcore': {'coreset': 0.01, 'layers': ('layer2', 'layer3')}}
+candle: done at 13s, peak RAM 5.5 GB
+capsules: done at 21s, peak RAM 5.5 GB
+cashew: done at 28s, peak RAM 5.5 GB
+chewinggum: done at 36s, peak RAM 5.5 GB
+fryum: done at 43s, peak RAM 5.5 GB
+macaroni1: done at 58s, peak RAM 5.5 GB
+macaroni2: done at 72s, peak RAM 5.5 GB
+pcb1: done at 91s, peak RAM 6.9 GB
+pcb2: done at 105s, peak RAM 6.9 GB
+pcb3: done at 123s, peak RAM 6.9 GB
+pcb4: done at 141s, peak RAM 6.9 GB
+pipe_fryum: done at 148s, peak RAM 6.9 GB
+    subset         ablation                       setting  pr_auc_mean  pr_auc_std  pr_auc_delta  pr_auc_beyond_seed_std  f2_mean  fpr_mean  prec_pi1%_mean
+12 classes       A1_scoring            Mahalanobis (full)        0.801       0.007         0.000                   False    0.779     0.332           0.037
+12 classes       A1_scoring                Euclidean 1-NN        0.734       0.003        -0.067                    True    0.753     0.421           0.027
+12 classes       A1_scoring                   cosine 1-NN        0.686       0.021        -0.115                    True    0.727     0.526           0.019
+12 classes     A2_threshold                best-F2 (full)        0.801       0.007         0.000                   False    0.779     0.332           0.037
+12 classes     A2_threshold                       best-F1        0.801       0.007         0.000                   False    0.651     0.178           0.090
+12 classes     A2_threshold    val-normal 99th percentile        0.801       0.007         0.000                   False    0.329     0.019           0.513
+12 classes     A2_threshold review budget: top 10% of val        0.801       0.007         0.000                   False    0.389     0.039           0.340
+12 classes A3_contamination                     0% (full)        0.801       0.007         0.000                   False    0.779     0.332           0.037
+12 classes A3_contamination                            1%        0.797       0.007        -0.004                   False    0.779     0.326           0.037
+12 classes A3_contamination                            2%        0.794       0.008        -0.007                   False    0.778     0.330           0.038
+12 classes   A4_aggregation                    max (full)        0.801       0.007         0.000                   False    0.779     0.332           0.037
+12 classes   A4_aggregation                   top-1% mean        0.799       0.006        -0.002                   False    0.768     0.318           0.040
+12 classes   A4_aggregation max of smoothed map (sigma=4)        0.796       0.007        -0.004                   False    0.773     0.344           0.035
+12 classes      A5_features            patch-level (full)        0.801       0.007         0.000                   False    0.779     0.332           0.037
+12 classes      A5_features                 global pooled        0.771       0.006        -0.029                    True    0.752     0.364           0.029
+ 9 classes       A1_scoring            Mahalanobis (full)        0.785       0.008         0.000                   False    0.796     0.381           0.036
+ 9 classes       A1_scoring                Euclidean 1-NN        0.718       0.001        -0.067                    True    0.761     0.470           0.023
+ 9 classes       A1_scoring                   cosine 1-NN        0.678       0.028        -0.107                    True    0.727     0.535           0.019
+ 9 classes     A2_threshold                best-F2 (full)        0.785       0.008         0.000                   False    0.796     0.381           0.036
+ 9 classes     A2_threshold                       best-F1        0.785       0.008         0.000                   False    0.652     0.208           0.058
+ 9 classes     A2_threshold    val-normal 99th percentile        0.785       0.008         0.000                   False    0.345     0.020           0.451
+ 9 classes     A2_threshold review budget: top 10% of val        0.785       0.008         0.000                   False    0.381     0.044           0.316
+ 9 classes A3_contamination                     0% (full)        0.785       0.008         0.000                   False    0.796     0.381           0.036
+ 9 classes A3_contamination                            1%        0.781       0.009        -0.003                   False    0.789     0.364           0.037
+ 9 classes A3_contamination                            2%        0.778       0.009        -0.006                   False    0.790     0.373           0.037
+ 9 classes   A4_aggregation                    max (full)        0.785       0.008         0.000                   False    0.796     0.381           0.036
+ 9 classes   A4_aggregation                   top-1% mean        0.781       0.006        -0.004                   False    0.782     0.368           0.036
+ 9 classes   A4_aggregation max of smoothed map (sigma=4)        0.778       0.008        -0.006                   False    0.789     0.397           0.031
+ 9 classes      A5_features            patch-level (full)        0.785       0.008         0.000                   False    0.796     0.381           0.036
+ 9 classes      A5_features                 global pooled        0.747       0.009        -0.038                    True    0.753     0.416           0.024

@@ -10,6 +10,8 @@ PR-AUC over the 12 classes (ties go to the earlier, smaller setting). Without th
 Usage:  python src/run.py --quick                  # 1 class, seed 0 -> results/stage5_quick/
         python src/run.py --search                 # val-only grid search -> results/stage6_main/search_val.csv
         python src/run.py [--objs ...] [--seeds ...] # default: 12 classes x seeds 0 1 2 -> results/stage6_main/
+        python src/run.py --latency pcb1           # per-image latency + environment.csv
+        python src/run.py --ablation               # Tier 2 ablations -> results/stage7_ablation/
 """
 import argparse
 import ctypes
@@ -38,11 +40,11 @@ TIERS = {"T1_template": lambda seed: TemplateDiff(),
 
 
 # ---------------------------------------------------------------- metrics
-def best_f2_tau(y, s):
-    """Threshold on val maximising F2 = 5PR / (4P + R); predictions are s >= tau."""
+def best_f2_tau(y, s, beta=2):
+    """Threshold on val maximising F_beta (default F2 = 5PR / (4P + R)); predictions are s >= tau."""
     p, r, thr = precision_recall_curve(y, s)
-    f2 = 5 * p[:-1] * r[:-1] / np.maximum(4 * p[:-1] + r[:-1], 1e-12)
-    return float(thr[np.argmax(f2)])
+    f = (1 + beta**2) * p[:-1] * r[:-1] / np.maximum(beta**2 * p[:-1] + r[:-1], 1e-12)
+    return float(thr[np.argmax(f)])
 
 
 def metrics(y, s, tau):
@@ -166,6 +168,104 @@ def run_class(obj, seeds, out):
     return rows
 
 
+# ---------------------------------------------------------------- ablations (§7), Tier 2 only
+# Each ablation changes one factor of the full Tier 2 method (CONFIG, best-F2 tau, clean train set).
+# "fit" changes the fitted model, "score" only how its map is turned into s(x), "tau" only the threshold rule.
+ABLATIONS = [
+    ("A1_scoring", "Mahalanobis (full)", {}, {}, "best-F2"),
+    ("A1_scoring", "Euclidean 1-NN", {"metric": "euclid"}, {}, "best-F2"),
+    ("A1_scoring", "cosine 1-NN", {"metric": "cosine"}, {}, "best-F2"),
+    ("A2_threshold", "best-F2 (full)", {}, {}, "best-F2"),
+    ("A2_threshold", "best-F1", {}, {}, "best-F1"),
+    ("A2_threshold", "val-normal 99th percentile", {}, {}, "p99"),
+    ("A2_threshold", "review budget: top 10% of val", {}, {}, "budget10"),
+    ("A3_contamination", "0% (full)", {}, {}, "best-F2"),
+    ("A3_contamination", "1%", {"contam": 0.01}, {}, "best-F2"),
+    ("A3_contamination", "2%", {"contam": 0.02}, {}, "best-F2"),
+    ("A4_aggregation", "max (full)", {}, {}, "best-F2"),
+    ("A4_aggregation", "top-1% mean", {}, {"agg": "top1pct"}, "best-F2"),
+    ("A4_aggregation", "max of smoothed map (sigma=4)", {}, {"sigma": 4}, "best-F2"),
+    ("A5_features", "patch-level (full)", {}, {}, "best-F2"),
+    ("A5_features", "global pooled", {"pooled": True}, {}, "best-F2"),
+]
+
+
+def tau_rule(rule, y, s):
+    if rule == "best-F2":
+        return best_f2_tau(y, s)
+    if rule == "best-F1":
+        return best_f2_tau(y, s, beta=1)
+    if rule == "p99":
+        return float(np.percentile(s[y == 0], 99))
+    return float(np.quantile(s, 0.90))  # budget10: inspect the 10 % highest-scoring val images
+
+
+def ablation_class(obj, seeds):
+    """Fit every distinct model once per seed on train (+ contam pool anomalies for A3), fix tau on val,
+    then read test once."""
+    _, train = load_features(obj, L234, splits=["train"])
+    fv, val = load_features(obj, L234, splits=["val"])
+    _, pool = load_features(obj, L234, splits=["contam"])
+    y_val = (fv.label == "anomaly").to_numpy().astype(int)
+    n_train = len(train["layer2"])
+
+    fitted, plans = {}, []
+    for seed in seeds:
+        for abl, setting, fit_kw, score_kw, rule in ABLATIONS:
+            key = (seed, repr(sorted(fit_kw.items())))
+            if key not in fitted:
+                kw = dict(fit_kw)
+                rate = kw.pop("contam", 0.0)
+                data = train
+                if rate:  # the extra anomalies come from the contam pool only, never from val or test
+                    k = round(rate * n_train)
+                    pick = np.sort(np.random.default_rng(seed).choice(len(pool["layer2"]), k, replace=False))
+                    data = {l: np.concatenate([train[l], pool[l][pick]]) for l in L234}
+                fitted[key] = (PaDiM(eps=0.01, seed=seed, **CONFIG["T2_padim"], **kw).fit(data),
+                               round(rate * n_train))
+            model, n_contam = fitted[key]
+            model.agg, model.sigma = score_kw.get("agg", "max"), score_kw.get("sigma")
+            s_val, _ = model.score(val)
+            plans.append({"ablation": abl, "setting": setting, "seed": seed, "key": key, "score_kw": score_kw,
+                          "tau": tau_rule(rule, y_val, s_val), "n_contam": n_contam})
+
+    test_frame, test = load_features(obj, L234, splits=["test"])  # read once, after every tau is fixed
+    y = (test_frame.label == "anomaly").to_numpy().astype(int)
+    rows, cache = [], {}
+    for p in plans:
+        ck = (p["key"], repr(p["score_kw"]))
+        if ck not in cache:
+            model = fitted[p["key"]][0]
+            model.agg, model.sigma = p["score_kw"].get("agg", "max"), p["score_kw"].get("sigma")
+            cache[ck] = model.score(test)[0]
+        rows.append({"object": obj, "ablation": p["ablation"], "setting": p["setting"], "seed": p["seed"],
+                     "n_contam": p["n_contam"], **metrics(y, cache[ck], p["tau"])})
+    return rows
+
+
+def summarize_ablations(df, out):
+    """Class-average per seed, mean / std over seeds, and delta vs the full setting of the same ablation.
+    `beyond_seed_std` marks |delta| larger than the seed std of both the full method and the setting."""
+    modes = pd.read_csv(ROOT / "results" / "stage4_eda" / "eda_acquisition_modes.csv")
+    affected = modes.loc[modes.affected, "object"].tolist()
+    cols = ["pr_auc", "auroc", "f1", "f2", "fpr", "recall", "prec_pi1%"]
+    rows = []
+    for subset, part in [("12 classes", df), ("9 classes", df[~df.object.isin(affected)])]:
+        per_seed = part.groupby(["ablation", "setting", "seed"], sort=False)[cols].mean()
+        stats = per_seed.groupby(["ablation", "setting"], sort=False).agg(["mean", "std"])
+        for (abl, setting), r in stats.iterrows():
+            full = stats.loc[abl].iloc[0]  # the first setting of each ablation is the full method
+            row = {"subset": subset, "ablation": abl, "setting": setting}
+            for c in cols:
+                row[f"{c}_mean"], row[f"{c}_std"] = r[(c, "mean")], r[(c, "std")]
+                row[f"{c}_delta"] = r[(c, "mean")] - full[(c, "mean")]
+                row[f"{c}_beyond_seed_std"] = abs(row[f"{c}_delta"]) > max(r[(c, "std")], full[(c, "std")])
+            rows.append(row)
+    summary = pd.DataFrame(rows)
+    summary.to_csv(out / "ablation_summary.csv", index=False)
+    return summary
+
+
 # ---------------------------------------------------------------- summary, latency, environment
 METRIC_COLS = ["auroc", "pr_auc", "f1", "f2", "fpr", "prec_pi1%", "prec_pi5%"]
 
@@ -242,6 +342,7 @@ if __name__ == "__main__":
                     help="smooth the Tier 2 map (upsample to 224 + Gaussian blur); results go to <out>_smooth")
     ap.add_argument("--search", action="store_true", help="val-only hyperparameter search, then exit")
     ap.add_argument("--latency", metavar="CLASS", help="per-image latency on one class's val images, then exit")
+    ap.add_argument("--ablation", action="store_true", help="Tier 2 ablations -> results/stage7_ablation/, then exit")
     args = ap.parse_args()
     _check_metrics()
     if args.search:
@@ -256,6 +357,20 @@ if __name__ == "__main__":
     if args.latency:
         environment(SEARCH_PATH.parent)
         print(latency(args.latency, SEARCH_PATH.parent).round(2).to_string(index=False))
+        sys.exit()
+    if args.ablation:
+        out = ROOT / "results" / "stage7_ablation"
+        out.mkdir(parents=True, exist_ok=True)
+        rows, t0 = [], time.time()
+        for obj in args.objs:
+            rows += ablation_class(obj, args.seeds)
+            pd.DataFrame(rows).to_csv(out / "ablation_metrics.csv", index=False)
+            print(f"{obj}: done at {time.time() - t0:.0f}s, peak RAM {peak_ram_gb():.1f} GB", flush=True)
+        if len(args.objs) == len(CLASSES):
+            s = summarize_ablations(pd.DataFrame(rows), out)
+            show = ["subset", "ablation", "setting", "pr_auc_mean", "pr_auc_std", "pr_auc_delta",
+                    "pr_auc_beyond_seed_std", "f2_mean", "fpr_mean", "prec_pi1%_mean"]
+            print(s[show].round(3).to_string(index=False))
         sys.exit()
     objs, seeds = (["candle"], [0]) if args.quick else (args.objs, args.seeds)
     out = ROOT / "results" / ("stage5_quick" if args.quick else "stage6_main")
