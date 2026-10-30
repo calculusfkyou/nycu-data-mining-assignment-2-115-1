@@ -1,0 +1,140 @@
+C:\Users\user\source\repo\nycu-data-mining-assignment-2-115-1\src\analyze.py:62: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  g = gaps[objs].mean(1)
+C:\Users\user\source\repo\nycu-data-mining-assignment-2-115-1\src\analyze.py:62: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  g = gaps[objs].mean(1)
+configs: {'T2_padim': {'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}, 'T3_patchcore': {'coreset': 0.01, 'layers': ('layer2', 'layer3')}}
+candle: heatmaps done
+capsules: heatmaps done
+cashew: heatmaps done
+chewinggum: heatmaps done
+fryum: heatmaps done
+macaroni1: heatmaps done
+macaroni2: heatmaps done
+pcb1: heatmaps done
+pcb2: heatmaps done
+pcb3: heatmaps done
+pcb4: heatmaps done
+pipe_fryum: heatmaps done
+
+== failure_cases.csv
+ case                   type     object                                  image  label             stratum      s    tau  s_over_tau  defect_area_pct  fn_count_T2_s0  fp_count_T2_s0
+    1 FN, complete inversion       pcb2       pcb2/Data/Images/Anomaly/022.JPG      1                melt  9.847 13.498       0.729            0.195             137             308
+    2          FN, near miss pipe_fryum pipe_fryum/Data/Images/Anomaly/055.JPG      1 similar colour spot 14.235 14.246       0.999            0.038             137             308
+    3 FP, complete inversion       pcb4       pcb4/Data/Images/Normal/0871.JPG      0              normal 26.415 12.669       2.085            0.000             137             308
+    4          FP, near miss       pcb4       pcb4/Data/Images/Normal/0457.JPG      0              normal 12.671 12.669       1.000            0.000             137             308
+
+== h1_by_group.csv
+    subset              group  n    T2    T3  T3_minus_T2
+12 classes  complex structure  4 0.822 0.917        0.095
+12 classes multiple instances  4 0.668 0.764        0.095
+12 classes    single instance  4 0.913 0.975        0.062
+ 9 classes  complex structure  2 0.833 0.941        0.108
+ 9 classes multiple instances  4 0.668 0.764        0.095
+ 9 classes    single instance  3 0.907 0.976        0.068
+
+== h1_per_class.csv
+    object  T0_all_normal  T1_template  T2_padim  T3_patchcore  T3_minus_T2              group  affected
+    candle          0.375        0.609     0.818         0.957        0.139 multiple instances     False
+  capsules          0.500        0.732     0.616         0.812        0.196 multiple instances     False
+    cashew          0.545        0.890     0.928         0.972        0.044    single instance      True
+chewinggum          0.545        0.694     0.972         0.995        0.023    single instance     False
+     fryum          0.545        0.830     0.844         0.945        0.101    single instance     False
+ macaroni1          0.375        0.581     0.697         0.793        0.097 multiple instances     False
+ macaroni2          0.375        0.563     0.544         0.492       -0.051 multiple instances     False
+      pcb1          0.375        0.748     0.855         0.891        0.036  complex structure      True
+      pcb2          0.375        0.891     0.765         0.895        0.130  complex structure      True
+      pcb3          0.373        0.619     0.739         0.897        0.158  complex structure     False
+      pcb4          0.373        0.534     0.928         0.985        0.057  complex structure     False
+pipe_fryum          0.545        0.736     0.907         0.988        0.081    single instance     False
+
+== h2_detection_by_area.csv
+    subset            area_bin            variant  recall_mean  recall_std  n_anomalies
+12 classes      small (<0.25%)      global pooled        0.742       0.024          434
+12 classes      small (<0.25%) patch-level (full)        0.770       0.013          434
+12 classes medium (0.25-0.98%)      global pooled        0.800       0.018          167
+12 classes medium (0.25-0.98%) patch-level (full)        0.834       0.025          167
+12 classes      large (>0.98%)      global pooled        0.969       0.017          119
+12 classes      large (>0.98%) patch-level (full)        0.983       0.015          119
+ 9 classes      small (<0.25%)      global pooled        0.755       0.033          319
+ 9 classes      small (<0.25%) patch-level (full)        0.797       0.031          319
+ 9 classes medium (0.25-0.98%)      global pooled        0.793       0.052          116
+ 9 classes medium (0.25-0.98%) patch-level (full)        0.885       0.025          116
+ 9 classes      large (>0.98%)      global pooled        0.965       0.020          105
+ 9 classes      large (>0.98%) patch-level (full)        0.981       0.016          105
+
+== heatmap_gallery.csv
+    object                                  image
+      pcb4       pcb4/Data/Images/Anomaly/089.JPG
+chewinggum chewinggum/Data/Images/Anomaly/004.JPG
+    candle     candle/Data/Images/Anomaly/030.JPG
+
+== peak_in_mask.csv
+    object         tier  n_anomaly  peak_in_mask_pct
+    candle     T2_padim         60            35.000
+    candle T3_patchcore         60            78.333
+  capsules     T2_padim         60             0.000
+  capsules T3_patchcore         60            43.333
+    cashew     T2_padim         60            25.000
+    cashew T3_patchcore         60            71.667
+chewinggum     T2_padim         60            50.000
+chewinggum T3_patchcore         60            96.667
+     fryum     T2_padim         60            30.000
+     fryum T3_patchcore         60            66.667
+ macaroni1     T2_padim         60             8.333
+ macaroni1 T3_patchcore         60            51.667
+ macaroni2     T2_padim         60             8.333
+ macaroni2 T3_patchcore         60            30.000
+      pcb1     T2_padim         60            15.000
+      pcb1 T3_patchcore         60            83.333
+      pcb2     T2_padim         60            25.000
+      pcb2 T3_patchcore         60            76.667
+      pcb3     T2_padim         60            20.000
+      pcb3 T3_patchcore         60            71.667
+      pcb4     T2_padim         60            58.333
+      pcb4 T3_patchcore         60            91.667
+pipe_fryum     T2_padim         60            28.333
+pipe_fryum T3_patchcore         60            81.667
+
+== pixel_auroc.csv
+    object         tier  pixel_auroc
+    candle     T2_padim        0.953
+    candle T3_patchcore        0.992
+  capsules     T2_padim        0.773
+  capsules T3_patchcore        0.957
+    cashew     T2_padim        0.985
+    cashew T3_patchcore        0.993
+chewinggum     T2_padim        0.964
+chewinggum T3_patchcore        0.991
+     fryum     T2_padim        0.941
+     fryum T3_patchcore        0.942
+ macaroni1     T2_padim        0.900
+ macaroni1 T3_patchcore        0.961
+ macaroni2     T2_padim        0.808
+ macaroni2 T3_patchcore        0.897
+      pcb1     T2_padim        0.981
+      pcb1 T3_patchcore        0.995
+      pcb2     T2_padim        0.916
+      pcb2 T3_patchcore        0.984
+      pcb3     T2_padim        0.933
+      pcb3 T3_patchcore        0.981
+      pcb4     T2_padim        0.968
+      pcb4 T3_patchcore        0.987
+pipe_fryum     T2_padim        0.978
+pipe_fryum T3_patchcore        0.996
+
+== practical_impact.csv
+                                    tier  recall   fpr                      tau_rule  missed_per_10k  false_alarms_per_10k  flagged_per_10k  true_defects_among_flagged_pct
+                             T1_template   0.833 0.465                best-F2 on val          16.667              4603.663         4686.997                           1.778
+                                T2_padim   0.820 0.332                best-F2 on val          17.963              3287.820         3369.857                           2.434
+                            T3_patchcore   0.815 0.174                best-F2 on val          18.519              1722.408         1803.889                           4.517
+                      T2_padim (best-F1)   0.639 0.178                       best-F1          36.111              1762.169         1826.058                           3.499
+   T2_padim (val-normal 99th percentile)   0.294 0.019    val-normal 99th percentile          70.648               185.974          215.326                          13.631
+T2_padim (review budget: top 10% of val)   0.345 0.039 review budget: top 10% of val          65.463               388.285          422.823                           8.168
+
+== significance.csv
+    subset                               comparison  point  boot_ci_low  boot_ci_high  wilcoxon_p  classes_T3_better  n_classes  classes_T2_better  ttest_p
+12 classes                           T3 - T2 PR-AUC  0.084        0.065         0.102       0.003               11.0       12.0                NaN      NaN
+12 classes                           T2 - T1 PR-AUC  0.099          NaN           NaN       0.077                NaN       12.0                9.0      NaN
+ 9 classes                           T3 - T2 PR-AUC  0.089        0.067         0.109       0.012                8.0        9.0                NaN      NaN
+ 9 classes                           T2 - T1 PR-AUC  0.129          NaN           NaN       0.055                NaN        9.0                7.0      NaN
+12 classes T3 - T2 PR-AUC, paired t-test over seeds  0.084          NaN           NaN         NaN                NaN        NaN                NaN    0.003

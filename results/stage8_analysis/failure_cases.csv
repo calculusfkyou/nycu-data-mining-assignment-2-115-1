@@ -1,0 +1,5 @@
+case,type,object,image,label,stratum,s,tau,s_over_tau,defect_area_pct,fn_count_T2_s0,fp_count_T2_s0
+1,"FN, complete inversion",pcb2,pcb2/Data/Images/Anomaly/022.JPG,1,melt,9.846860885620117,13.498391151428223,0.7294840216636658,0.1953125,137,308
+2,"FN, near miss",pipe_fryum,pipe_fryum/Data/Images/Anomaly/055.JPG,1,similar colour spot,14.234561920166016,14.246140480041504,0.9991872310638428,0.03786670918367347,137,308
+3,"FP, complete inversion",pcb4,pcb4/Data/Images/Normal/0871.JPG,0,normal,26.414949417114258,12.668789863586426,2.0850412845611572,0.0,137,308
+4,"FP, near miss",pcb4,pcb4/Data/Images/Normal/0457.JPG,0,normal,12.671438217163086,12.668789863586426,1.000209093093872,0.0,137,308

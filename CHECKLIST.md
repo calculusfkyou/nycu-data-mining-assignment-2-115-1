@@ -91,7 +91,7 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 4.1 | `results/stage8_analysis/fig_pipeline.png` 包含 8 個步驟 | ⬜ | ⬜ | 開圖對照計畫 | |
+| 4.1 | `results/stage8_analysis/fig_pipeline.png` 包含 8 個步驟 | ✅ | ⬜ | 開圖對照計畫 | `results/stage8_analysis/fig_pipeline.png`：輸入 → resize 224 + 正規化 → WRN50 layer2/3/4 → 隨機 200 / 3584 維 → 每位置高斯（Σ + 0.01 I）→ 28×28 Mahalanobis 圖 → max → 與 τ 比較，共 8 步 |
 | 4.2 | 前處理直接 resize 224×224（不做 center crop），並寫明理由 | ⬜ | ⬜ | 閱讀程式與草稿 | |
 | 4.3 | `eda.py` 報告「若改用 center crop，mask 會損失多少比例」 | ✅ | ✅ | 檢查輸出數字 | `results/stage4_eda/eda_crop_loss.csv`：resize 256 + center crop 224 平均切掉 4.1% 瑕疵像素；macaroni2 22.9%（12.5% 影像完全切掉）、capsules 10.9%、pcb3 9.7%；Review（2026-10-30，本機重現）：本機重算完全相同；以 shorter side = 256 換算裁切框的邏輯正確 |
 | 4.4 | s_ij(x)、s(x) = max、Σ + εI（ε = 0.01）的公式與程式一致 | ✅ | ⬜ | 公式與 `methods.py` 逐行比對 | `methods.PaDiM`：`s_ij` 以 `(Σ_ij + εI)^-1` 計算（ε = 0.01），`s(x)` = 28×28 分數圖的 max。主設定維持不平滑；另保留 `sigma` 選項（`run.py --padim-sigma 4`，上採樣 224 + Gaussian σ=4），結果在 `results/stage5_quick_smooth/`：12 類 × 3 seeds 的 val PR-AUC 0.578 → 0.581（Δ < seed std 0.013，Wilcoxon p = 0.57），可作為 ablation 的負面結果 |
@@ -125,8 +125,8 @@
 |---|---|---|---|---|---|
 | 6.1 | 主結果表欄位齊全（AUROC、PR-AUC、F1、F2、FPR、prec@π、ms/image、訓練時間） | ✅ | ⬜ | 對照 CSV | `metrics.csv`（AUROC、PR-AUC、F1、F2、FPR、prec@1% / 5%、fit_s）+ `latency.csv`（ms / image）+ `summary.csv`（訓練時間合計） |
 | 6.2 | 12 類平均 + 各類結果，mean ± std，每欄最佳值加粗 | 🔶 | ⬜ | 從 CSV 重算幾格 | `summary.csv` 為 12 類平均的 mean ± std，`metrics.csv` 為各類結果；加粗待報告。12 類 PR-AUC：T1 0.702、T2 0.801 ± 0.007、T3 0.885 ± 0.002 |
-| 6.3 | T2 vs T3 的 paired bootstrap 95% CI（類內重抽、1,000 次） | ⬜ | ⬜ | 閱讀 bootstrap 程式 | |
-| 6.4 | 12 類配對的 Wilcoxon 檢定（seed t-test 為補充） | ⬜ | ⬜ | 閱讀程式與輸出 | |
+| 6.3 | T2 vs T3 的 paired bootstrap 95% CI（類內重抽、1,000 次） | ✅ | ⬜ | 閱讀 bootstrap 程式 | `significance.csv`：每類內依標籤分層重抽 test、1,000 次、PR-AUC 取 3 seeds 平均。T3 − T2 = +0.084，95% CI [0.065, 0.102]；9 類 +0.089 [0.067, 0.109]，皆不含 0 |
+| 6.4 | 12 類配對的 Wilcoxon 檢定（seed t-test 為補充） | ✅ | ⬜ | 閱讀程式與輸出 | Wilcoxon（12 類配對）：T3 vs T2 p = 0.003（11 / 12 類 T3 較好，唯一例外 macaroni2）；9 類 p = 0.012。T2 vs T1 p = 0.077（9 / 12 類 T2 較好）。seed 層級 paired t-test：p = 0.003 |
 | 6.5 | 解釋 T2 贏或輸 T3 的原因，以及準確度與成本的取捨 | ⬜ | ⬜ | 閱讀草稿 §7 | |
 | 6.6 | Ablation 1：Mahalanobis vs 歐氏 kNN vs cosine | ✅ | ⬜ | 確認只改了一個因子 | `results/stage7_ablation/ablation_summary.csv` A1：只換位置分數（同一份 200 維特徵、同 τ 規則）。12 類 PR-AUC：Mahalanobis 0.801 → 歐氏 1-NN 0.734（Δ −0.067）、cosine 1-NN 0.686（Δ −0.115），皆超過 seed std |
 | 6.7 | Ablation 2：best-F2 vs best-F1 vs percentile vs 審核預算 | ✅ | ⬜ | 確認只改了一個因子 | A2：同一個模型只換 τ 規則；PR-AUC 不變，比較 F2 / FPR / prec@1%。best-F2：recall 0.82、FPR 0.33、prec@1% 0.037；best-F1：F2 −0.128、prec@1% 0.090；val-normal p99：FPR 0.019、prec@1% 0.513、recall 0.29；審核預算（val 前 10%）：prec@1% 0.340。皆超過 seed std |
@@ -140,14 +140,14 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 7.1 | 至少 3 個失敗案例，其中至少 1 個 FP、1 個 FN | ⬜ | ⬜ | 對照 CSV 中的 label 與 s(x) | |
-| 7.2 | 每個案例都有影像 ID、s(x)、τ、與 τ 的距離、熱圖 | ⬜ | ⬜ | 開圖與 CSV 對照 | |
+| 7.1 | 至少 3 個失敗案例，其中至少 1 個 FP、1 個 FN | ✅ | ⬜ | 對照 CSV 中的 label 與 s(x) | `failure_cases.csv`（T2、seed 0，依 s/τ 排序固定挑選）：FN 完全判反 pcb2 melt（s/τ 0.73）、FN 擦邊 pipe_fryum 色斑（0.999）、FP 完全判反 pcb4 正常（2.09）、FP 擦邊 pcb4 正常（1.000）；T2 seed 0 共 137 FN、308 FP |
+| 7.2 | 每個案例都有影像 ID、s(x)、τ、與 τ 的距離、熱圖 | ✅ | ⬜ | 開圖與 CSV 對照 | 每個案例有影像路徑、s(x)、τ、s/τ、瑕疵類型與面積；`fig_failure_cases.png` 有原圖、熱圖疊圖、mask 輪廓與色條 |
 | 7.3 | 共同盲點與第一個想嘗試的修正 | ⬜ | ⬜ | 閱讀草稿 | |
-| 7.4 | H2 佐證：依 mask 面積分組的偵測率（T2 vs 全域特徵版本） | ⬜ | ⬜ | 閱讀程式與輸出 | |
-| 7.5 | Tier 2 熱圖疊圖 + pixel AUROC | ⬜ | ⬜ | 開圖；閱讀 pixel AUROC 程式 | |
+| 7.4 | H2 佐證：依 mask 面積分組的偵測率（T2 vs 全域特徵版本） | ✅ | ⬜ | 閱讀程式與輸出 | `h2_detection_by_area.csv`：依 test 瑕疵面積三分位分組，patch 層級 vs 全域的 recall。12 類：小（<0.25%）0.770 vs 0.742、中 0.834 vs 0.800、大（>0.98%）0.983 vs 0.969；9 類中組差距最大（0.885 vs 0.793） |
+| 7.5 | Tier 2 熱圖疊圖 + pixel AUROC | ✅ | ⬜ | 開圖；閱讀 pixel AUROC 程式 | `pixel_auroc.csv`（含正常影像像素）：T2 0.773（capsules）～0.985（cashew），T3 0.897～0.996；`fig_heatmaps.png` 為三種結構類型各一張的 T2 / T3 疊圖 |
 | 7.6 | 至少一張被標記樣本的具體解釋 | ⬜ | ⬜ | 閱讀草稿 | |
 | 7.7 | Trust 討論：工程師是否會依熱圖採取行動 | ⬜ | ⬜ | 閱讀草稿 | |
-| 7.8 | 以 1% 盛行率換算每 10,000 件的漏檢數與誤報數（T2 vs T3） | ⬜ | ⬜ | 用 TPR / FPR 自行計算並比對 | |
+| 7.8 | 以 1% 盛行率換算每 10,000 件的漏檢數與誤報數（T2 vs T3） | ✅ | ⬜ | 用 TPR / FPR 自行計算並比對 | `practical_impact.csv`（π = 1%，每 10,000 件）：漏檢 T2 18.0、T3 18.5；誤報 T2 3,288、T3 1,722；T2 改用 val-normal p99 時誤報 186、漏檢 70.6。注意：此處先平均 TPR / FPR 再換算，和 `metrics.csv` 各類 prec@π 的平均不同 |
 | 7.9 | 誤報數換算成人工複檢工作量，並連結到利害關係人 | ⬜ | ⬜ | 閱讀草稿 | |
 
 ## 8. 進度報告 `reports/progress.md`（繁中）
@@ -177,7 +177,7 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | 🔶 | 🔶 | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py`、`eda.py`；Review（2026-10-30，本機重現）：目前 3 / 6 個檔案，職責與計畫一致；目前 5 / 6 個檔案（新增 `methods.py`、`run.py`）；仍為 5 / 6 個檔案；`run.py` 新增 `--search`、`--latency`、`summarize()` |
+| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | ✅ | 🔶 | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py`、`eda.py`；Review（2026-10-30，本機重現）：目前 3 / 6 個檔案，職責與計畫一致；目前 5 / 6 個檔案（新增 `methods.py`、`run.py`）；仍為 5 / 6 個檔案；`run.py` 新增 `--search`、`--latency`、`summarize()`；`src/` 六個檔案齊全：data、features、eda、methods、run、analyze |
 | 10.2 | `features.py` 每類、每層分開快取（float16、原始解析度） | ✅ | ✅ | 檢查 `cache/` 的檔名、dtype、shape | 12 類 × 3 層（layer2/3/4）共 36 個 .npy + 12 個 index.csv，約 15 GB；shape、dtype、列順序與切分逐類 assert 通過；重新計算抽樣影像，差異只有 float16 捨入誤差；Review（2026-10-30，本機重現）：本機重建：12 類 × 3 層 shape、float16、index 與 `load_split` 一致，共 14.16 GB；capsules / pcb4 重新計算 3 張，相對誤差 ≤ 4.4e-3（float16 + TF32 捨入） |
 | 10.3 | `run.py --quick`（1 類、1 seed）端到端跑通，並記錄 VRAM / RAM 峰值 | ✅ | ⬜ | 自行重跑一次 | `python src/run.py --quick`（candle、seed 0）144 s 跑完；VRAM 峰值 1.44 GB、RAM 峰值 6.4 GB；輸出 `results/stage5_quick/metrics.csv` 與 `scores/*.npz` |
 
@@ -209,6 +209,6 @@
 | 13.2 | 受影響類別的判定規則（差距 ≥ 40 個百分點）與名單在第 6 階段前寫入計畫，之後不再更改 | ✅ | ✅ | 用 `git log` 確認規則寫入時間早於第 6 階段的結果 | 名單：cashew、pcb1、pcb2；規則寫在計畫的「問題 1」；Review（2026-10-30，本機重現）：`AFFECTED_GAP_PP` 於 5d9d868 加入，尚無第 6 階段結果；本機重算名單相同（cashew、pcb1、pcb2）。計畫檔不在 repo，無法直接查證 |
 | 13.3 | `acquisition_causes()` 確認原因（亮度、旋轉 180°），只用 train/val | ✅ | ✅ | 閱讀程式與 `eda_acquisition_causes.csv` | `results/stage4_eda/eda_acquisition_causes.csv`：cashew、pcb2 異常影像曝光較亮（灰階 62.7 vs 53.1/55.8；97.7 vs 86.8/91.0）；pcb1 有 45% 異常旋轉 180°（正常約 7%），其餘原因未明；只讀 train/val 影像；Review（2026-10-30，本機重現）：數字與 CSV 一致；pcb1 正常整體旋轉比例 = 162 × 36.4% / 805 ≈ 7.3% |
 | 13.4 | 主結果表標註受影響類別，另報排除後的 9 類平均，並檢查 T1/T2/T3 排名是否改變 | 🔶 | ⬜ | 從 CSV 重算 9 類平均 | `summary.csv` 有 12 類與 9 類兩個版本；兩者排名皆為 T3 > T2 > T1 > T0，沒有改變（9 類 PR-AUC：T3 0.874、T2 0.785、T1 0.655）。表格標註待報告 |
-| 13.5 | Ablation 5（H2）與 H1 的比較同時報告 12 類與 9 類版本 | 🔶 | ⬜ | 檢查兩個版本的表格 | A5 與 A1 的 12 類、9 類版本都在 `ablation_summary.csv`，結論方向一致；H1 的 12 / 9 類比較待第 8 階段 |
-| 13.6 | 熱圖最高分位置落在 mask（擴 8 px）內的比例，依類別與 tier 報告；只在 test 評估之後做 | ⬜ | ⬜ | 閱讀程式；抽幾張圖目視比對 | |
+| 13.5 | Ablation 5（H2）與 H1 的比較同時報告 12 類與 9 類版本 | ✅ | ⬜ | 檢查兩個版本的表格 | A5 與 A1 的 12 類、9 類版本都在 `ablation_summary.csv`，結論方向一致；H1 的 12 / 9 類比較待第 8 階段；H1：`h1_by_group.csv` 12 類與 9 類版本；T3 − T2 在多物體型為 +0.095（兩版相同，該組沒有受影響類別），單物體型 +0.062 / +0.068、複雜結構 +0.095 / +0.108；macaroni2 為唯一 T2 > T3 的類別（−0.051） |
+| 13.6 | 熱圖最高分位置落在 mask（擴 8 px）內的比例，依類別與 tier 報告；只在 test 評估之後做 | ✅ | ⬜ | 閱讀程式；抽幾張圖目視比對 | `peak_in_mask.csv`（mask 擴 8 px，test 全部異常）：T2 0%（capsules）～58%（pcb4），T3 30%（macaroni2）～97%（chewinggum）；在 test 評估完成後才計算，重新擬合的分數已 assert 與第 6 階段相同 |
 | 13.7 | §4、§8 寫入 EDA 發現的問題；§9 的部分整理在 `progress.md` 的缺口與限制 | ⬜ | ⬜ | 閱讀草稿與 `progress.md` | 包含問題 1–5 |
