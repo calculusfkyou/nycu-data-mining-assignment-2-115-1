@@ -1,0 +1,12 @@
+# Dataset (VisA, ~1.9 GB) — kept out of git until the team decides how to ship it
+data/
+*.tar
+
+# Cached features and local environment
+cache/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
