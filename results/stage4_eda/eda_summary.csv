@@ -1,0 +1,12 @@
+statistic,value
+N images,10821
+normal,9621
+anomaly,1200
+objects,12
+defect types (first label),34
+raw width px (min / median / max),1274 / 1404 / 1562
+raw height px (min / median / max),960 / 1070 / 1176
+input D after resize,"224x224x3 = 150,528"
+Tier 2 feature dim per position,1536 (layer2+3) -> 100 random
+"defect area % of image, val+contam (median)",0.20
+"defect area % of image, val+contam (p10 / p90)",0.03 / 1.67

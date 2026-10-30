@@ -28,6 +28,7 @@
 
 - 0.4（`main` 沒有新 commit；只在同意後 push；沒有 merge、沒有 PR）是持續項目，每個階段結束時都要重新確認。
 - 10.1 會在每個新增 `src/` 檔案的階段更新，到第 8 階段才會全部完成。
+- 各階段的結果放在 `results/` 底下自己的資料夾：第 4 階段 `stage4_eda/`、第 5 階段 `stage5_quick/`、第 6 階段 `stage6_main/`、第 7 階段 `stage7_ablation/`、第 8 階段 `stage8_analysis/`。
 
 ## 0. 環境與分支
 
@@ -64,13 +65,13 @@
 |---|---|---|---|---|---|
 | 2.1 | 明確寫出資料類別為「Image / Video」，並討論這類資料的挑戰 | ⬜ | ⬜ | 閱讀草稿 §3 | |
 | 2.2 | 偵測單位為 image-level；正常與異常的定義都有寫 | ⬜ | ⬜ | 閱讀草稿 §3 | |
-| 2.3 | 正常與異常範例縮圖各一張 | ⬜ | ⬜ | 開圖確認標籤正確 | |
+| 2.3 | 正常與異常範例縮圖各一張 | ✅ | ⬜ | 開圖確認標籤正確 | `results/stage4_eda/fig_samples.png`：pcb1、capsules、cashew、macaroni2 各一張正常與異常（只取 train/val），異常以紅線標出 mask |
 | 2.4 | 引用 Zou et al., ECCV 2022、資料連結與 CC BY 4.0 | ⬜ | ⬜ | 到 ECCV 論文頁與 GitHub 查證 | |
-| 2.5 | 報告 N、anomaly 數、D（150,528 與 Tier 2 的 100 維） | ⬜ | ⬜ | 數字與 `splits/visa_split.csv` 對照 | |
-| 2.6 | 各類各 split 的數量表與摘要統計表 | ⬜ | ⬜ | 數字與 CSV 對照 | |
+| 2.5 | 報告 N、anomaly 數、D（150,528 與 Tier 2 的 100 維） | ✅ | ⬜ | 數字與 `splits/visa_split.csv` 對照 | `results/stage4_eda/eda_summary.csv`：N 10,821、anomaly 1,200、D = 150,528、Tier 2 每位置 100 維；原圖寬 1274–1562、高 960–1176 px |
+| 2.6 | 各類各 split 的數量表與摘要統計表 | ✅ | ⬜ | 數字與 CSV 對照 | `results/stage4_eda/eda_split_counts.csv`（各類各 split）、`results/stage4_eda/eda_summary.csv`（摘要統計，含瑕疵面積中位數 0.20%） |
 | 2.7 | 標籤來源、可能的標籤雜訊、學習範式（半監督） | ⬜ | ⬜ | 閱讀草稿 §3 | |
-| 2.8 | 不平衡比例一律寫成 anomaly : normal（全資料 1 : 8，test 約 1 : 1.34） | ⬜ | ⬜ | 自行計算並比對 | |
-| 2.9 | 用「全猜正常」示範 accuracy 會失效 | ⬜ | ⬜ | 檢查數字是否等於 normal 比例 | |
+| 2.8 | 不平衡比例一律寫成 anomaly : normal（全資料 1 : 8，test 約 1 : 1.34） | ✅ | ⬜ | 自行計算並比對 | `results/stage4_eda/eda_imbalance.csv`：全資料 1 : 8.02、test 1 : 1.34、val 1 : 3.98 |
+| 2.9 | 用「全猜正常」示範 accuracy 會失效 | ✅ | ⬜ | 檢查數字是否等於 normal 比例 | `results/stage4_eda/eda_imbalance.csv`：全猜正常的 accuracy 為全資料 88.9%、test 57.2%、π=1% 時 99.0%、π=5% 時 95.0% |
 | 2.10 | 對策：PR-AUC 為主要指標，另報 prec_π（π = 1%、5%） | ⬜ | ⬜ | 檢查公式 | |
 | 2.11 | 提到 val 的異常比例遠高於部署時的盛行率 | ⬜ | ⬜ | 閱讀草稿 | |
 
@@ -78,11 +79,11 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 3.1 | 只用 train normal + val anomaly，完全沒碰 test；文中寫明有使用 val anomaly | ⬜ | ⬜ | 在 `eda.py` 搜尋 `"test"`，確認沒有讀取 test | |
-| 3.2 | 全域嵌入的 PCA / t-SNE 分布對比圖 | ⬜ | ⬜ | 開圖：有座標軸標籤、圖例 | |
-| 3.3 | 以 Mahalanobis 距離與 PCA 分量計算 KS / Wasserstein 距離 | ⬜ | ⬜ | 閱讀程式與輸出表 | |
-| 3.4 | 每類的類內變異：對齊型 vs 多物體型 | ⬜ | ⬜ | 閱讀輸出表 | |
-| 3.5 | 特徵層冗餘分析（layer2 vs layer3） | ⬜ | ⬜ | 閱讀輸出 | |
+| 3.1 | 只用 train normal + val anomaly，完全沒碰 test；文中寫明有使用 val anomaly | 🔶 | ⬜ | 在 `eda.py` 搜尋 `"test"`，確認沒有讀取 test | 程式部分完成：特徵只讀 train/val（`global_embeddings()` 有 assert），mask 只讀 val/contam，test 只出現在標籤計數表；另外使用 val normal 作為未參與擬合的正常對照。「文中寫明」待第 9 階段 |
+| 3.2 | 全域嵌入的 PCA / t-SNE 分布對比圖 | ✅ | ⬜ | 開圖：有座標軸標籤、圖例 | `results/stage4_eda/fig_pca.png`、`results/stage4_eda/fig_tsne.png`（train normal vs val anomaly），另有 `results/stage4_eda/fig_maha_hist.png` |
+| 3.3 | 以 Mahalanobis 距離與 PCA 分量計算 KS / Wasserstein 距離 | ✅ | ⬜ | 閱讀程式與輸出表 | `results/stage4_eda/eda_separability.csv`：Mahalanobis KS 0.30（capsules，p=0.12）～0.91（pipe_fryum）；macaroni2 0.45；另附 W1/std 與 PC1–3 的 KS |
+| 3.4 | 每類的類內變異：對齊型 vs 多物體型 | ✅ | ⬜ | 閱讀輸出表 | `results/stage4_eda/eda_dispersion.csv`：layer3 同一位置變異 capsules 10.4、macaroni2 7.8，其餘 1.3–3.6；依 VisA 三種結構類型分組 |
+| 3.5 | 特徵層冗餘分析（layer2 vs layer3） | ✅ | ⬜ | 閱讀輸出 | `results/stage4_eda/eda_redundancy.csv`：layer2 vs layer3 linear CKA 0.68–0.97；解釋 95% 變異需 109–287 / 1536 維 |
 | 3.6 | 每張圖都有解讀文字 | ⬜ | ⬜ | 閱讀草稿 §4 | |
 | 3.7 | H1–H3 都已寫出，並註明在 §7–§8 用什麼驗證 | ⬜ | ⬜ | 閱讀草稿 §4 | |
 
@@ -90,9 +91,9 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 4.1 | `results/fig_pipeline.png` 包含 8 個步驟 | ⬜ | ⬜ | 開圖對照計畫 | |
+| 4.1 | `results/stage8_analysis/fig_pipeline.png` 包含 8 個步驟 | ⬜ | ⬜ | 開圖對照計畫 | |
 | 4.2 | 前處理直接 resize 224×224（不做 center crop），並寫明理由 | ⬜ | ⬜ | 閱讀程式與草稿 | |
-| 4.3 | `eda.py` 報告「若改用 center crop，mask 會損失多少比例」 | ⬜ | ⬜ | 檢查輸出數字 | |
+| 4.3 | `eda.py` 報告「若改用 center crop，mask 會損失多少比例」 | ✅ | ⬜ | 檢查輸出數字 | `results/stage4_eda/eda_crop_loss.csv`：resize 256 + center crop 224 平均切掉 4.1% 瑕疵像素；macaroni2 22.9%（12.5% 影像完全切掉）、capsules 10.9%、pcb3 9.7% |
 | 4.4 | s_ij(x)、s(x) = max、Σ + εI（ε = 0.01）的公式與程式一致 | ⬜ | ⬜ | 公式與 `methods.py` 逐行比對 | |
 | 4.5 | τ 每類各自決定；主設定為 val best-F2，並說明不用 recall ≥ 95% 的原因 | ⬜ | ⬜ | 閱讀 τ 的程式 | |
 | 4.6 | τ 的選擇完全沒用到 test | ⬜ | ⬜ | 追蹤 τ 函式的輸入來源 | |
@@ -116,7 +117,7 @@
 | 5.6 | 記錄 torch / torchvision 版本、CPU、RTX 4070 12 GB、RAM 32 GB | ⬜ | ⬜ | 對照 `requirements.txt` | |
 | 5.7 | 指標 AUROC、PR-AUC、F1@τ、F2@τ、FPR@τ、prec@π，並寫明選用理由 | ⬜ | ⬜ | 用一個小例子手算驗證指標函式 | |
 | 5.8 | 延遲量測：GPU、batch 1、warm-up 10 張、包含特徵抽取；訓練時間為 12 類合計 | ⬜ | ⬜ | 閱讀計時程式 | |
-| 5.9 | 3 個 seed（0 / 1 / 2）；Tier 1 的 std = 0 有註明 | ⬜ | ⬜ | 檢查 `results/*.csv` 的 seed 欄位 | |
+| 5.9 | 3 個 seed（0 / 1 / 2）；Tier 1 的 std = 0 有註明 | ⬜ | ⬜ | 檢查 `results/stage6_main/*.csv` 的 seed 欄位 | |
 
 ## 6. §7 Results
 
@@ -162,7 +163,7 @@
 | 8.7 | 實務影響 | ⬜ | ⬜ | 對照 PDF p.17 | |
 | 8.8 | H1–H3 的驗證結果（各一句話附數字） | ⬜ | ⬜ | 數字與 CSV 對照 | |
 | 8.9 | 是否值得繼續（證據強弱、缺口、換題風險、建議） | ⬜ | ⬜ | 閱讀 | |
-| 8.10 | 所有數字都能在 `results/*.csv` 找到對應，沒有手動填寫的數字 | ⬜ | ⬜ | 隨機抽 5 個數字回查 CSV | |
+| 8.10 | 所有數字都能在 `results/stage*/*.csv` 找到對應，沒有手動填寫的數字 | ⬜ | ⬜ | 隨機抽 5 個數字回查 CSV | |
 
 ## 9. 英文草稿 `reports/sec3-8.md`
 
@@ -176,7 +177,7 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | 🔶 | ⬜ | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py` |
+| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | 🔶 | ⬜ | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py`、`eda.py` |
 | 10.2 | `features.py` 每類、每層分開快取（float16、原始解析度） | ✅ | ⬜ | 檢查 `cache/` 的檔名、dtype、shape | 12 類 × 3 層（layer2/3/4）共 36 個 .npy + 12 個 index.csv，約 15 GB；shape、dtype、列順序與切分逐類 assert 通過；重新計算抽樣影像，差異只有 float16 捨入誤差 |
 | 10.3 | `run.py --quick`（1 類、1 seed）端到端跑通，並記錄 VRAM / RAM 峰值 | ⬜ | ⬜ | 自行重跑一次 | |
 
@@ -186,7 +187,7 @@
 |---|---|---|---|---|---|
 | 11.1 | assert train 裡沒有 anomaly | ✅ | ⬜ | 閱讀 `check_split()` | |
 | 11.2 | assert 各 split 的 ID 沒有交集 | ✅ | ⬜ | 閱讀 `check_split()` | |
-| 11.3 | eda 與 τ 的選擇都沒有用到 test | ⬜ | ⬜ | 搜尋程式中讀取 test 的地方 | |
+| 11.3 | eda 與 τ 的選擇都沒有用到 test | 🔶 | ⬜ | 搜尋程式中讀取 test 的地方 | EDA 部分完成（同 3.1）；τ 的部分待第 6 階段 |
 | 11.4 | `methods.py` 合成資料自檢：三個方法的 AUROC 都 > 0.9 | ⬜ | ⬜ | 執行 `python src/methods.py` | |
 | 11.5 | Tier 3 的平均 AUROC 與查證過的文獻數字（註明出處）相差 ≤ 5 個百分點 | ⬜ | ⬜ | 查證文獻數字 | |
 | 11.6 | 所有引用文獻都已查證為真實存在，沒有捏造 | ⬜ | ⬜ | 逐筆到出版社或會議頁面查證 | |

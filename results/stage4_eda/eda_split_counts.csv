@@ -1,0 +1,14 @@
+object,contam_anomaly,test_anomaly,test_normal,train_normal,val_anomaly,val_normal
+candle,20,60,100,801,20,99
+capsules,20,60,60,482,20,60
+cashew,20,60,50,400,20,50
+chewinggum,20,60,50,403,20,50
+fryum,20,60,50,400,20,50
+macaroni1,20,60,100,801,20,99
+macaroni2,20,60,100,801,20,99
+pcb1,20,60,100,805,20,99
+pcb2,20,60,100,802,20,99
+pcb3,20,60,101,805,20,100
+pcb4,20,60,101,805,20,99
+pipe_fryum,20,60,50,400,20,50
+total,240,720,962,7705,240,954
