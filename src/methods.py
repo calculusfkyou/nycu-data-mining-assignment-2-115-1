@@ -1,7 +1,8 @@
 """The three tiers (§5). Every method has fit(train) and score(x) -> (image_score (N,), heatmap (N, h, w)).
 
 Tier 1  TemplateDiff  inputs: images (N, 3, 224, 224) in [0, 1]
-Tier 2  PaDiM         inputs: {"layer2": (N, 512, 28, 28), "layer3": (N, 1024, 14, 14)} (float16 memmaps are fine)
+Tier 2  PaDiM         inputs: {"layer2": (N, 512, 28, 28), "layer3": (N, 1024, 14, 14)[, "layer4": (N, 2048, 7, 7)]}
+                      (float16 memmaps are fine; the layers used are a constructor argument)
 Tier 3  PatchCore     same inputs as Tier 2
 
 Features are moved to the GPU in chunks of CHUNK images, so a class never has to fit in VRAM at once.
@@ -14,7 +15,7 @@ import torch.nn.functional as F
 from torchvision.transforms.functional import gaussian_blur
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-SIDE = 28   # layer2 resolution; layer3 is upsampled to it
+SIDE = 28   # layer2 resolution; layer3 / layer4 are upsampled to it
 CHUNK = 64
 
 
@@ -44,7 +45,8 @@ class TemplateDiff:
 
 
 class PaDiM:
-    """Tier 2: per-location Gaussian on a random subset of layer2+layer3 channels.
+    """Tier 2: per-location Gaussian on a random subset of the channels of `layers` (default layer2+layer3;
+    the main run uses layer2+3+4, chosen on val by run.py --search).
 
     s_ij(x) = sqrt((f_ij - mu_ij)^T (Sigma_ij + eps I)^-1 (f_ij - mu_ij)),  s(x) = max_ij s_ij(x).
     With sigma set, the 28x28 map is first upsampled to 224x224 and Gaussian-blurred as in the PaDiM paper,

@@ -51,6 +51,7 @@
 | 「全猜正常」的 accuracy | 全資料 88.9%、test 57.2%、π = 1% 時 **99.0%** → accuracy 沒有參考價值，改以 PR-AUC 為主要指標，另報 prec@π |
 
 - 標籤：資料集作者人工標註，同時提供 image-level 標籤與 pixel mask。
+- 分層抽樣：異常依瑕疵類型分層切分；capsules 的異常第一個標籤全是 `bubble`，所以這類的分層等同隨機抽樣。
 - 出處：`results/stage4_eda/eda_summary.csv`、`eda_imbalance.csv`、`eda_split_counts.csv`
 
 ## 4. 主結果（仿 p.14）
@@ -209,11 +210,12 @@
 
 **缺口**
 1. §1、§2、§9 和 Contributions 還沒寫。英文草稿目前只涵蓋 §3–§8。
-2. **第 5–8 階段的程式和結果還沒有人 review**，CHECKLIST 的 Review 欄還是 ⬜。
+2. 第 5–8 階段已依 commit 的結果 review（CHECKLIST），沒有在 pinned 環境重跑；`--quick` 曾在 candle 的 test 上試跑，沒有影響任何設定或 τ，草稿 §6 已揭露。
 3. T2 的維度在搜尋範圍上限（200）表現最好，代表上限可能訂得太低。規則是事先定好的，所以不再加大範圍，改在 §9 寫成限制。
 4. `eda_summary.csv` 中「Tier 2 每位置 100 維」是第 4 階段的舊設定，最終設定是 3584 維中隨機取 200 維。草稿以最終設定為準。
 5. 實驗在本機跑（RTX 4060 Ti、torch 2.15），和 `requirements.txt` 鎖定的版本不同；切分和 EDA 已確認可以重現。
 6. 規格以 `CHECKLIST.md` 為準（組員已確認）。partner 更新過的計畫原文還沒放進 repo，上傳後會再對照一次 CHECKLIST 13.7。
+7. 直接 resize 成 224×224 會讓長寬比變形（原圖約 1.1–1.3 : 1），待寫入 §9 的限制。
 
 **換題的風險**
 - 今天是 10/30，離截止日 11/16 只剩 17 天。

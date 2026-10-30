@@ -29,7 +29,8 @@ official one-class split, we fix one split (seed 0) for all tiers (Table 1): 89 
 normals form *train*, 11 % plus 20 anomalies per class form *val*, 20 anomalies per class form a
 *contamination pool* used only in Ablation A3, and the official test normals plus the remaining 60
 anomalies per class form *test*. Anomalies are stratified by defect type, and no image appears in two
-splits.
+splits. For capsules every anomaly carries the same first label (bubble), so there the stratification
+reduces to random sampling.
 
 **Class imbalance.** The anomaly : normal ratio is 1 : 8.02 over the full dataset, 1 : 3.98 in val and
 1 : 1.34 in test (42.8 % anomalies), far above a realistic production prevalence. A predict-all-normal rule
@@ -117,13 +118,25 @@ the nearest-neighbour distance as patch score, aggregated by max. Tiers 2 and 3 
 **Split and leakage.** All tiers use the split of §3. Models see train normals only; preprocessing uses
 fixed ImageNet statistics, so nothing is fitted on val or test. For every object, all models are fitted
 and all thresholds fixed before the test features are loaded, and test is evaluated once. Hyperparameter
-search and latency measurement never read test.
+search and latency measurement never read test. The only other test evaluation was a pipeline smoke test
+on one object (candle, seed 0, default settings, with and without map smoothing) run before the search;
+no setting or threshold was chosen from it.
 
 **Hyperparameters (Table 2).** The search uses val only (seed 0) and selects, per tier, the setting with
-the highest mean val PR-AUC over the 12 objects. Tier 2: channels {50, 100, 200} × layers {2,3}, {2,3,4};
-selected 200 channels with layers 2,3,4 (val PR-AUC 0.664). Tier 3: coreset {1 %, 10 %} × layers {2,3},
-{2,3,4}; selected 1 % with layers 2,3 (0.811). Fixed: ε = 0.01, 3 × 3 averaging, 128-d projection. The best
-Tier 2 setting lies at the edge of the grid, which we keep as defined in advance.
+the highest mean val PR-AUC over the 12 objects. The best Tier 2 setting lies at the edge of the grid,
+which we keep as defined in advance.
+
+| Tier | Hyperparameter | Search range | Selected | Mean val PR-AUC |
+|---|---|---|---|---|
+| T2 | random channels | 50, 100, 200 | 200 | 0.664 |
+| T2 | backbone layers | {2, 3}, {2, 3, 4} | {2, 3, 4} | |
+| T3 | coreset ratio | 1 %, 10 % | 1 % | 0.811 |
+| T3 | backbone layers | {2, 3}, {2, 3, 4} | {2, 3} | |
+| T2 | ε (covariance ridge) | fixed | 0.01 | – |
+| T3 | neighbourhood / projection | fixed | 3 × 3 / 128-d | – |
+
+*Table 2: Hyperparameter search on val (seed 0); grid points are the full cross product per tier.*
+(`results/stage6_main/search_val.csv`)
 
 **Metrics.** PR-AUC is primary because it is informative under imbalance \citep{davis2006relationship,
 saito2015precision}; ROC-AUC is reported for comparison with the literature. At τ we report F1, F2 and the
@@ -132,8 +145,10 @@ production. Results are the mean ± std over seeds 0, 1, 2 of the 12-object aver
 channel subset, Tier 3 coreset start and projection; Tier 1 is deterministic, std = 0).
 
 **Hardware.** Python 3.12.8, torch 2.15.0 (CUDA 13.2), NVIDIA RTX 4060 Ti 8 GB, 32 GB RAM. Latency is
-measured on GPU with batch size 1 after 10 warm-up images and includes feature extraction; images are
-decoded beforehand. Peak memory of the main run: 2.2 GB VRAM, 6.6 GB RAM.
+the median over 50 val images of pcb1 (val, so test stays untouched), measured on GPU with batch size 1
+after 10 warm-up images and including feature extraction; images are decoded beforehand. Training time
+is the model fitting only, excluding loading the cached features. Peak memory of the main run: 2.2 GB
+VRAM, 6.6 GB RAM.
 
 ## 7 Results
 
