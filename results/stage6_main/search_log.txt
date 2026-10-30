@@ -1,0 +1,24 @@
+candle: searched
+capsules: searched
+cashew: searched
+chewinggum: searched
+fryum: searched
+macaroni1: searched
+macaroni2: searched
+pcb1: searched
+pcb2: searched
+pcb3: searched
+pcb4: searched
+pipe_fryum: searched
+        tier  config_id  val_pr_auc
+    T2_padim          0      0.6040
+    T2_padim          1      0.5937
+    T2_padim          2      0.6423
+    T2_padim          3      0.6046
+    T2_padim          4      0.6203
+    T2_padim          5      0.6638
+T3_patchcore          0      0.8112
+T3_patchcore          1      0.7876
+T3_patchcore          2      0.6341
+T3_patchcore          3      0.6294
+chosen: {'T2_padim': {'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}, 'T3_patchcore': {'coreset': 0.01, 'layers': ('layer2', 'layer3')}}

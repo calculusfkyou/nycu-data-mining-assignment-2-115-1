@@ -1,0 +1,121 @@
+object,tier,config_id,config,val_pr_auc,val_auroc,fit_score_s
+candle,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.84483813700919,0.952020202020202,0.5006084442138672
+candle,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.4459014401318704,0.8227272727272728,0.21267986297607422
+candle,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.6393497677090256,0.9156565656565657,0.4397621154785156
+candle,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.346189418487991,0.7343434343434343,0.08183765411376953
+candle,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.3436287126193629,0.7797979797979798,0.12765097618103027
+candle,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.52133335511898,0.8479797979797981,0.2598271369934082
+candle,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.8867986011471343,0.9717171717171718,14.679116010665894
+candle,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8787366902962881,0.9585858585858585,112.15482997894287
+candle,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.48867072571370235,0.8404040404040404,20.16287136077881
+candle,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.4658511788438567,0.8318181818181818,128.19098806381226
+capsules,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.24172973062813152,0.49,0.09885859489440918
+capsules,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.36427967424658136,0.6233333333333333,0.135542631149292
+capsules,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.3120666469249317,0.5275000000000001,0.2672154903411865
+capsules,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.35826910542491364,0.6058333333333334,0.056528329849243164
+capsules,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.22042339940060401,0.4091666666666667,0.08451724052429199
+capsules,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.26667537204487696,0.4975,0.17919397354125977
+capsules,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.43763643388389833,0.6575,6.4599223136901855
+capsules,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.3958043319816865,0.645,45.58634972572327
+capsules,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.20575683790059746,0.39,8.65250039100647
+capsules,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.20114779737439697,0.37666666666666665,46.08403968811035
+cashew,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.6492691049300705,0.7799999999999999,0.07100820541381836
+cashew,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.6639316223710215,0.842,0.11128473281860352
+cashew,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.691478202061642,0.821,0.22084808349609375
+cashew,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.6269879459143418,0.825,0.044718027114868164
+cashew,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.7582892432131465,0.832,0.07041025161743164
+cashew,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.6826999701653551,0.8310000000000001,0.1466050148010254
+cashew,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.8944432112173311,0.946,4.758732318878174
+cashew,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8897248176659944,0.9490000000000001,30.853055477142334
+cashew,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.7917220795999869,0.849,5.767999172210693
+cashew,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.783535542189971,0.847,36.86045980453491
+chewinggum,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.8575337222626898,0.91,0.05924582481384277
+chewinggum,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.919705427699236,0.956,0.14855289459228516
+chewinggum,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.9646277151211364,0.986,0.22944116592407227
+chewinggum,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.8689518235439491,0.9220000000000002,0.04644155502319336
+chewinggum,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.869290750915751,0.893,0.07221770286560059
+chewinggum,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.8763174048174049,0.9279999999999999,0.1504073143005371
+chewinggum,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.9822751322751326,0.991,5.808600664138794
+chewinggum,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.9845370370370372,0.992,35.48358225822449
+chewinggum,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.9335424605064699,0.944,5.854959487915039
+chewinggum,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.9288863731297943,0.94,40.372557640075684
+fryum,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.7657411430656986,0.868,0.04649615287780762
+fryum,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.8085357113831264,0.887,0.09789800643920898
+fryum,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.7791347591618489,0.915,0.21230483055114746
+fryum,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.7706289699292797,0.873,0.03952527046203613
+fryum,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.8021461483052383,0.876,0.0647730827331543
+fryum,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.8527562424544692,0.947,0.16182160377502441
+fryum,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.9315489996811737,0.9480000000000001,4.387664079666138
+fryum,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8748451261382297,0.911,29.246905088424683
+fryum,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.7414763838903009,0.8250000000000001,6.586414813995361
+fryum,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.7210781860122981,0.795,37.315672636032104
+macaroni1,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.472234769108455,0.7909090909090909,0.12198233604431152
+macaroni1,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.5362611282460086,0.8464646464646465,0.22494983673095703
+macaroni1,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.6116909790330833,0.8267676767676768,0.4708709716796875
+macaroni1,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.48816740635390465,0.8055555555555556,0.0845334529876709
+macaroni1,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.5662102413607484,0.8727272727272727,0.13004279136657715
+macaroni1,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.6446528954024098,0.8444444444444443,0.27110958099365234
+macaroni1,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.6384497810035028,0.8580808080808081,16.320189952850342
+macaroni1,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.6297051102251627,0.8883838383838383,107.13726544380188
+macaroni1,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.5101989452646681,0.8020202020202021,15.047363758087158
+macaroni1,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.5165878207298285,0.7808080808080807,122.08568525314331
+macaroni2,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.23309182075869095,0.6227272727272728,0.08890461921691895
+macaroni2,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.2686587848105878,0.6611111111111111,0.1742410659790039
+macaroni2,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.36409981528453855,0.7964646464646464,0.3312108516693115
+macaroni2,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.280745483062092,0.7176767676767677,0.0675511360168457
+macaroni2,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.3143311180207231,0.7070707070707072,0.10834479331970215
+macaroni2,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.3972953780731003,0.8136363636363636,0.2376546859741211
+macaroni2,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.4301952891017595,0.7095959595959596,13.154732465744019
+macaroni2,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.26150087636322333,0.6944444444444444,113.36261105537415
+macaroni2,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.27107353328527944,0.6777777777777777,19.5932354927063
+macaroni2,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.2704192842944029,0.6767676767676768,166.53759098052979
+pcb1,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.636504039181965,0.8803030303030304,0.1610107421875
+pcb1,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.5857874190345995,0.8883838383838384,0.2320866584777832
+pcb1,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.7167186972132525,0.9282828282828284,0.49967098236083984
+pcb1,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.74493311663357,0.9222222222222222,0.09919571876525879
+pcb1,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.7704832510219404,0.9363636363636363,0.1529560089111328
+pcb1,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.8688074002650912,0.9661616161616161,0.3169872760772705
+pcb1,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.8492713603046422,0.957070707070707,23.748392820358276
+pcb1,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8567396049576901,0.9611111111111111,270.0703094005585
+pcb1,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.7854825014873827,0.9292929292929294,17.992176055908203
+pcb1,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.7891588171960453,0.9136363636363636,130.13273811340332
+pcb2,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.6391642303610575,0.8494949494949495,0.1730802059173584
+pcb2,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.45921650158986543,0.7853535353535352,0.22539067268371582
+pcb2,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.5267771057921331,0.793939393939394,0.4633350372314453
+pcb2,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.7607939728400255,0.9247474747474747,0.09107828140258789
+pcb2,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.5930219314050732,0.8853535353535353,0.13478899002075195
+pcb2,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.6490247037602246,0.8858585858585859,0.27677249908447266
+pcb2,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.8887208913416116,0.9565656565656566,19.503446102142334
+pcb2,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8836867182663599,0.9696969696969697,128.46175599098206
+pcb2,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.662711474521372,0.8833333333333333,16.571505546569824
+pcb2,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.6664361377739689,0.8833333333333333,134.4560089111328
+pcb3,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.516946689886745,0.7345,0.10096240043640137
+pcb3,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.4816641560483631,0.742,0.19591617584228516
+pcb3,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.44420095263094783,0.6915,0.4284858703613281
+pcb3,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.4874319060006113,0.781,0.09051823616027832
+pcb3,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.5396900864184573,0.7805,0.12431836128234863
+pcb3,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.5458534292128401,0.7799999999999999,0.2779059410095215
+pcb3,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.8240457316599323,0.9385000000000001,16.170673847198486
+pcb3,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.8244304674841131,0.9375000000000001,124.28272461891174
+pcb3,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.5568436177607646,0.788,17.258644104003906
+pcb3,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.5584130084119743,0.812,117.8548972606659
+pcb4,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.6940560673179822,0.9348484848484848,0.08809995651245117
+pcb4,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.6814431572469499,0.9297979797979798,0.17113733291625977
+pcb4,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.7045455111690178,0.944949494949495,0.3419661521911621
+pcb4,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.6957315605753486,0.9388888888888889,0.07955527305603027
+pcb4,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.7155153147777005,0.9303030303030303,0.12787079811096191
+pcb4,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.7600293808823222,0.95,0.22559499740600586
+pcb4,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",0.9714954812970196,0.9939393939393939,15.301806688308716
+pcb4,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",0.9718055555555558,0.9934343434343434,113.12292218208313
+pcb4,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.8478703288288789,0.9691919191919192,20.399444818496704
+pcb4,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.838681032028493,0.9671717171717171,137.87259006500244
+pipe_fryum,T2_padim,0,"{'n_dims': 50, 'layers': ('layer2', 'layer3')}",0.6964378005646295,0.832,0.07672524452209473
+pipe_fryum,T2_padim,1,"{'n_dims': 100, 'layers': ('layer2', 'layer3')}",0.9088981647840051,0.956,0.13030385971069336
+pipe_fryum,T2_padim,2,"{'n_dims': 200, 'layers': ('layer2', 'layer3')}",0.9530041303725516,0.972,0.2944626808166504
+pipe_fryum,T2_padim,3,"{'n_dims': 50, 'layers': ('layer2', 'layer3', 'layer4')}",0.8267353417496983,0.914,0.06507587432861328
+pipe_fryum,T2_padim,4,"{'n_dims': 100, 'layers': ('layer2', 'layer3', 'layer4')}",0.9507937576250944,0.9770000000000001,0.11390209197998047
+pipe_fryum,T2_padim,5,"{'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}",0.8997136330953723,0.9600000000000001,0.26659393310546875
+pipe_fryum,T3_patchcore,0,"{'coreset': 0.01, 'layers': ('layer2', 'layer3')}",1.0000000000000002,1.0,5.44556999206543
+pipe_fryum,T3_patchcore,1,"{'coreset': 0.1, 'layers': ('layer2', 'layer3')}",1.0000000000000002,1.0,31.031346559524536
+pipe_fryum,T3_patchcore,2,"{'coreset': 0.01, 'layers': ('layer2', 'layer3', 'layer4')}",0.8139299901039501,0.915,4.461100339889526
+pipe_fryum,T3_patchcore,3,"{'coreset': 0.1, 'layers': ('layer2', 'layer3', 'layer4')}",0.8123309591025552,0.9179999999999999,30.398794412612915

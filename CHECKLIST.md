@@ -95,8 +95,8 @@
 | 4.2 | 前處理直接 resize 224×224（不做 center crop），並寫明理由 | ⬜ | ⬜ | 閱讀程式與草稿 | |
 | 4.3 | `eda.py` 報告「若改用 center crop，mask 會損失多少比例」 | ✅ | ✅ | 檢查輸出數字 | `results/stage4_eda/eda_crop_loss.csv`：resize 256 + center crop 224 平均切掉 4.1% 瑕疵像素；macaroni2 22.9%（12.5% 影像完全切掉）、capsules 10.9%、pcb3 9.7%；Review（2026-10-30，本機重現）：本機重算完全相同；以 shorter side = 256 換算裁切框的邏輯正確 |
 | 4.4 | s_ij(x)、s(x) = max、Σ + εI（ε = 0.01）的公式與程式一致 | ✅ | ⬜ | 公式與 `methods.py` 逐行比對 | `methods.PaDiM`：`s_ij` 以 `(Σ_ij + εI)^-1` 計算（ε = 0.01），`s(x)` = 28×28 分數圖的 max。主設定維持不平滑；另保留 `sigma` 選項（`run.py --padim-sigma 4`，上採樣 224 + Gaussian σ=4），結果在 `results/stage5_quick_smooth/`：12 類 × 3 seeds 的 val PR-AUC 0.578 → 0.581（Δ < seed std 0.013，Wilcoxon p = 0.57），可作為 ablation 的負面結果 |
-| 4.5 | τ 每類各自決定；主設定為 val best-F2，並說明不用 recall ≥ 95% 的原因 | ⬜ | ⬜ | 閱讀 τ 的程式 | |
-| 4.6 | τ 的選擇完全沒用到 test | ⬜ | ⬜ | 追蹤 τ 函式的輸入來源 | |
+| 4.5 | τ 每類各自決定；主設定為 val best-F2，並說明不用 recall ≥ 95% 的原因 | 🔶 | ⬜ | 閱讀 τ 的程式 | `run_class` 對每類、每個 (tier, seed) 各自以 `best_f2_tau(val)` 決定 τ；不用 recall ≥ 95% 的原因待草稿 |
+| 4.6 | τ 的選擇完全沒用到 test | ✅ | ⬜ | 追蹤 τ 函式的輸入來源 | τ 只由 `best_f2_tau(y_val, s_val)` 產生；test 在所有 τ 固定後才讀取 |
 | 4.7 | FP / FN 成本都有說明，並解釋 τ 為什麼傾向壓低 FN | ⬜ | ⬜ | 閱讀草稿 §5 | |
 | 4.8 | Tier 1 模板差 + 「全猜正常」對照 | ✅ | ⬜ | 閱讀程式 | `methods.TemplateDiff`：每類 train normal 平均影像當模板，s(x) = 平均 |x − template|；`run.py` 另輸出 `T0_all_normal` 列（candle test acc 62.5%、PR-AUC 0.375） |
 | 4.9 | Tier 2 PaDiM 式方法 | ✅ | ⬜ | 閱讀程式，並看合成資料自檢結果 | `methods.PaDiM`：layer2 + 上採樣的 layer3，隨機 100 維（seed 控制），每個位置一個高斯；合成資料自檢 AUROC 1.000 |
@@ -111,20 +111,20 @@
 |---|---|---|---|---|---|
 | 5.1 | 所有方法共用同一份切分 | ✅ | ⬜ | 確認所有方法都透過 `load_split()` 讀資料 | `run.inputs()` 一律經 `load_features()` 讀取，其 index 與 `load_split()` 相同（第 3 階段已驗證） |
 | 5.2 | 前處理只用 ImageNet 固定統計值；μ / Σ 只用 train 擬合 | ✅ | ⬜ | 閱讀 `fit` 的輸入 | `fit` 只收 train（`run_class` 有 assert train 全為 normal）；Tier 1 用 `normalize=False`，Tier 2/3 的特徵只用 ImageNet 固定統計值 |
-| 5.3 | test 只在 `run.py` 最後讀取一次 | ⬜ | ⬜ | 搜尋所有讀取 test 的地方 | |
-| 5.4 | 超參數表：隨機維度、coreset 比例、特徵層，以及固定值（ε、3×3、128） | ⬜ | ⬜ | 與 `run.py` 的設定對照 | |
-| 5.5 | 超參數只在 val 上搜尋，以 val PR-AUC 為標準 | ⬜ | ⬜ | 閱讀搜尋程式 | |
-| 5.6 | 記錄 torch / torchvision 版本、CPU、RTX 4070 12 GB、RAM 32 GB | ⬜ | ⬜ | 對照 `requirements.txt` | |
+| 5.3 | test 只在 `run.py` 最後讀取一次 | ✅ | ⬜ | 搜尋所有讀取 test 的地方 | `run_class` 在所有模型擬合、τ 決定後才呼叫 `inputs(obj, ["test"])`，每類一次；`--search`、`--latency` 都不讀 test |
+| 5.4 | 超參數表：隨機維度、coreset 比例、特徵層，以及固定值（ε、3×3、128） | 🔶 | ⬜ | 與 `run.py` 的設定對照 | 搜尋範圍與結果在 `results/stage6_main/search_val.csv`；固定值 ε = 0.01、3×3、128 維投影寫在 `run.py`。選定：T2 200 維、layer 2+3+4；T3 coreset 1%、layer 2+3。論文表格待草稿 |
+| 5.5 | 超參數只在 val 上搜尋，以 val PR-AUC 為標準 | ✅ | ⬜ | 閱讀搜尋程式 | `run.py --search` 只用 train / val、seed 0；`choose_configs()` 取 12 類平均 val PR-AUC 最高者（T2 0.664、T3 0.811）。T2 最佳值落在範圍上限 200 維 |
+| 5.6 | 記錄 torch / torchvision 版本、CPU、RTX 4070 12 GB、RAM 32 GB | ✅ | ⬜ | 對照 `requirements.txt` | `results/stage6_main/environment.csv`：Python 3.12.8、torch 2.15.0+cu132、RTX 4060 Ti 8 GB、RAM 32 GB（本機，非 RTX 4070） |
 | 5.7 | 指標 AUROC、PR-AUC、F1@τ、F2@τ、FPR@τ、prec@π，並寫明選用理由 | 🔶 | ⬜ | 用一個小例子手算驗證指標函式 | `run.metrics()` 輸出 AUROC、PR-AUC、F1、F2、FPR、prec@1%/5%；`_check_metrics()` 以手算例子 assert，每次執行都會跑。選用理由待草稿 |
-| 5.8 | 延遲量測：GPU、batch 1、warm-up 10 張、包含特徵抽取；訓練時間為 12 類合計 | ⬜ | ⬜ | 閱讀計時程式 | |
-| 5.9 | 3 個 seed（0 / 1 / 2）；Tier 1 的 std = 0 有註明 | ⬜ | ⬜ | 檢查 `results/stage6_main/*.csv` 的 seed 欄位 | |
+| 5.8 | 延遲量測：GPU、batch 1、warm-up 10 張、包含特徵抽取；訓練時間為 12 類合計 | ✅ | ⬜ | 閱讀計時程式 | `results/stage6_main/latency.csv`（pcb1 val、GPU、batch 1、warm-up 10、計時 50 張、含特徵抽取）：T1 0.12、T2 7.38、T3 11.72 ms 中位數；訓練時間 12 類合計見 `summary.csv` 的 `fit_s_total_mean`（T3 114 s） |
+| 5.9 | 3 個 seed（0 / 1 / 2）；Tier 1 的 std = 0 有註明 | ✅ | ⬜ | 檢查 `results/stage6_main/*.csv` 的 seed 欄位 | `metrics.csv` 有 seed 0 / 1 / 2；T1 為確定性方法只跑 seed 0，`summary.csv` 中 n_seeds = 1、std = 0 |
 
 ## 6. §7 Results
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 6.1 | 主結果表欄位齊全（AUROC、PR-AUC、F1、F2、FPR、prec@π、ms/image、訓練時間） | ⬜ | ⬜ | 對照 CSV | |
-| 6.2 | 12 類平均 + 各類結果，mean ± std，每欄最佳值加粗 | ⬜ | ⬜ | 從 CSV 重算幾格 | |
+| 6.1 | 主結果表欄位齊全（AUROC、PR-AUC、F1、F2、FPR、prec@π、ms/image、訓練時間） | ✅ | ⬜ | 對照 CSV | `metrics.csv`（AUROC、PR-AUC、F1、F2、FPR、prec@1% / 5%、fit_s）+ `latency.csv`（ms / image）+ `summary.csv`（訓練時間合計） |
+| 6.2 | 12 類平均 + 各類結果，mean ± std，每欄最佳值加粗 | 🔶 | ⬜ | 從 CSV 重算幾格 | `summary.csv` 為 12 類平均的 mean ± std，`metrics.csv` 為各類結果；加粗待報告。12 類 PR-AUC：T1 0.702、T2 0.801 ± 0.007、T3 0.885 ± 0.002 |
 | 6.3 | T2 vs T3 的 paired bootstrap 95% CI（類內重抽、1,000 次） | ⬜ | ⬜ | 閱讀 bootstrap 程式 | |
 | 6.4 | 12 類配對的 Wilcoxon 檢定（seed t-test 為補充） | ⬜ | ⬜ | 閱讀程式與輸出 | |
 | 6.5 | 解釋 T2 贏或輸 T3 的原因，以及準確度與成本的取捨 | ⬜ | ⬜ | 閱讀草稿 §7 | |
@@ -177,7 +177,7 @@
 
 | # | 項目 | 實作 | Review | Review 方式 | 證據 / 備註 |
 |---|---|---|---|---|---|
-| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | 🔶 | 🔶 | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py`、`eda.py`；Review（2026-10-30，本機重現）：目前 3 / 6 個檔案，職責與計畫一致；目前 5 / 6 個檔案（新增 `methods.py`、`run.py`） |
+| 10.1 | `src/` 下六個檔案都存在，職責與計畫一致 | 🔶 | 🔶 | 列出 `src/` 並閱讀各檔開頭說明 | 目前有 `data.py`、`features.py`、`eda.py`；Review（2026-10-30，本機重現）：目前 3 / 6 個檔案，職責與計畫一致；目前 5 / 6 個檔案（新增 `methods.py`、`run.py`）；仍為 5 / 6 個檔案；`run.py` 新增 `--search`、`--latency`、`summarize()` |
 | 10.2 | `features.py` 每類、每層分開快取（float16、原始解析度） | ✅ | ✅ | 檢查 `cache/` 的檔名、dtype、shape | 12 類 × 3 層（layer2/3/4）共 36 個 .npy + 12 個 index.csv，約 15 GB；shape、dtype、列順序與切分逐類 assert 通過；重新計算抽樣影像，差異只有 float16 捨入誤差；Review（2026-10-30，本機重現）：本機重建：12 類 × 3 層 shape、float16、index 與 `load_split` 一致，共 14.16 GB；capsules / pcb4 重新計算 3 張，相對誤差 ≤ 4.4e-3（float16 + TF32 捨入） |
 | 10.3 | `run.py --quick`（1 類、1 seed）端到端跑通，並記錄 VRAM / RAM 峰值 | ✅ | ⬜ | 自行重跑一次 | `python src/run.py --quick`（candle、seed 0）144 s 跑完；VRAM 峰值 1.44 GB、RAM 峰值 6.4 GB；輸出 `results/stage5_quick/metrics.csv` 與 `scores/*.npz` |
 
@@ -187,9 +187,9 @@
 |---|---|---|---|---|---|
 | 11.1 | assert train 裡沒有 anomaly | ✅ | ✅ | 閱讀 `check_split()` | Review（2026-10-30，本機重現）：`check_split()` 有 assert，本機重跑通過 |
 | 11.2 | assert 各 split 的 ID 沒有交集 | ✅ | ✅ | 閱讀 `check_split()` | Review（2026-10-30，本機重現）：`check_split()` 兩兩交集 assert，本機重跑通過 |
-| 11.3 | eda 與 τ 的選擇都沒有用到 test | 🔶 | 🔶 | 搜尋程式中讀取 test 的地方 | EDA 部分完成（同 3.1）；τ 的部分待第 6 階段；Review（2026-10-30，本機重現）：EDA 部分 ✅（同 3.1）；τ 待第 6 階段 |
+| 11.3 | eda 與 τ 的選擇都沒有用到 test | ✅ | 🔶 | 搜尋程式中讀取 test 的地方 | EDA 部分完成（同 3.1）；τ 的部分待第 6 階段；Review（2026-10-30，本機重現）：EDA 部分 ✅（同 3.1）；τ 待第 6 階段；τ 部分：同 4.6 |
 | 11.4 | `methods.py` 合成資料自檢：三個方法的 AUROC 都 > 0.9 | ✅ | ⬜ | 執行 `python src/methods.py` | `python src/methods.py`：T1 / T2 / T3 AUROC 皆為 1.000 |
-| 11.5 | Tier 3 的平均 AUROC 與查證過的文獻數字（註明出處）相差 ≤ 5 個百分點 | ⬜ | ⬜ | 查證文獻數字 | |
+| 11.5 | Tier 3 的平均 AUROC 與查證過的文獻數字（註明出處）相差 ≤ 5 個百分點 | ✅ | ⬜ | 查證文獻數字 | T3 平均 image AUROC 0.902；Zou et al. 2022 Table 6（PatchCore、WRN50、VisA 1-class）為 92.4，差 2.2 個百分點。注意對方使用官方切分 |
 | 11.6 | 所有引用文獻都已查證為真實存在，沒有捏造 | ⬜ | ⬜ | 逐筆到出版社或會議頁面查證 | |
 
 ## 12. README 與收尾
@@ -208,7 +208,7 @@
 | 13.1 | 拍攝條件不均已量化：每類 train normal 與 val anomaly 落在小群的比例 | ✅ | ✅ | 閱讀 `acquisition_modes()`；確認只用 train/val | `results/stage4_eda/eda_acquisition_modes.csv`：cashew 35.8→95.0%、pcb1 20.1→95.0%、pcb2 23.2→70.0%；新增 `gap_pp`、`affected` 欄位，由 `AFFECTED_GAP_PP = 40` 判定；Review（2026-10-30，本機重現）：本機重算 `eda_acquisition_modes.csv` 完全相同；只用 train / val |
 | 13.2 | 受影響類別的判定規則（差距 ≥ 40 個百分點）與名單在第 6 階段前寫入計畫，之後不再更改 | ✅ | ✅ | 用 `git log` 確認規則寫入時間早於第 6 階段的結果 | 名單：cashew、pcb1、pcb2；規則寫在計畫的「問題 1」；Review（2026-10-30，本機重現）：`AFFECTED_GAP_PP` 於 5d9d868 加入，尚無第 6 階段結果；本機重算名單相同（cashew、pcb1、pcb2）。計畫檔不在 repo，無法直接查證 |
 | 13.3 | `acquisition_causes()` 確認原因（亮度、旋轉 180°），只用 train/val | ✅ | ✅ | 閱讀程式與 `eda_acquisition_causes.csv` | `results/stage4_eda/eda_acquisition_causes.csv`：cashew、pcb2 異常影像曝光較亮（灰階 62.7 vs 53.1/55.8；97.7 vs 86.8/91.0）；pcb1 有 45% 異常旋轉 180°（正常約 7%），其餘原因未明；只讀 train/val 影像；Review（2026-10-30，本機重現）：數字與 CSV 一致；pcb1 正常整體旋轉比例 = 162 × 36.4% / 805 ≈ 7.3% |
-| 13.4 | 主結果表標註受影響類別，另報排除後的 9 類平均，並檢查 T1/T2/T3 排名是否改變 | ⬜ | ⬜ | 從 CSV 重算 9 類平均 | |
+| 13.4 | 主結果表標註受影響類別，另報排除後的 9 類平均，並檢查 T1/T2/T3 排名是否改變 | 🔶 | ⬜ | 從 CSV 重算 9 類平均 | `summary.csv` 有 12 類與 9 類兩個版本；兩者排名皆為 T3 > T2 > T1 > T0，沒有改變（9 類 PR-AUC：T3 0.874、T2 0.785、T1 0.655）。表格標註待報告 |
 | 13.5 | Ablation 5（H2）與 H1 的比較同時報告 12 類與 9 類版本 | ⬜ | ⬜ | 檢查兩個版本的表格 | |
 | 13.6 | 熱圖最高分位置落在 mask（擴 8 px）內的比例，依類別與 tier 報告；只在 test 評估之後做 | ⬜ | ⬜ | 閱讀程式；抽幾張圖目視比對 | |
 | 13.7 | §4、§8 寫入 EDA 發現的問題；§9 的部分整理在 `progress.md` 的缺口與限制 | ⬜ | ⬜ | 閱讀草稿與 `progress.md` | 包含問題 1–5 |

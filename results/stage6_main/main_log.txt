@@ -1,0 +1,114 @@
+configs: {'T2_padim': {'n_dims': 200, 'layers': ('layer2', 'layer3', 'layer4')}, 'T3_patchcore': {'coreset': 0.01, 'layers': ('layer2', 'layer3')}}
+candle: done at 111s, peak RAM 6.6 GB
+capsules: done at 200s, peak RAM 6.6 GB
+cashew: done at 263s, peak RAM 6.6 GB
+chewinggum: done at 336s, peak RAM 6.6 GB
+fryum: done at 392s, peak RAM 6.6 GB
+macaroni1: done at 492s, peak RAM 6.6 GB
+macaroni2: done at 584s, peak RAM 6.6 GB
+pcb1: done at 672s, peak RAM 6.6 GB
+pcb2: done at 772s, peak RAM 6.6 GB
+pcb3: done at 884s, peak RAM 6.6 GB
+pcb4: done at 997s, peak RAM 6.6 GB
+pipe_fryum: done at 1075s, peak RAM 6.6 GB
+    object          tier  seed  auroc  pr_auc    f1    f2   fpr  prec_pi1%  fit_s  score_ms_per_image_cached  fit_vram_gb
+    candle T0_all_normal     0  0.500   0.375 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+    candle   T1_template     0  0.762   0.609 0.672 0.669 0.190      0.034  0.010                      0.278        0.000
+    candle      T2_padim     0  0.842   0.768 0.695 0.763 0.320      0.025  0.377                      1.351        2.001
+    candle      T2_padim     1  0.889   0.839 0.769 0.806 0.200      0.040  0.188                      0.330        2.118
+    candle      T2_padim     2  0.892   0.845 0.785 0.823 0.190      0.043  0.204                      0.316        2.236
+    candle  T3_patchcore     0  0.969   0.952 0.839 0.805 0.050      0.137 12.458                      5.461        1.478
+    candle  T3_patchcore     1  0.975   0.961 0.864 0.856 0.070      0.109 16.700                      5.007        1.514
+    candle  T3_patchcore     2  0.970   0.957 0.862 0.845 0.060      0.123 14.901                      5.192        1.550
+  capsules T0_all_normal     0  0.500   0.500 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+  capsules   T1_template     0  0.723   0.732 0.675 0.802 0.800      0.011  0.008                      0.177        0.000
+  capsules      T2_padim     0  0.565   0.590 0.667 0.819 0.933      0.010  0.279                      2.788        1.252
+  capsules      T2_padim     1  0.601   0.617 0.679 0.812 0.817      0.011  0.194                      0.367        1.369
+  capsules      T2_padim     2  0.647   0.641 0.675 0.786 0.733      0.012  0.157                      0.364        1.487
+  capsules  T3_patchcore     0  0.765   0.814 0.659 0.807 0.933      0.010  7.103                      4.677        1.358
+  capsules  T3_patchcore     1  0.761   0.800 0.672 0.717 0.483      0.015  6.104                      4.424        1.380
+  capsules  T3_patchcore     2  0.769   0.821 0.689 0.686 0.300      0.022  6.539                      4.552        1.401
+    cashew T0_all_normal     0  0.500   0.545 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+    cashew   T1_template     0  0.887   0.890 0.752 0.709 0.160      0.041  0.005                      0.168        0.000
+    cashew      T2_padim     0  0.905   0.930 0.829 0.842 0.240      0.035  0.386                      1.147        1.060
+    cashew      T2_padim     1  0.897   0.919 0.750 0.687 0.100      0.062  0.122                      1.109        1.178
+    cashew      T2_padim     2  0.901   0.935 0.824 0.819 0.200      0.040  0.126                      0.707        1.295
+    cashew  T3_patchcore     0  0.965   0.974 0.893 0.856 0.040      0.174  4.344                      3.352        1.334
+    cashew  T3_patchcore     1  0.959   0.970 0.893 0.897 0.140      0.061  4.518                      3.197        1.353
+    cashew  T3_patchcore     2  0.957   0.971 0.898 0.889 0.100      0.082  4.991                      3.292        1.371
+chewinggum T0_all_normal     0  0.500   0.545 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+chewinggum   T1_template     0  0.634   0.694 0.724 0.828 0.740      0.012  0.007                      1.952        0.000
+chewinggum      T2_padim     0  0.962   0.969 0.917 0.917 0.100      0.085  0.158                      1.512        1.067
+chewinggum      T2_padim     1  0.962   0.976 0.923 0.909 0.060      0.132  0.132                      1.229        1.185
+chewinggum      T2_padim     2  0.955   0.971 0.900 0.900 0.120      0.070  0.136                      1.217        1.302
+chewinggum  T3_patchcore     0  0.996   0.997 0.975 0.970 0.020      0.328  4.509                      4.200        1.334
+chewinggum  T3_patchcore     1  0.997   0.998 0.952 0.980 0.120      0.078  4.492                      3.977        1.352
+chewinggum  T3_patchcore     2  0.986   0.991 0.942 0.947 0.080      0.107  3.653                      3.958        1.370
+     fryum T0_all_normal     0  0.500   0.545 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+     fryum   T1_template     0  0.800   0.830 0.779 0.839 0.460      0.019  0.005                      0.184        0.000
+     fryum      T2_padim     0  0.811   0.835 0.764 0.776 0.320      0.024  0.321                      1.200        1.060
+     fryum      T2_padim     1  0.845   0.858 0.780 0.772 0.240      0.031  0.107                      1.616        1.178
+     fryum      T2_padim     2  0.808   0.839 0.785 0.841 0.440      0.020  0.112                      0.655        1.295
+     fryum  T3_patchcore     0  0.934   0.953 0.839 0.805 0.100      0.073  3.484                      3.543        1.334
+     fryum  T3_patchcore     1  0.917   0.942 0.826 0.779 0.080      0.087  3.663                      3.628        1.353
+     fryum  T3_patchcore     2  0.917   0.940 0.831 0.822 0.180      0.044  3.706                      3.668        1.371
+ macaroni1 T0_all_normal     0  0.500   0.375 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+ macaroni1   T1_template     0  0.772   0.581 0.651 0.780 0.520      0.017  0.014                      0.081        0.000
+ macaroni1      T2_padim     0  0.798   0.711 0.667 0.723 0.320      0.024  0.426                      1.324        2.001
+ macaroni1      T2_padim     1  0.808   0.729 0.624 0.757 0.570      0.015  0.216                      0.510        2.118
+ macaroni1      T2_padim     2  0.734   0.650 0.591 0.693 0.520      0.015  0.227                      0.228        2.236
+ macaroni1  T3_patchcore     0  0.834   0.776 0.667 0.782 0.460      0.019 12.972                      4.050        1.478
+ macaroni1  T3_patchcore     1  0.876   0.799 0.742 0.785 0.230      0.035 12.446                      4.022        1.514
+ macaroni1  T3_patchcore     2  0.866   0.805 0.746 0.768 0.190      0.040 11.092                      3.989        1.550
+ macaroni2 T0_all_normal     0  0.500   0.375 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+ macaroni2   T1_template     0  0.718   0.563 0.602 0.723 0.560      0.015  0.014                      0.088        0.000
+ macaroni2      T2_padim     0  0.660   0.583 0.517 0.581 0.490      0.013  0.249                      1.354        2.001
+ macaroni2      T2_padim     1  0.630   0.505 0.576 0.714 0.660      0.013  0.225                      0.313        2.118
+ macaroni2      T2_padim     2  0.665   0.543 0.573 0.726 0.720      0.012  0.226                      0.240        2.236
+ macaroni2  T3_patchcore     0  0.599   0.468 0.503 0.566 0.500      0.012 13.544                      4.179        1.478
+ macaroni2  T3_patchcore     1  0.619   0.529 0.522 0.566 0.420      0.014 13.333                      4.065        1.514
+ macaroni2  T3_patchcore     2  0.582   0.479 0.550 0.724 0.850      0.011 12.712                      4.127        1.550
+      pcb1 T0_all_normal     0  0.500   0.375 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+      pcb1   T1_template     0  0.855   0.748 0.763 0.873 0.340      0.028  0.009                      0.069        0.000
+      pcb1      T2_padim     0  0.900   0.859 0.737 0.783 0.240      0.033  0.448                      1.503        2.009
+      pcb1      T2_padim     1  0.889   0.847 0.713 0.744 0.230      0.033  0.183                      0.231        2.126
+      pcb1      T2_padim     2  0.905   0.858 0.768 0.736 0.090      0.074  0.193                      0.250        2.243
+      pcb1  T3_patchcore     0  0.937   0.897 0.810 0.794 0.090      0.081 11.596                      4.080        1.478
+      pcb1  T3_patchcore     1  0.935   0.892 0.822 0.858 0.160      0.053 11.156                      4.138        1.514
+      pcb1  T3_patchcore     2  0.934   0.886 0.796 0.768 0.080      0.087 11.120                      4.055        1.550
+      pcb2 T0_all_normal     0  0.500   0.375 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+      pcb2   T1_template     0  0.903   0.891 0.778 0.801 0.170      0.046  0.009                      0.244        0.000
+      pcb2      T2_padim     0  0.797   0.756 0.636 0.592 0.130      0.042  0.509                      1.161        2.001
+      pcb2      T2_padim     1  0.816   0.755 0.661 0.674 0.230      0.029  0.186                      0.582        2.118
+      pcb2      T2_padim     2  0.836   0.784 0.667 0.667 0.200      0.033  0.190                      0.291        2.236
+      pcb2  T3_patchcore     0  0.938   0.899 0.774 0.717 0.050      0.121 11.655                      5.159        1.478
+      pcb2  T3_patchcore     1  0.923   0.892 0.826 0.779 0.040      0.159 12.402                      5.226        1.514
+      pcb2  T3_patchcore     2  0.922   0.894 0.828 0.811 0.080      0.092 12.387                      5.164        1.550
+      pcb3 T0_all_normal     0  0.500   0.373 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+      pcb3   T1_template     0  0.748   0.619 0.667 0.714 0.297      0.025  0.015                      0.227        0.000
+      pcb3      T2_padim     0  0.758   0.705 0.651 0.680 0.267      0.026  0.268                      2.432        2.009
+      pcb3      T2_padim     1  0.804   0.743 0.636 0.787 0.594      0.016  0.251                      0.349        2.126
+      pcb3      T2_padim     2  0.809   0.767 0.662 0.755 0.406      0.020  0.254                      0.428        2.243
+      pcb3  T3_patchcore     0  0.923   0.895 0.786 0.753 0.079      0.086 13.841                      4.792        1.478
+      pcb3  T3_patchcore     1  0.914   0.893 0.778 0.729 0.059      0.106 13.644                      4.924        1.514
+      pcb3  T3_patchcore     2  0.929   0.903 0.786 0.753 0.079      0.086 13.376                      4.880        1.550
+      pcb4 T0_all_normal     0  0.500   0.373 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+      pcb4   T1_template     0  0.681   0.534 0.598 0.755 0.683      0.013  0.014                      0.218        0.000
+      pcb4      T2_padim     0  0.956   0.908 0.828 0.923 0.248      0.039  0.419                      0.301        2.009
+      pcb4      T2_padim     1  0.963   0.935 0.882 0.912 0.109      0.080  0.220                      0.298        2.126
+      pcb4      T2_padim     2  0.965   0.940 0.870 0.916 0.139      0.065  0.226                      0.304        2.243
+      pcb4  T3_patchcore     0  0.994   0.989 0.933 0.933 0.040      0.192 14.014                      5.486        1.478
+      pcb4  T3_patchcore     1  0.990   0.984 0.915 0.906 0.040      0.187 13.779                      4.871        1.514
+      pcb4  T3_patchcore     2  0.989   0.982 0.915 0.906 0.040      0.187 12.428                      5.272        1.550
+pipe_fryum T0_all_normal     0  0.500   0.545 0.000 0.000 0.000        NaN    NaN                        NaN          NaN
+pipe_fryum   T1_template     0  0.656   0.736 0.652 0.708 0.660      0.011  0.006                      0.225        0.000
+pipe_fryum      T2_padim     0  0.885   0.910 0.824 0.868 0.340      0.026  0.141                      0.296        1.060
+pipe_fryum      T2_padim     1  0.844   0.881 0.768 0.787 0.340      0.023  0.137                      0.280        1.178
+pipe_fryum      T2_padim     2  0.905   0.930 0.796 0.747 0.100      0.068  0.141                      0.291        1.295
+pipe_fryum  T3_patchcore     0  0.984   0.990 0.868 0.804 0.000      1.000  4.506                      4.184        1.334
+pipe_fryum  T3_patchcore     1  0.980   0.987 0.911 0.873 0.020      0.300  4.519                      4.211        1.353
+pipe_fryum  T3_patchcore     2  0.977   0.986 0.899 0.848 0.000      1.000  4.547                      4.434        1.371
+
+wall 1075s, peak RAM 6.6 GB, peak VRAM (fit + val scoring) 2.24 GB
+12 classes ranking by PR-AUC: T3_patchcore > T2_padim > T1_template > T0_all_normal
+9 classes (excl. cashew, pcb1, pcb2) ranking by PR-AUC: T3_patchcore > T2_padim > T1_template > T0_all_normal

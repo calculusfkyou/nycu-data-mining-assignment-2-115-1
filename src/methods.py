@@ -28,7 +28,7 @@ def _to_gpu(a, sl, idx=None):
 
 
 def _up(x):
-    return F.interpolate(x, size=(SIDE, SIDE), mode="bilinear", align_corners=False)
+    return x if x.shape[-1] == SIDE else F.interpolate(x, size=(SIDE, SIDE), mode="bilinear", align_corners=False)
 
 
 class TemplateDiff:
@@ -51,18 +51,17 @@ class PaDiM:
     and s(x) is the max of that smoothed map.
     """
 
-    def __init__(self, n_dims=100, eps=0.01, seed=0, sigma=None):
-        self.n_dims, self.eps, self.seed, self.sigma = n_dims, eps, seed, sigma
+    def __init__(self, n_dims=100, eps=0.01, seed=0, sigma=None, layers=("layer2", "layer3")):
+        self.n_dims, self.eps, self.seed, self.sigma, self.layers = n_dims, eps, seed, sigma, layers
 
     def _embed(self, feats, sl):
-        l2 = _to_gpu(feats["layer2"], sl, self.idx2)
-        l3 = _up(_to_gpu(feats["layer3"], sl, self.idx3))
-        return torch.cat([l2, l3], 1).flatten(2)                     # (B, d, 784)
+        return torch.cat([_up(_to_gpu(feats[l], sl, self.idx[l])) for l in self.layers], 1).flatten(2)  # (B, d, 784)
 
     def fit(self, feats):
-        c2, c3 = feats["layer2"].shape[1], feats["layer3"].shape[1]
-        dims = np.sort(np.random.default_rng(self.seed).choice(c2 + c3, self.n_dims, replace=False))
-        self.idx2, self.idx3 = dims[dims < c2], dims[dims >= c2] - c2
+        sizes = [feats[l].shape[1] for l in self.layers]
+        dims = np.sort(np.random.default_rng(self.seed).choice(sum(sizes), self.n_dims, replace=False))
+        starts = np.cumsum([0] + sizes)
+        self.idx = {l: dims[(dims >= a) & (dims < b)] - a for l, a, b in zip(self.layers, starts, starts[1:])}
         n = len(feats["layer2"])
         x = torch.cat([self._embed(feats, sl) for sl in _chunks(n)])  # (N, d, 784)
         self.mu = x.mean(0)
@@ -89,17 +88,15 @@ class PaDiM:
 class PatchCore:
     """Tier 3: locally aware patch features (3x3 average), greedy coreset memory bank, nearest-neighbour distance.
 
-    The coreset is selected in a 128-d random projection; the bank keeps the full 1536-d features.
+    The coreset is selected in a 128-d random projection; the bank keeps the full features (1536-d for layer2+3).
     """
 
-    def __init__(self, coreset=0.01, proj_dim=128, seed=0):
-        self.coreset, self.proj_dim, self.seed = coreset, proj_dim, seed
+    def __init__(self, coreset=0.01, proj_dim=128, seed=0, layers=("layer2", "layer3")):
+        self.coreset, self.proj_dim, self.seed, self.layers = coreset, proj_dim, seed, layers
 
     def _embed(self, feats, sl):
-        l2 = F.avg_pool2d(_to_gpu(feats["layer2"], sl), 3, 1, 1)
-        l3 = _up(F.avg_pool2d(_to_gpu(feats["layer3"], sl), 3, 1, 1))
-        x = torch.cat([l2, l3], 1)                                      # (B, 1536, 28, 28)
-        return x.permute(0, 2, 3, 1).reshape(-1, x.shape[1])            # (B*784, 1536)
+        x = torch.cat([_up(F.avg_pool2d(_to_gpu(feats[l], sl), 3, 1, 1)) for l in self.layers], 1)  # (B, C, 28, 28)
+        return x.permute(0, 2, 3, 1).reshape(-1, x.shape[1])            # (B*784, C)
 
     def fit(self, feats):
         g = torch.Generator(device=DEVICE).manual_seed(self.seed)
@@ -114,12 +111,16 @@ class PatchCore:
         z = torch.cat([b[1] for b in bank])                             # GPU float32, projected
         del bank
         k = max(1, int(self.coreset * len(z)))
-        sel = [int(torch.randint(len(z), (1,), device=DEVICE, generator=g))]
-        min_d = torch.cdist(z, z[sel[-1]][None]).squeeze(1)
+        # squared distances via ||z||^2 - 2 z.c + ||c||^2: one GEMV per step and no host sync (~5x faster than cdist)
+        zz = (z * z).sum(1)
+        sq_dist = lambda j: zz - 2 * (z @ z[j]) + zz[j]
+        j = torch.randint(len(z), (), device=DEVICE, generator=g)
+        sel, min_d = [j], sq_dist(j)
         for _ in range(k - 1):
-            sel.append(int(min_d.argmax()))
-            min_d = torch.minimum(min_d, torch.cdist(z, z[sel[-1]][None]).squeeze(1))
-        self.bank = full[torch.tensor(sel)].float().to(DEVICE)          # (k, 1536)
+            j = min_d.argmax()
+            sel.append(j)
+            min_d = torch.minimum(min_d, sq_dist(j))
+        self.bank = full[torch.stack(sel).cpu()].float().to(DEVICE)    # (k, C)
         return self
 
     def score(self, feats):
