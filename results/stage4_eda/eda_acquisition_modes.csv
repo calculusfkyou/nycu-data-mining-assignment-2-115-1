@@ -1,13 +1,13 @@
-object,group,minor_mode_pct_of_train_normal,minor_mode_pct_of_val_anomaly
-candle,multiple instances,32.33458177278402,0.0
-capsules,multiple instances,36.51452282157676,55.00000000000001
-cashew,single instance,35.75,95.0
-chewinggum,single instance,4.218362282878412,0.0
-fryum,single instance,49.75,75.0
-macaroni1,multiple instances,43.82022471910113,50.0
-macaroni2,multiple instances,47.44069912609238,35.0
-pcb1,complex structure,20.124223602484474,95.0
-pcb2,complex structure,23.19201995012469,70.0
-pcb3,complex structure,48.81987577639752,50.0
-pcb4,complex structure,32.67080745341615,0.0
-pipe_fryum,single instance,42.0,50.0
+object,group,minor_mode_pct_of_train_normal,minor_mode_pct_of_val_anomaly,gap_pp,affected
+candle,multiple instances,32.33458177278402,0.0,-32.33458177278402,False
+capsules,multiple instances,36.51452282157676,55.00000000000001,18.485477178423245,False
+cashew,single instance,35.75,95.0,59.25,True
+chewinggum,single instance,4.218362282878412,0.0,-4.218362282878412,False
+fryum,single instance,49.75,75.0,25.25,False
+macaroni1,multiple instances,43.82022471910113,50.0,6.179775280898873,False
+macaroni2,multiple instances,47.44069912609238,35.0,-12.440699126092383,False
+pcb1,complex structure,20.124223602484474,95.0,74.87577639751552,True
+pcb2,complex structure,23.19201995012469,70.0,46.80798004987531,True
+pcb3,complex structure,48.81987577639752,50.0,1.1801242236024834,False
+pcb4,complex structure,32.67080745341615,0.0,-32.67080745341615,False
+pipe_fryum,single instance,42.0,50.0,8.0,False

@@ -181,23 +181,69 @@ def feature_analysis():
     return proj
 
 
+AFFECTED_GAP_PP = 40  # plan, "EDA 發現的問題" 問題 1: fixed before any test result
+
+
+def _modes(obj):
+    """Two k-means modes of the train-normal embedding (2-D PCA space); returns frame, masks and in-minor flag."""
+    frame, pooled = global_embeddings(obj)
+    emb = np.concatenate([pooled["layer2"], pooled["layer3"]], axis=1)
+    tr = (frame.split == "train").to_numpy()
+    va = ((frame.split == "val") & (frame.label == "anomaly")).to_numpy()
+    z = PCA(n_components=2).fit(emb[tr]).transform(emb)
+    mode = KMeans(n_clusters=2, n_init=10, random_state=0).fit(z[tr]).predict(z)
+    in_minor = mode == np.argmin(np.bincount(mode[tr]))
+    return frame, tr, va, in_minor
+
+
 def acquisition_modes():
-    """Split each class's train-normal embedding into two k-means modes (in 2-D PCA space) and report how
-    normals and val anomalies fall into the smaller mode; a large gap flags a capture-condition shortcut."""
+    """Report how train normals and val anomalies fall into the smaller mode; a large gap flags a
+    capture-condition shortcut. Classes past AFFECTED_GAP_PP are reported separately from §7 on."""
     rows = []
     for obj in CLASSES:
-        frame, pooled = global_embeddings(obj)
-        emb = np.concatenate([pooled["layer2"], pooled["layer3"]], axis=1)
-        tr = (frame.split == "train").to_numpy()
-        va = ((frame.split == "val") & (frame.label == "anomaly")).to_numpy()
-        z = PCA(n_components=2).fit(emb[tr]).transform(emb)
-        km = KMeans(n_clusters=2, n_init=10, random_state=0).fit(z[tr])
-        mode = km.predict(z)
-        minor = np.argmin(np.bincount(mode[tr]))
+        _, tr, va, in_minor = _modes(obj)
+        n_pct, a_pct = 100 * in_minor[tr].mean(), 100 * in_minor[va].mean()
         rows.append({"object": obj, "group": GROUP[obj],
-                     "minor_mode_pct_of_train_normal": 100 * (mode[tr] == minor).mean(),
-                     "minor_mode_pct_of_val_anomaly": 100 * (mode[va] == minor).mean()})
+                     "minor_mode_pct_of_train_normal": n_pct, "minor_mode_pct_of_val_anomaly": a_pct,
+                     "gap_pp": a_pct - n_pct, "affected": a_pct - n_pct >= AFFECTED_GAP_PP})
     pd.DataFrame(rows).to_csv(RESULTS / "eda_acquisition_modes.csv", index=False)
+
+
+def _gray_small(path):
+    """Grayscale image downsampled to 64x48 via JPEG draft decoding (fast), as float32."""
+    im = Image.open(VISA_DIR / path)
+    im.draft("L", (im.width // 8, im.height // 8))
+    return np.asarray(im.convert("L").resize((64, 48)), dtype=np.float32)
+
+
+def acquisition_causes():
+    """Explain the modes with two capture properties (train/val images only):
+    brightness of the whole image and of a 5 % border (mostly background), and whether an image matches
+    the train-normal mean template better after a 180-degree rotation."""
+    rows = []
+    for obj in CLASSES:
+        frame, tr, va, in_minor = _modes(obj)
+        imgs = np.stack([_gray_small(p) for p in frame.image])
+        border = np.ones((48, 64), bool)
+        border[3:-3, 3:-3] = False
+
+        def zscore(x):
+            x = x.reshape(len(x), -1)
+            return (x - x.mean(1, keepdims=True)) / (x.std(1, keepdims=True) + 1e-6)
+
+        template = zscore(imgs[tr].mean(0, keepdims=True))[0]
+        flat, flat_rot = zscore(imgs), zscore(imgs[:, ::-1, ::-1])
+        rotated = (flat_rot @ template) > (flat @ template)
+
+        groups = {"normal_major": tr & ~in_minor, "normal_minor": tr & in_minor, "val_anomaly": va}
+        row = {"object": obj, "group": GROUP[obj]}
+        for g, m in groups.items():
+            row[f"n_{g}"] = int(m.sum())
+            row[f"gray_{g}"] = imgs[m].mean() if m.any() else np.nan
+            row[f"border_gray_{g}"] = imgs[m][:, border].mean() if m.any() else np.nan
+            row[f"rot180_pct_{g}"] = 100 * rotated[m].mean() if m.any() else np.nan
+        rows.append(row)
+    pd.DataFrame(rows).to_csv(RESULTS / "eda_acquisition_causes.csv", index=False)
 
 
 def _grid(title, fname, draw):
@@ -246,6 +292,7 @@ if __name__ == "__main__":
     crop_loss(split)
     projection_figures(feature_analysis())
     acquisition_modes()
+    acquisition_causes()
     for f in sorted(RESULTS.glob("eda_*.csv")):
         print(f"\n== {f.name}")
         print(pd.read_csv(f).round(3).to_string(index=False))
