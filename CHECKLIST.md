@@ -26,7 +26,7 @@
 | 9 | 步驟 10–11 | 撰寫 `reports/sec3-8.md` 與 `reports/progress.md` | 2.1、2.2、2.4、2.7、2.10、2.11、3.6、3.7、4.2、4.7、4.12、6.5、6.12、7.3、7.6、7.7、7.9、8.1–8.10、9.1–9.3、11.6 |
 | 10 | 步驟 12 | 更新 README、最後的 commit | 12.1–12.4 |
 
-- 0.4（`main` 沒有新 commit、沒有 push）是持續項目，每個階段結束時都要重新確認。
+- 0.4（`main` 沒有新 commit；只在同意後 push；沒有 merge、沒有 PR）是持續項目，每個階段結束時都要重新確認。
 - 10.1 會在每個新增 `src/` 檔案的階段更新，到第 8 階段才會全部完成。
 
 ## 0. 環境與分支
@@ -36,7 +36,7 @@
 | 0.1 | 所有檔案都在 `nycu-data-mining-assignment-2-115-1` repo 內，上層 `work2/` 沒有多出工作檔案 | ✅ | ⬜ | 列出 `work2/` 的內容，確認沒有程式或結果檔 | `work2/` 只有 PDF、計畫與舊版 checklist，沒有程式或結果檔 |
 | 0.2 | D 槽剩餘空間 ≥ 25 GB；`data/`、`cache/`、`.venv/` 都在 repo 內並被 ignore | ✅ | ⬜ | `git check-ignore -v data/x cache/x .venv` | D 槽剩 408 GB；`git check-ignore` 三條規則都有作用 |
 | 0.3 | 已從 `main` 建立 `feature/visa-experiments`，所有工作都在這個分支上 | ✅ | ⬜ | `git log --oneline --graph --all` | |
-| 0.4 | `main` 上沒有新的 commit；沒有 push、沒有 merge | ✅ | ⬜ | `git log main --oneline`、`git branch -r` | 2026-10-30 確認：`main` 仍只有 d6ca658，遠端只有 origin/main |
+| 0.4 | `main` 上沒有新的 commit；只在同意後才 push 分支；沒有 merge、沒有開 PR | ✅ | ⬜ | `git log main --oneline`、`git ls-remote --heads origin`、GitHub 的 Pull requests 頁面 | 2026-10-30：經同意將 `feature/visa-experiments` 推上 origin（adf096b）；`main` 仍只有 d6ca658；沒有 PR |
 | 0.5 | `.venv` 使用 Python 3.9.1；CUDA 版 torch 可以使用 GPU | ✅ | ⬜ | `.venv/Scripts/python -c "import torch; print(torch.__version__, torch.cuda.is_available())"` | torch 2.8.0+cu126，RTX 4070 |
 | 0.6 | `requirements.txt` 版本已鎖定，並註明 CUDA 安裝指令 | ✅ | ⬜ | 開檔對照 `pip freeze` | |
 | 0.7 | `.gitignore` 包含 `data/`、`cache/`、`.venv/`、`*.tar`，且在下載資料前就已建立 | ✅ | ⬜ | `git log --diff-filter=A -- .gitignore` 的時間早於下載 | |
