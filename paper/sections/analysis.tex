@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 % §8 Analysis. results/stage8_analysis/{failure_cases,peak_in_mask,pixel_auroc,h1_per_class,h1_by_group,
 % h2_detection_by_area,practical_impact}.csv. The failure-case maps (fig_failure_cases.png) are left out for
-% space; the figure crops fig_heatmaps.png (chewing gum row, y = 518-1010 px; 150 dpi, 1 px = 0.48 bp).
+% space; the figure crops fig_heatmaps.png (chewing gum row, y = 551-1010 px, panel titles cut and their s/tau moved to the caption; 150 dpi, 1 px = 0.48 bp).
 \section{Analysis}
 \label{sec:analysis}
 
@@ -34,7 +34,7 @@ In \#3 and \#4 the board sits slightly off its usual position and the maximum fa
 board edge.
 The shared blind spot is position: a location-wise Gaussian flags the edges of a shifted object, which
 masks small defects.
-Over all test anomalies the Tier~2 map peaks inside the defect mask (dilated by 8\,px) for 25.3\% of
+Over all test anomalies (seed~0) the Tier~2 map peaks inside the defect mask (dilated by 8\,px) for 25.3\% of
 images (0\% for capsules), against 70.3\% for Tier~3.
 The first fix to try is registering each image to a reference pose before scoring.
 
@@ -49,9 +49,9 @@ $>$0.98\%: 0.983 vs.\ 0.969), within 1--2 seed std and not largest for small def
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth, trim=0 249.6 0 248.6, clip]{stage8_analysis/fig_heatmaps.png}
-  \caption{A correctly flagged chewing gum with a missing chunk: image with defect mask, Tier~2 map
-    and Tier~3 map. $s/\tau$ is the score relative to each tier's threshold.}
+  \includegraphics[width=\columnwidth, trim=0 249.6 0 264.5, clip]{stage8_analysis/fig_heatmaps.png}
+  \caption{A correctly flagged chewing gum with a missing chunk (white: defect mask). Left: image;
+    middle: Tier~2 map, $s/\tau = 5.19$; right: Tier~3 map, $s/\tau = 1.82$ (score over threshold).}
   \label{fig:heatmaps}
 \end{figure}
 
@@ -68,5 +68,5 @@ escaped defects.
 In Figure~\ref{fig:heatmaps} Tier~2 flags the chewing gum by a wide margin ($s/\tau = 5.19$), but its
 map peaks on the shadow above the object; Tier~3 peaks on the missing chunk.
 For a missing pcb4 component both maps peak on the empty pad, so an engineer could act on either.
-Mean pixel ROC-AUC is 0.925 for Tier~2 and 0.973 for Tier~3, so we would show engineers the Tier~3 map
+Mean pixel ROC-AUC (seed~0) is 0.925 for Tier~2 and 0.973 for Tier~3, so we would show engineers the Tier~3 map
 and not trust the Tier~2 map, which hits the defect in only a quarter of cases.

@@ -8,8 +8,8 @@
 \paragraph{Benchmarks and methods.}
 Our task is in the image data category, where industrial inspection is usually studied on MVTec AD
 \citep{bergmann2019mvtec}, where image-level AUROC is close to saturated (Table~\ref{tab:related}).
-VisA \citep{zou2022spot} adds complex structures and freely placed instances, and the same PatchCore drops
-there from 99.8 to 92.4 AUROC, so it still separates methods.
+VisA \citep{zou2022spot} adds complex structures and freely placed instances: PatchCore, up to 99.6
+AUROC on MVTec AD, reaches only 92.4 there, so VisA still separates methods.
 Among the families reviewed by \citet{ruff2021unifying}, the strongest normal-only detectors on such data
 pair ImageNet-pretrained features with a simple model: a global Gaussian \citep{rippel2021modeling}, a
 Gaussian per location (PaDiM, \citealp{defard2021padim}), or $k$NN to normal patches (SPADE,
