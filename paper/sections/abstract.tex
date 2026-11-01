@@ -1,4 +1,16 @@
 % !TEX root = ../main.tex
+% Numbers from results/stage6_main/summary.csv, results/stage8_analysis/{significance,peak_in_mask}.csv.
 \begin{abstract}
-TODO (about 150 words): application, data, main quantitative result.
+Quality-control inspectors need a camera-based detector that flags defective products for rejection or
+manual re-inspection, learned from normal images because defects are rare and varied.
+We study this on VisA, 10,821 industrial images of 12 objects with defects covering a median 0.20\% of
+the image, and compare three tiers on one leakage-free split with per-object thresholds chosen on a
+labelled validation set: a template difference, PaDiM (a Gaussian per location on pretrained features,
+our primary method) and PatchCore.
+PaDiM reaches 0.801\,$\pm$\,0.007 PR-AUC, PatchCore 0.885\,$\pm$\,0.002, a significant gap
+($+0.084$, bootstrap 95\% CI $[0.065, 0.102]$).
+At a 1\% defect rate, however, only 3.7\% and 14.8\% of their alerts are real defects.
+Ablations show that PaDiM depends on its location-wise covariance, and error analysis traces its
+failures to position: its anomaly map peaks inside the defect for 25\% of anomalies, against 70\% for
+PatchCore.
 \end{abstract}
