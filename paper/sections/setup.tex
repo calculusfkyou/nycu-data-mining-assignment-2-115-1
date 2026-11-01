@@ -1,5 +1,64 @@
 % !TEX root = ../main.tex
+% §6 Experimental Setup. Search: results/stage6_main/search_log.txt (config ids follow run.py GRID order);
+% environment.csv and latency.csv, peak memory from main_log.txt. The main run (stages 5-8) used the
+% environment in environment.csv (see README); requirements.txt pins the stage 1-4 environment.
 \section{Experimental Setup}
 \label{sec:setup}
 
-TODO
+\paragraph{Split and leakage prevention.}
+All tiers use the single split of \S\ref{sec:data} (fixed indices, seed~0): 7,705 / 1,194 / 1,682
+images for train / val / test.
+Models are fitted on train normals only.
+Preprocessing uses fixed ImageNet statistics, so nothing is fitted on val or test.
+Val anomalies are used only to choose $\tau$ and the hyperparameters below, never to fit weights.
+For every object, all models are fitted and all thresholds fixed before the test features are loaded,
+and test is evaluated once.
+The only earlier contact with test was a pipeline smoke test on one object (candle, seed~0, default
+settings) before the search; nothing was chosen from it.
+
+\paragraph{Hyperparameters.}
+The search uses val only (seed~0).
+For each tier it fits every point of the grid in Table~\ref{tab:hparams} and keeps the setting with the
+highest mean val PR-AUC over the 12 objects.
+The chosen Tier~2 setting lies at the edge of its grid; we kept the grid as defined in advance.
+
+\begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Tier & Hyperparameter & Range & Selected \\
+    \midrule
+    T2 & channels $d$ & 50, 100, 200 & 200 \\
+    T2 & layers & \{2,3\}, \{2,3,4\} & \{2,3,4\} \\
+    T2 & ridge $\epsilon$ & fixed & 0.01 \\
+    \midrule
+    T3 & coreset ratio & 1\%, 10\% & 1\% \\
+    T3 & layers & \{2,3\}, \{2,3,4\} & \{2,3\} \\
+    T3 & neighbourhood / proj. & fixed & $3 \times 3$ / 128-d \\
+    \bottomrule
+  \end{tabular}
+  \caption{Hyperparameter search on val (seed~0, full grid per tier). Mean val PR-AUC of the selected
+    setting: 0.664 (T2) and 0.811 (T3).}
+  \label{tab:hparams}
+\end{table}
+
+\paragraph{Metrics.}
+PR-AUC is the primary metric because, unlike ROC-AUC, it reflects how many alerts are real defects under
+class imbalance \citep{davis2006relationship,saito2015precision}.
+We also report ROC-AUC for comparison with the literature.
+At the chosen $\tau$ we report F1, F2 and the false-positive rate, which is the share of good products
+sent to re-inspection.
+We also report $\mathrm{prec}_\pi$ (Eq.~\ref{eq:prec-pi}) at $\pi = 1\%$ and $5\%$, the share of alerts
+that would be real defects in production.
+Every number is the mean $\pm$ std over seeds 0, 1 and 2 of the 12-object average.
+The seed controls the Tier~2 channel subset and the Tier~3 coreset start and projection; Tier~1 is
+deterministic.
+
+\paragraph{Implementation and hardware.}
+PyTorch 2.15.0 with CUDA 13.2, torchvision 0.29.2 and scikit-learn, on an NVIDIA RTX 4060 Ti (8\,GB).
+Latency is the median over 50 val images of pcb1, on GPU with batch size~1 after 10 warm-up images,
+including feature extraction.
+Training time covers model fitting only, not loading the cached features.
+The main run peaked at 2.24\,GB of GPU memory and 6.6\,GB of RAM.
