@@ -5,30 +5,19 @@
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Benchmarks for image anomaly detection.}
+\paragraph{Benchmarks and methods.}
 Our task falls in the image data category.
-Industrial inspection is usually studied on MVTec AD \citep{bergmann2019mvtec}, 15 categories and 5,354
-images in which a model is fitted on defect-free images and tested on a mix of normal and defective ones.
-Image-level AUROC on MVTec AD is now close to saturated (Table~\ref{tab:related}).
-VisA \citep{zou2022spot} keeps the same one-class protocol but adds objects with complex structure (PCBs)
-and with multiple, freely placed instances (capsules, candles, macaroni).
-The same PatchCore configuration that reaches 99.8 AUROC on MVTec AD reaches 92.4 on VisA in the authors'
-own evaluation \citep{zou2022spot}, so VisA still separates methods and is the dataset we use.
-
-\paragraph{Method families.}
-\citet{ruff2021unifying} group deep and shallow detectors into density estimation, one-class
-classification and reconstruction models.
-On industrial images, the strongest normal-only detectors combine ImageNet-pretrained CNN features with a
-simple model of normality.
-SPADE \citep{cohen2020spade} uses $k$-nearest-neighbour distances to normal images and normal patches.
-\citet{rippel2021modeling} fit one multivariate Gaussian to global features and score images by
-Mahalanobis distance.
-PaDiM \citep{defard2021padim} fits one Gaussian per spatial location of a patch-feature map, which makes
-the score a location-wise Mahalanobis distance.
-PatchCore \citep{roth2022towards} replaces the Gaussian with a coreset-subsampled memory bank of normal
-patch features and scores the nearest-neighbour distance.
-Table~\ref{tab:related} lists data, method family, paradigm and the reported image-level result of
-each work.
+Industrial inspection is usually studied on MVTec AD \citep{bergmann2019mvtec} (15 categories, 5,354
+images), where image-level AUROC is now close to saturated (Table~\ref{tab:related}).
+VisA \citep{zou2022spot} keeps the one-class protocol but adds complex structures (PCBs) and multiple,
+freely placed instances; the same PatchCore configuration drops from 99.8 AUROC on MVTec AD to 92.4 on
+VisA \citep{zou2022spot}, so VisA still separates methods.
+Of the families in the review by \citet{ruff2021unifying}, the strongest normal-only detectors for this
+data combine ImageNet-pretrained CNN features with a simple density or nearest-neighbour model: a global
+Gaussian \citep{rippel2021modeling}, a Gaussian per location (PaDiM, \citealp{defard2021padim}), or
+$k$NN to normal patches (SPADE, \citealp{cohen2020spade}; PatchCore with a coreset memory bank,
+\citealp{roth2022towards}).
+Table~\ref{tab:related} lists the data, family, paradigm and reported result of each.
 
 \begin{table*}[t]
   \centering
@@ -58,26 +47,20 @@ each work.
   \label{tab:related}
 \end{table*}
 
-\paragraph{Positioning and choice of tiers.}
-The three tiers are ordered by how much each assumes about normal images.
-Tier~1 (template difference) assumes that normal images are pixel-aligned with the class-mean image, so
-any deviation from that mean is a defect.
-This assumption fails for objects that move or come in several instances, which is why Tier~1 is a lower
-bound and not a competitor.
-Tier~2 (PaDiM) moves the comparison into pretrained feature space but keeps a weaker form of alignment:
-each location must follow a single Gaussian.
-It is cheap to fit, has one interpretable score per location, and has few hyperparameters to ablate,
-which makes it suitable as our primary method.
-Tier~3 (PatchCore) drops both the Gaussian and the alignment assumption by comparing each patch with its
-nearest normal patch anywhere in the image, at the cost of a memory bank and a nearest-neighbour search.
-Tiers~2 and~3 share the backbone and the input, so their gap isolates the normality model.
+\paragraph{Choice of tiers.}
+The tiers are ordered by what they assume about normal images.
+Tier~1 (template difference) assumes pixel alignment with the class-mean image, which fails for objects
+that move, so it is a lower bound.
+Tier~2 (PaDiM) compares in pretrained feature space but still assumes one Gaussian per location; it is
+cheap, gives an interpretable score per location and has few hyperparameters, so it is our primary
+method.
+Tier~3 (PatchCore) drops both assumptions by matching each patch to its nearest normal patch anywhere,
+at the cost of a memory bank and a nearest-neighbour search.
+Tiers~2 and~3 share backbone and input, so their gap isolates the normality model.
 
 \paragraph{What we do differently.}
-Prior work on VisA reports threshold-free AUROC and AU-PR on the official test set, where about half of
-the images are anomalous.
-Instead, we fix one stratified split with a labelled validation set, choose one threshold per object
-on it, and report the resulting operating point at a deployment prevalence of 1\% and 5\%.
-We also report variation over seeds, ablate choices specific to anomaly detection, and audit the data
-itself.
-For cashew, pcb1 and pcb2 the anomalies differ from the normals in acquisition conditions, so we also
-report results without these three objects (\S\ref{sec:eda}).
+Prior VisA work reports threshold-free AUROC and AU-PR on the official test set, about half of which is
+anomalous.
+We instead choose one threshold per object on a labelled validation split and report the operating
+point at a deployment prevalence of 1\% and 5\%, with variation over seeds, anomaly-specific ablations
+and an audit of the data that flags an acquisition shortcut in three objects (\S\ref{sec:eda}).

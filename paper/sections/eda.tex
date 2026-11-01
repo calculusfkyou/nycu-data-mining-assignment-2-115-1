@@ -12,7 +12,7 @@ dimensions.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.85\textwidth]{stage4_eda/fig_eda_paper.png}
+  \includegraphics[width=0.78\textwidth]{stage4_eda/fig_eda_paper.png}
   \caption{Normal vs.\ anomalous images in the global embedding, for one object per pattern.
     Top: PCA fitted on train normals (axes are unitless projections). Bottom: Mahalanobis distance to the
     train-normal Gaussian, val normal vs.\ val anomaly; KS is the two-sample statistic. All 12 objects are
@@ -22,48 +22,36 @@ dimensions.
 
 \paragraph{Distribution contrast.}
 In the PCA projection (Figure~\ref{fig:eda}, top), val anomalies fall inside the train-normal cloud for
-most objects and form no cluster of their own, so a single global embedding is a weak detector.
-We fit a Ledoit--Wolf Gaussian \citep{ledoit2004well} to the train normals and compare the Mahalanobis
-distances of val normals and val anomalies (bottom).
-The two-sample KS statistic is between 0.66 and 0.91 for ten objects.
-It is only 0.45 for macaroni2 and 0.30 for capsules, where the difference is not significant
-($p = 0.12$).
-Both weak objects contain several freely placed instances.
+most objects, so a single global embedding is a weak detector.
+Against a Ledoit--Wolf Gaussian \citep{ledoit2004well} fitted on train normals (bottom), the two-sample
+KS statistic between the Mahalanobis distances of val normals and val anomalies is 0.66--0.91 for ten
+objects, but only 0.45 for macaroni2 and 0.30 for capsules ($p = 0.12$, not significant); both contain
+several freely placed instances.
 
 \paragraph{Dispersion and redundancy.}
 The per-location variance of layer3 features across train normals is 10.4 for capsules and 7.8 for
-macaroni2, against 1.3--3.6 for the other ten objects.
-Objects whose instances move in the frame are therefore much less regular at a fixed position, which is
-exactly what a location-wise Gaussian assumes.
-The candidate features are also redundant.
-Layer2 and layer3 have a linear CKA \citep{kornblith2019similarity} of 0.68--0.97, and 109--287 of the
-1,536 pooled dimensions explain 95\% of the variance.
-This redundancy is why Tier~2 keeps a random subset of channels instead of all of them
-(\S\ref{sec:method}).
+macaroni2, against 1.3--3.6 for the other objects: moving instances make a fixed position irregular,
+against the location-wise Gaussian assumption.
+The features are also redundant: layer2 and layer3 have a linear CKA \citep{kornblith2019similarity}
+of 0.68--0.97, and 109--287 of 1,536 pooled dimensions explain 95\% of the variance, which is why
+Tier~2 keeps a random channel subset (\S\ref{sec:method}).
 
 \paragraph{Acquisition shortcut.}
 For three objects the val anomalies concentrate in the smaller of two $k$-means modes of the train
-normals: cashew (35.8\% of normals vs.\ 95.0\% of anomalies), pcb1 (20.1\% vs.\ 95.0\%) and pcb2
-(23.2\% vs.\ 70.0\%).
-Figure~\ref{fig:eda} shows this for pcb1, where almost all anomalies sit in the minor PCA cluster.
-Simple image statistics explain the pattern.
-Anomalous cashew images are brighter than normals (mean grey level 62.7 vs.\ 53.1 and 55.8 in the two
-modes), and so are anomalous pcb2 images (97.7 vs.\ 86.8 and 91.0).
-For pcb1, 45\% of anomalous images are rotated by 180\textdegree, against about 7\% of normals.
-A detector can therefore score well on these objects without seeing the defect.
-We flagged every object with a gap of at least 40 percentage points before computing any test result,
-and we report each main result on the remaining nine objects as well.
+normals: cashew (35.8\% of normals vs.\ 95.0\% of anomalies), pcb1 (20.1\% vs.\ 95.0\%; the minor PCA
+cluster in Figure~\ref{fig:eda}) and pcb2 (23.2\% vs.\ 70.0\%).
+Anomalous cashew and pcb2 images are brighter (mean grey 62.7 vs.\ 53.1 / 55.8 in the two modes, and
+97.7 vs.\ 86.8 / 91.0), and 45\% of anomalous pcb1 images are rotated by 180\textdegree, against about
+7\% of normals.
+A detector can thus score well here without seeing the defect.
+We flagged every object with a gap of at least 40 percentage points before any test result, and report
+each main result on the other nine objects as well.
 
-\paragraph{Hypotheses.}
-The evidence above leads to three hypotheses, which we revisit in \S\ref{sec:results} and
-\S\ref{sec:analysis}.
-\begin{itemize}
-  \item \textbf{H1:} a location-wise Gaussian (Tier~2) loses most to a location-free
-    nearest-neighbour model (Tier~3) on objects with high positional variance (capsules, macaroni2).
-    Tested by the per-object Tier~3 $-$ Tier~2 gap.
-  \item \textbf{H2:} small defects are diluted in global features, so patch-level scoring is needed.
-    Tested by the feature ablation (patch-level vs.\ global pooled) and by detection rate per defect
-    size.
-  \item \textbf{H3:} aggregating the anomaly map by its maximum is more sensitive to small defects than
-    a top-1\% mean. Tested by the aggregation ablation.
-\end{itemize}
+\paragraph{Hypotheses} (revisited in \S\ref{sec:results} and \S\ref{sec:analysis}).
+\textbf{H1:} a location-wise Gaussian (Tier~2) loses most to location-free nearest neighbours (Tier~3)
+on objects with high positional variance (capsules, macaroni2); tested by the per-object Tier~3 $-$
+Tier~2 gap.
+\textbf{H2:} small defects are diluted in global features, so patch-level scoring is needed; tested by
+the patch-level vs.\ global-pooled ablation and by detection rate per defect size.
+\textbf{H3:} max aggregation of the anomaly map is more sensitive to small defects than a top-1\% mean;
+tested by the aggregation ablation.

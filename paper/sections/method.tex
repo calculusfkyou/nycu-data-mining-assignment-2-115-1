@@ -35,56 +35,43 @@
 \end{figure}
 
 \paragraph{Pipeline.}
-Figure~\ref{fig:pipeline} shows the Tier~2 pipeline, which follows PaDiM \citep{defard2021padim}.
-After the preprocessing of \S\ref{sec:data}, a frozen ImageNet-pretrained WideResNet-50
-\citep{zagoruyko2016wide} produces layer2 ($512 \times 28 \times 28$), layer3
-($1024 \times 14 \times 14$) and layer4 ($2048 \times 7 \times 7$) maps.
-Layer3 and layer4 are bilinearly upsampled to $28 \times 28$ and concatenated, giving a
-3,584-dimensional feature $f_{ij}(x)$ at each of the 784 locations.
-We keep a random subset of $d = 200$ channels, drawn once per seed and shared by train and test images
-(\S\ref{sec:eda} showed the features are highly redundant).
-The layers and $d$ were chosen on val PR-AUC (\S\ref{sec:setup}); no parameter is fitted on test data.
+Tier~2 (Figure~\ref{fig:pipeline}) follows PaDiM \citep{defard2021padim}.
+A frozen ImageNet-pretrained WideResNet-50 \citep{zagoruyko2016wide} produces layer2
+($512 \times 28^2$), layer3 ($1024 \times 14^2$) and layer4 ($2048 \times 7^2$) maps; layer3 and layer4
+are bilinearly upsampled to $28 \times 28$ and concatenated into a 3,584-d feature $f_{ij}(x)$ at each
+of the 784 locations.
+Because the features are redundant (\S\ref{sec:eda}), we keep a random subset of $d = 200$ channels,
+drawn once per seed.
+Layers and $d$ were chosen on val (\S\ref{sec:setup}).
 
 \paragraph{Anomaly score.}
-For every location $(i,j)$ we fit a Gaussian with mean $\mu_{ij}$ and covariance $\Sigma_{ij}$ on the
-train normals.
-The location score is the Mahalanobis distance, and the image score is the maximum over locations:
+At every location we fit a Gaussian $(\mu_{ij}, \Sigma_{ij})$ on train normals; the location score is
+the Mahalanobis distance and the image score its maximum:
 \begin{align}
   s_{ij}(x) &= \sqrt{(f_{ij} - \mu_{ij})^\top (\Sigma_{ij} + \epsilon I)^{-1} (f_{ij} - \mu_{ij})},
   \label{eq:sij} \\
   s(x) &= \max_{i,j}\, s_{ij}(x), \label{eq:sx}
 \end{align}
 with $\epsilon = 0.01$ to keep $\Sigma_{ij}$ invertible.
-We use the maximum because the median defect covers 0.20\% of the image (\S\ref{sec:data}), about 1.6
-of the 784 locations, so any averaging over the map would dilute it.
-The map $s_{ij}(x)$ also serves as the explanation of each alert (\S\ref{sec:analysis}).
+We take the maximum because the median defect covers 0.20\% of the image, about 1.6 of the 784
+locations, so averaging would dilute it; the map $s_{ij}(x)$ also explains each alert
+(\S\ref{sec:analysis}).
 
-\paragraph{Threshold decision.}
-An alert is raised when $s(x) \ge \tau$.
-For each object, $\tau$ maximises $F_2 = 5PR / (4P + R)$ on val, where $P$ and $R$ are precision and
-recall.
-$F_2$ weights recall more heavily than precision, which matches the cost asymmetry below.
-We do not use a fixed rule such as ``recall $\ge$ 95\%'': with 20 val anomalies per object, that rule
-is decided by the single hardest val anomaly and is therefore unstable.
-Alternatives (best-F1, the 99th percentile of val normals, and a review budget) are compared in
-\S\ref{sec:results}.
-
-\paragraph{FP vs.\ FN cost.}
-A false negative ships a defective product to a customer, which leads to returns and possibly a safety
-risk.
-A false positive sends a good product to manual re-inspection, which costs labour.
-The false negative is more expensive, so our $\tau$ is set to suppress false negatives at the cost of
-more false alarms.
-\S\ref{sec:analysis} converts the resulting false alarms into inspection workload.
+\paragraph{Threshold and error costs.}
+An alert is raised when $s(x) \ge \tau$, where $\tau$ maximises $F_2 = 5PR/(4P+R)$ on val, per object.
+A false negative ships a defective product to a customer (returns, possible safety risk); a false
+positive sends a good product to manual re-inspection (labour).
+Because false negatives cost more, $F_2$, which weights recall above precision, suppresses them at the
+price of more false alarms, whose workload \S\ref{sec:analysis} quantifies.
+We avoid a fixed ``recall $\ge$ 95\%'' rule: with 20 val anomalies per object it is decided by the
+single hardest one.
+Other rules are compared in \S\ref{sec:results}.
 
 \paragraph{Baselines.}
 Tier~0 predicts every image as normal.
-Tier~1 uses the mean train-normal image of each object as a template and scores the mean absolute pixel
-difference, on un-normalised RGB inputs.
-Tier~3 is PatchCore \citep{roth2022towards}.
-It averages layer2 and layer3 features over $3 \times 3$ neighbourhoods (1,536 channels, no random
-subset) and keeps a 1\% greedy coreset of the train patches as a memory bank, selected in a 128-d random
-projection.
-A patch is scored by its distance to the nearest bank entry, and the image score is again the maximum.
-Tiers~2 and~3 share the backbone and the input; Tier~1 shares only the input size.
-All tiers use the same per-object best-F2 threshold rule.
+Tier~1 scores the mean absolute pixel difference to the mean train-normal image of each object, on
+un-normalised RGB.
+Tier~3 is PatchCore \citep{roth2022towards}: layer2 and layer3 features averaged over $3 \times 3$
+neighbourhoods (1,536 channels), a 1\% greedy coreset of train patches selected in a 128-d random
+projection, and the distance to the nearest bank entry as patch score, maximised over the image.
+Tiers~2 and~3 share backbone and input; all tiers use the same best-F2 threshold rule.
