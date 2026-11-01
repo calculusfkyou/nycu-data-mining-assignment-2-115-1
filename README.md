@@ -16,12 +16,14 @@ validation set (best F2). The test set is read once, after every model and thres
 | Method | PR-AUC | ROC-AUC | F1 | FPR@τ | prec@1 % | ms / image |
 |---|---|---|---|---|---|---|
 | T0 predict all normal | 0.442 | 0.500 | 0 | 0 | – | – |
-| T1 template | 0.702 | 0.762 | 0.693 | 0.465 | 0.023 | 0.12 (CPU) |
-| T2 PaDiM | 0.801 ± 0.007 | 0.828 ± 0.008 | 0.733 ± 0.007 | 0.332 ± 0.012 | 0.037 ± 0.005 | 7.38 |
-| T3 PatchCore | **0.885 ± 0.002** | **0.902 ± 0.002** | **0.806 ± 0.009** | **0.174 ± 0.021** | **0.148 ± 0.044** | 11.72 |
+| T1 template | 0.702 | 0.762 | 0.693 | 0.465 | 0.018 | 0.12 (CPU) |
+| T2 PaDiM | 0.801 ± 0.007 | 0.828 ± 0.008 | 0.733 ± 0.007 | 0.332 ± 0.012 | 0.024 ± 0.001 | 7.38 |
+| T3 PatchCore | **0.885 ± 0.002** | **0.902 ± 0.002** | **0.806 ± 0.009** | **0.174 ± 0.021** | **0.046 ± 0.005** | 11.72 |
 
 - T3 − T2 PR-AUC = +0.084, paired bootstrap 95 % CI [0.065, 0.102], Wilcoxon p = 0.003 over the 12 objects.
-- prec@1 % is the share of alerts that would be real defects at a 1 % production defect rate.
+- prec@1 % is the share of alerts that would be real defects at a 1 % production defect rate, computed
+  per seed from the object-averaged TPR and FPR (per object it is unreliable: with 50–101 test normals,
+  FPR is often 0).
 - Latency: RTX 4060 Ti, batch 1, feature extraction included.
 - Without the three objects whose anomalies show a capture-condition shortcut (cashew, pcb1, pcb2), the
   ranking is unchanged (PR-AUC 0.655 / 0.785 / 0.874).
