@@ -6,18 +6,14 @@
 \label{sec:related}
 
 \paragraph{Benchmarks and methods.}
-Our task falls in the image data category.
-Industrial inspection is usually studied on MVTec AD \citep{bergmann2019mvtec} (15 categories, 5,354
-images), where image-level AUROC is now close to saturated (Table~\ref{tab:related}).
-VisA \citep{zou2022spot} keeps the one-class protocol but adds complex structures (PCBs) and multiple,
-freely placed instances; the same PatchCore configuration drops from 99.8 AUROC on MVTec AD to 92.4 on
-VisA \citep{zou2022spot}, so VisA still separates methods.
-Of the families in the review by \citet{ruff2021unifying}, the strongest normal-only detectors for this
-data combine ImageNet-pretrained CNN features with a simple density or nearest-neighbour model: a global
-Gaussian \citep{rippel2021modeling}, a Gaussian per location (PaDiM, \citealp{defard2021padim}), or
-$k$NN to normal patches (SPADE, \citealp{cohen2020spade}; PatchCore with a coreset memory bank,
-\citealp{roth2022towards}).
-Table~\ref{tab:related} lists the data, family, paradigm and reported result of each.
+Our task is in the image data category, where industrial inspection is usually studied on MVTec AD
+\citep{bergmann2019mvtec}, where image-level AUROC is close to saturated (Table~\ref{tab:related}).
+VisA \citep{zou2022spot} adds complex structures and freely placed instances, and the same PatchCore drops
+there from 99.8 to 92.4 AUROC, so it still separates methods.
+Among the families reviewed by \citet{ruff2021unifying}, the strongest normal-only detectors on such data
+pair ImageNet-pretrained features with a simple model: a global Gaussian \citep{rippel2021modeling}, a
+Gaussian per location (PaDiM, \citealp{defard2021padim}), or $k$NN to normal patches (SPADE,
+\citealp{cohen2020spade}; PatchCore, \citealp{roth2022towards}).
 
 \begin{table*}[t]
   \centering
@@ -38,29 +34,19 @@ Table~\ref{tab:related} lists the data, family, paradigm and reported result of 
     Ours, Tier 3 & VisA$^\ast$ & PatchCore (patch $k$NN), WRN50 & normal + val.\ $\tau$ & 90.2\,$\pm$\,0.2 & 88.5\,$\pm$\,0.2 \\
     \bottomrule
   \end{tabular}
-  \caption{Image-level results (\%) reported by prior work and by us.
-    ``Normal only'': fitted on normal images only; ``normal + val.\ $\tau$'': also uses labelled
-    validation anomalies, but only to choose thresholds and hyperparameters.
-    $^\dagger$As reported by \citet{defard2021padim}.
-    $^\ast$Our own split of VisA (\S\ref{sec:data}); rows on different splits give context, not a
-    direct comparison. Ours: mean\,$\pm$\,std over 3 seeds, averaged over 12 objects.}
+  \caption{Image-level results (\%) of prior work and ours. ``Normal + val.\ $\tau$'': labelled val
+    anomalies only choose thresholds and hyperparameters. $^\dagger$As reported by
+    \citet{defard2021padim}. $^\ast$Our split (\S\ref{sec:data}): context, not a direct comparison;
+    mean\,$\pm$\,std over 3 seeds, 12 objects.}
   \label{tab:related}
 \end{table*}
 
-\paragraph{Choice of tiers.}
-The tiers are ordered by what they assume about normal images.
-Tier~1 (template difference) assumes pixel alignment with the class-mean image, which fails for objects
-that move, so it is a lower bound.
-Tier~2 (PaDiM) compares in pretrained feature space but still assumes one Gaussian per location; it is
-cheap, gives an interpretable score per location and has few hyperparameters, so it is our primary
-method.
-Tier~3 (PatchCore) drops both assumptions by matching each patch to its nearest normal patch anywhere,
-at the cost of a memory bank and a nearest-neighbour search.
-Tiers~2 and~3 share backbone and input, so their gap isolates the normality model.
-
-\paragraph{What we do differently.}
-Prior VisA work reports threshold-free AUROC and AU-PR on the official test set, 55\% of which is
-anomalous.
-We instead choose one threshold per object on a labelled validation split and report the operating
-point at a deployment prevalence of 1\% and 5\%, with variation over seeds, anomaly-specific ablations
-and an audit of the data that flags an acquisition shortcut in three objects (\S\ref{sec:eda}).
+\paragraph{Choice of tiers and positioning.}
+The tiers differ in what they assume about normal images.
+Tier~1 (template difference) assumes pixel alignment and is a lower bound.
+Tier~2 (PaDiM) assumes one Gaussian per feature location; it is cheap, interpretable per location and
+has few hyperparameters, so it is our primary method.
+Tier~3 (PatchCore) drops the alignment assumption at the cost of a memory bank.
+Unlike prior VisA work, which reports threshold-free scores on an official test set that is 55\%
+anomalous, we fix thresholds on a labelled validation split and report operating points at a 1\% and
+5\% deployment prevalence.

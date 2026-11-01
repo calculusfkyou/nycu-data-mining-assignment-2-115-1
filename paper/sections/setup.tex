@@ -25,13 +25,11 @@ Tier~3: coreset $\in \{1\%, 10\%\}$ and the same layer sets, selected 1\% with $
 $3 \times 3$ neighbourhood and 128-d projection fixed.
 
 \paragraph{Metrics.}
-PR-AUC is primary because it reflects how many alerts are real defects under imbalance
-\citep{davis2006relationship,saito2015precision}; ROC-AUC allows comparison with the literature.
+PR-AUC is primary (\S\ref{sec:data}); ROC-AUC allows comparison with the literature.
 At $\tau$ we report F1, F2, the false-positive rate (good products sent to re-inspection) and
-$\mathrm{prec}_\pi$ (Eq.~\ref{eq:prec-pi}) at $\pi = 1\%$ and $5\%$ (share of alerts that are real
-defects in production).
+$\mathrm{prec}_\pi$ (Eq.~\ref{eq:prec-pi}), the share of alerts that are real defects in production.
 Numbers are the mean $\pm$ std over seeds 0--2 of the 12-object average; the seed sets the Tier~2
-channel subset and the Tier~3 coreset start and projection (Tier~1 is deterministic).
+channel subset and the Tier~3 coreset (Tier~1 is deterministic).
 
 \paragraph{Implementation and hardware.}
 PyTorch 2.15.0 (CUDA 13.2), torchvision 0.29.2 and scikit-learn on an NVIDIA RTX 4060 Ti (8\,GB).

@@ -40,9 +40,8 @@ A frozen ImageNet-pretrained WideResNet-50 \citep{zagoruyko2016wide} produces la
 ($512 \times 28^2$), layer3 ($1024 \times 14^2$) and layer4 ($2048 \times 7^2$) maps; layer3 and layer4
 are bilinearly upsampled to $28 \times 28$ and concatenated into a 3,584-d feature $f_{ij}(x)$ at each
 of the 784 locations.
-Because the features are redundant (\S\ref{sec:eda}), we keep a random subset of $d = 200$ channels,
-drawn once per seed.
-Layers and $d$ were chosen on val (\S\ref{sec:setup}).
+As the features are redundant (\S\ref{sec:eda}), we keep a random subset of $d = 200$ channels per
+seed (layers and $d$ chosen on val, \S\ref{sec:setup}).
 
 \paragraph{Anomaly score.}
 At every location we fit a Gaussian $(\mu_{ij}, \Sigma_{ij})$ on train normals; the location score is
@@ -62,10 +61,9 @@ An alert is raised when $s(x) \ge \tau$, where $\tau$ maximises $F_2 = 5PR/(4P+R
 A false negative ships a defective product to a customer (returns, possible safety risk); a false
 positive sends a good product to manual re-inspection (labour).
 Because false negatives cost more, $F_2$, which weights recall above precision, suppresses them at the
-price of more false alarms, whose workload \S\ref{sec:analysis} quantifies.
-We avoid a fixed ``recall $\ge$ 95\%'' rule: with 20 val anomalies per object it is decided by the
-single hardest one.
-Other rules are compared in \S\ref{sec:results}.
+price of more false alarms (quantified in \S\ref{sec:analysis}).
+A fixed ``recall $\ge$ 95\%'' rule would hinge on the single hardest of 20 val anomalies; other rules
+are compared in \S\ref{sec:results}.
 
 \paragraph{Baselines.}
 Tier~0 predicts every image as normal.

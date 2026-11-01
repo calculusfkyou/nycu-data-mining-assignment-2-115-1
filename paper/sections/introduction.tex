@@ -12,15 +12,12 @@ A missed defect reaches a customer; a false alarm costs inspection labour, so th
 the two at the real defect rate of the line, around 1\%.
 
 \paragraph{Motivation and anomaly definition.}
-This is an image anomaly detection task.
-An anomaly is an item with a surface or structural defect, such as a bent pin on an otherwise normal
-circuit board (pcb1 in Figure~\ref{fig:samples}).
-The task is hard for three reasons.
-Defects are rare and varied, so few labelled examples exist and models must learn from normal images.
-They are tiny, with a median area of 0.20\% of the image.
-And on some objects the normal appearance itself varies, because several instances lie at random
-positions.
-We study these issues on VisA \citep{zou2022spot}, 12 objects photographed under inspection conditions.
+In this image anomaly detection task, an anomaly is an item with a surface or structural defect, such
+as a bent pin on an otherwise normal circuit board (pcb1 in Figure~\ref{fig:samples}).
+The task is hard because defects are rare and varied, so models must learn from normal images; they are
+tiny (median 0.20\% of the image); and on some objects several instances lie at random positions, so
+the normal appearance itself varies.
+We study this on VisA \citep{zou2022spot}, 12 objects photographed under inspection conditions.
 
 \paragraph{Research question.}
 How well does a location-wise Gaussian on pretrained patch features (PaDiM, our Tier~2) detect defects
@@ -29,14 +26,13 @@ what would its alerts cost an inspection team at a 1\% defect rate?
 
 \paragraph{Contributions.}
 \begin{itemize}
-  \item A leakage-free comparison of three tiers on one shared VisA split with per-object thresholds:
-    Tier~3 beats Tier~2 by $+0.084$ PR-AUC (significant over seeds and objects), yet at a 1\% defect
-    rate only 3.7\% of Tier~2 and 14.8\% of Tier~3 alerts are real defects (\S\ref{sec:results}).
-  \item Controlled ablations showing that the location-wise covariance carries Tier~2 ($-0.07$ to
-    $-0.12$ PR-AUC without it), while up to 2\% training contamination and the aggregation rule have no
-    effect beyond seed noise (\S\ref{sec:results}).
-  \item An error and interpretability analysis that traces Tier~2's failures to position: its map peaks
-    inside the defect for 25\% of anomalies, against 70\% for Tier~3 (\S\ref{sec:analysis}).
-  \item A data audit that finds an acquisition shortcut in three objects before any test result; every
-    main result is also reported without them (\S\ref{sec:eda}).
+  \item A leakage-free three-tier comparison with per-object thresholds: Tier~3 beats Tier~2 by
+    $+0.084$ PR-AUC (significant), yet at a 1\% defect rate only 3.7\% and 14.8\% of their alerts are
+    real defects (\S\ref{sec:results}).
+  \item Ablations showing that the location-wise covariance carries Tier~2 (up to 0.12 PR-AUC), while
+    2\% contamination and the aggregation rule do not matter (\S\ref{sec:results}).
+  \item An error analysis tracing Tier~2's failures to position: its map hits the defect for 25\% of
+    anomalies, Tier~3's for 70\% (\S\ref{sec:analysis}).
+  \item A data audit that flags an acquisition shortcut in three objects before testing
+    (\S\ref{sec:eda}).
 \end{itemize}
