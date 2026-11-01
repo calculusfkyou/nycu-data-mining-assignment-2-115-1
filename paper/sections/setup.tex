@@ -12,8 +12,8 @@ Models are fitted on train normals only, normalisation uses fixed ImageNet stati
 anomalies only choose $\tau$ and hyperparameters.
 For every object, all models and thresholds are fixed before test features are loaded, and test is
 evaluated once.
-The only earlier contact with test was a pipeline smoke test on one object (candle, seed~0, default
-settings) before the search; nothing was chosen from it.
+The only earlier contact with test were two pipeline smoke runs on one object (candle, seed~0; Tier~2
+raw and smoothed) before the search; nothing was chosen from them.
 
 \paragraph{Hyperparameters.}
 On val (seed~0) we fit the full grid per tier and keep the setting with the highest mean val PR-AUC

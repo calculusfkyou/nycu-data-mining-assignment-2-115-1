@@ -2,7 +2,7 @@
 % §3 Task Definition & Data. Numbers from results/stage4_eda/{eda_summary,eda_split_counts,eda_imbalance,
 % eda_crop_loss}.csv; Tier 2 feature size from results/stage6_main/search_log.txt (chosen config).
 % Figure 1 shows the pcb1 and capsules columns of fig_samples.png (150 dpi: 1 px = 0.48 bp; the trim keeps
-% x = 15-957 px, y = 80-1018 px and drops the in-image title).
+% x = 15-957 px, y = 120-982 px and drops the in-image title).
 \section{Task Definition \& Data}
 \label{sec:data}
 
@@ -14,7 +14,7 @@ The median defect covers only 0.20\% of the image (10th / 90th percentile 0.03\%
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth, trim=7.2 29.8 462.2 38.4, clip]{stage4_eda/fig_samples.png}
+  \includegraphics[width=0.85\columnwidth, trim=7.2 47.0 462.2 57.6, clip]{stage4_eda/fig_samples.png}
   \caption{Normal (top) and anomalous (bottom) images of two VisA objects, from train and val only.
     Red contours mark the ground-truth defect masks.}
   \label{fig:samples}

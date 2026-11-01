@@ -41,10 +41,11 @@ The first fix to try is registering each image to a reference pose before scorin
 \paragraph{Hypotheses.}
 H1 is only partly supported.
 Capsules has the largest Tier~3 $-$ Tier~2 gap ($+0.196$ PR-AUC), but on macaroni2 Tier~2 is better
-(0.544 vs.\ 0.492, both near chance), and the multiple-instance group gap ($+0.095$) equals the
-complex-structure gap.
-H2 holds at every defect size: patch-level scoring recalls more anomalies than global pooling for small
-($<$0.25\%: 0.770 vs.\ 0.742), medium (0.834 vs.\ 0.800) and large defects ($>$0.98\%: 0.983 vs.\ 0.969).
+(0.544 vs.\ 0.492, both weak; chance is 0.375), and the multiple-instance group gap ($+0.095$) equals
+the complex-structure gap.
+H2 is partly supported: patch-level scoring beats pooling overall ($-0.029$ when pooled, beyond seed
+std), but per defect size its recall gains are 0.01--0.03 (small $<$0.25\%: 0.770 vs.\ 0.742; large
+$>$0.98\%: 0.983 vs.\ 0.969), within 1--2 seed std and not largest for small defects.
 
 \begin{figure}[t]
   \centering
@@ -56,13 +57,12 @@ H2 holds at every defect size: patch-level scoring recalls more anomalies than g
 
 \paragraph{Practical impact.}
 Of 10,000 items at a 1\% defect rate, Tier~2 with best-F2 misses 18 of 100 defects and sends 3,288
-good items to re-inspection (2.4\% of flagged items are defective); Tier~3 misses 18.5 but raises 1,565
-fewer false alarms (1,722), roughly halving the inspectors' workload.
+good items to re-inspection (2.4\% of flagged items are defective); Tier~3 misses about as many (18.5)
+with about half the false alarms (1,722), roughly halving the inspectors' workload.
 If only about 2\% of production can be re-inspected, Tier~2 needs the 99th-percentile threshold (186
 false alarms) and misses 71 defects.
-Labour versus escaped defects is the quality manager's choice, and Tier~3 improves both sides.
-(These use class-averaged TPR and FPR, so they differ slightly from prec$_{1\%}$ in
-Table~\ref{tab:main}.)
+Labour versus escaped defects is the quality manager's choice; Tier~3 cuts the labour at no cost in
+escaped defects.
 
 \paragraph{Interpretability.}
 In Figure~\ref{fig:heatmaps} Tier~2 flags the chewing gum by a wide margin ($s/\tau = 5.19$), but its

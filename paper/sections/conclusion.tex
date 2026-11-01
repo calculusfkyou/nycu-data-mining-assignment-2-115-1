@@ -13,7 +13,7 @@ defective.
 
 \paragraph{Reflection and future work.}
 The decision that mattered most was the threshold rule, which alone moves the share of real defects
-among alerts from 3.7\% to 51\% (recall 0.82 to 0.29); starting again, we would fix the inspection
+among alerts from 2.4\% to 13.8\% (recall 0.82 to 0.29); starting again, we would fix the inspection
 budget with the stakeholder first.
 Following \S\ref{sec:analysis}, we would next (1) register each image to a reference pose before Tier~2
 scoring and (2) let each patch be compared with the Gaussians of its spatial neighbours, removing the
@@ -21,7 +21,8 @@ position blind spot at Tier~2 cost.
 
 \paragraph{Limitations and deployment.}
 Each object comes from one acquisition setup and our test set is 43\% anomalous, so absolute numbers
-are optimistic, more so for cashew, pcb1 and pcb2.
+are optimistic, more so for cashew, pcb1 and pcb2; with 50--101 test normals per object, FPR is
+resolved only to 1--2\%.
 We assume clean normal training data (tested up to 2\% contamination) and roughly aligned objects, which
 fails for capsules; our split differs from the official one, so results may not transfer exactly.
 In deployment, changes in lighting, camera position or product revision shift the normal appearance:
