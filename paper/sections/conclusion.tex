@@ -1,5 +1,37 @@
 % !TEX root = ../main.tex
+% §9 Conclusion & Limitations. No new results: every number appears earlier (§4, §7, §8).
 \section{Conclusion \& Limitations}
 \label{sec:conclusion}
 
-TODO
+\paragraph{Key findings.}
+Fitted on normal images only, PaDiM (Tier~2) detects VisA defects with 0.801 PR-AUC, significantly
+below PatchCore (0.885, $+0.084$).
+Its location-wise Gaussian is both its strength (removing the covariance costs up to 0.12 PR-AUC) and
+its blind spot: it confuses shifted objects with defects and localises only a quarter of them.
+For an inspection team at a 1\% defect rate, neither tier is ready to reject items automatically: with
+a recall-oriented threshold only 2--5\% of flagged items are defective.
+
+\paragraph{Reflection and future work.}
+The decision that mattered most was the threshold rule: with the model fixed, it moves the share of
+real defects among alerts from 3.7\% to 51\% and recall from 0.82 to 0.29.
+Starting again, we would agree on the inspection budget with the stakeholder first and choose $\tau$ for
+it.
+Following \S\ref{sec:analysis}, our next steps are (1) registering each image to a reference pose before
+Tier~2 scoring, and (2) a hybrid that keeps the per-location Gaussian but scores each patch against
+its spatial neighbourhood, to remove the position blind spot at Tier~2 cost.
+
+\paragraph{Limitations.}
+All images come from one acquisition setup per object, and our test set is 43\% anomalous, so absolute
+numbers are optimistic for a real line; the acquisition shortcut in cashew, pcb1 and pcb2 inflates
+them further.
+We assume clean normal training data; we tested contamination only up to 2\%, the limit of our pool.
+Tier~2 also assumes roughly aligned objects, which fails for multi-instance objects such as capsules.
+Our split differs from the official one, so the findings may not transfer exactly to other datasets or
+domains.
+
+\paragraph{Deployment considerations.}
+Lighting, camera position or a new product revision would shift the normal appearance; refitting
+Tier~2 takes seconds, but $\tau$ needs fresh labelled anomalies, so drift should be monitored through
+the alert rate.
+Both tiers meet a per-item budget of tens of milliseconds on one GPU, and the images show products, not
+people, so no personal data is processed.

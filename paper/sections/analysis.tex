@@ -1,5 +1,81 @@
 % !TEX root = ../main.tex
+% §8 Analysis. results/stage8_analysis/{failure_cases,peak_in_mask,pixel_auroc,h1_per_class,h1_by_group,
+% h2_detection_by_area,practical_impact}.csv. The failure-case maps (fig_failure_cases.png) are left out for
+% space; the figure crops fig_heatmaps.png (chewing gum row, y = 518-1010 px; 150 dpi, 1 px = 0.48 bp).
 \section{Analysis}
 \label{sec:analysis}
 
-TODO
+\begin{table}[t]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{1.8pt}
+  \begin{tabular}{@{}cllccc@{}}
+    \toprule
+    \# & Type & Image, defect (area \%) & $s(x)$ & $\tau$ & $s/\tau$ \\
+    \midrule
+    1 & FN inv. & pcb2 A022, melt (0.20) & 9.85 & 13.50 & 0.73 \\
+    2 & FN near & pipe fryum A055, spot (0.04) & 14.23 & 14.25 & 0.999 \\
+    3 & FP inv. & pcb4 N0871 & 26.41 & 12.67 & 2.09 \\
+    4 & FP near & pcb4 N0457 & 12.67 & 12.67 & 1.000 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tier~2 failure cases on test (seed~0; 137 FN of 720 anomalies, 308 FP of 962 normals):
+    inv. = most inverted, near = nearest miss of each error type; A = anomaly, N = normal.}
+  \label{tab:failures}
+\end{table}
+
+\paragraph{Failure cases.}
+Table~\ref{tab:failures} lists four Tier~2 errors; their anomaly maps are in the repository
+(\texttt{results/stage8\_analysis}).
+In \#1 the melt lies among dense components and the map stays low there; its maximum is in the
+background, so the defect is simply not seen.
+In \#2 the score is high, but it comes from the object--background boundary, not from the tiny spot,
+so the near miss is coincidental.
+In \#3 and \#4 the board sits slightly off its usual position, and the maximum falls on the background
+or the board edge.
+The shared blind spot is position: a location-wise Gaussian treats a shifted object as anomalous at its
+edges, and this edge response masks small defects.
+Over all test anomalies, the Tier~2 map peaks inside the defect mask (dilated by 8\,px) for 25.3\% of
+images (0\% for capsules), against 70.3\% for Tier~3.
+The first fix we would try is registering each image to a reference pose before scoring, or a
+position-free patch score as in Tier~3.
+
+\paragraph{Hypotheses.}
+H1 is only partly supported.
+Capsules has the largest Tier~3 $-$ Tier~2 gap ($+0.196$ PR-AUC), but on macaroni2 Tier~2 is better
+(0.544 vs.\ 0.492, both near chance), and the multiple-instance group gap ($+0.095$) equals the
+complex-structure gap.
+H2 holds at every defect size: patch-level scoring recalls more anomalies than global pooling for small
+($<$0.25\%: 0.770 vs.\ 0.742), medium (0.834 vs.\ 0.800) and large defects ($>$0.98\%: 0.983 vs.\ 0.969).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth, trim=0 249.6 0 248.6, clip]{stage8_analysis/fig_heatmaps.png}
+  \caption{A correctly flagged chewing gum with a missing chunk: image with defect mask, Tier~2 map
+    and Tier~3 map. $s/\tau$ is the score relative to each tier's threshold.}
+  \label{fig:heatmaps}
+\end{figure}
+
+\paragraph{Practical impact.}
+At a 1\% defect rate, 10,000 inspected items contain 100 defects.
+With the best-F2 threshold, Tier~2 misses 18 of them and sends 3,288 good items to re-inspection, so
+only 2.4\% of flagged items are defective; Tier~3 misses about the same number (18.5) but raises 1,722
+false alarms, 1,565 fewer, which roughly halves the inspectors' workload.
+If the line can re-inspect only about 2\% of production, Tier~2 needs the 99th-percentile threshold
+(186 false alarms) and then misses 71 of 100 defects.
+Choosing between inspection labour and escaped defects is therefore the quality manager's decision, and
+Tier~3 moves the whole trade-off in their favour.
+These figures use the class-averaged TPR and FPR, so they differ slightly from prec$_{1\%}$ in
+Table~\ref{tab:main}.
+
+\paragraph{Interpretability.}
+Figure~\ref{fig:heatmaps} explains why one anomaly was flagged.
+Tier~2 flags the chewing gum with a large margin ($s/\tau = 5.19$), but its map peaks on the shadow
+above the object, not on the missing chunk; Tier~3 peaks on the defect itself.
+For a missing component on pcb4 (in the repository), both maps peak on the empty pad, so an engineer
+could act on either.
+Mean pixel ROC-AUC is 0.925 for Tier~2 and 0.973 for Tier~3.
+We would show engineers the Tier~3 map as a localisation aid and not trust the Tier~2 map, which points
+at the defect in only a quarter of cases.
+On cashew, pcb1 and pcb2 a high score may also reflect the acquisition shortcut of \S\ref{sec:eda}
+rather than the defect, which is why these objects are reported separately.
