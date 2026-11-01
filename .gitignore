@@ -13,3 +13,13 @@ __pycache__/
 
 # reports data
 reports/slides/
+# LaTeX build output (paper/)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.pdf

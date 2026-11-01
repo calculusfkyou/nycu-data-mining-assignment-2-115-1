@@ -1,0 +1,63 @@
+% HW2 paper (ACL format). Build: pdflatex -> bibtex -> pdflatex x2 (VS Code: LaTeX Workshop, see .vscode/).
+% main.tex        -> named version, \usepackage[preprint]{acl}  -> HW2_<TeamID>_report.pdf
+% main_review.tex -> anonymized version, \usepackage[review]{acl}, Team ID only (LLM TA Judge draft)
+\providecommand{\anonymous}{0}
+\documentclass[11pt]{article}
+
+\ifnum\anonymous=1
+  \usepackage[review]{acl}
+  % Keep review mode (line numbers) but print the Team ID instead of "Anonymous ACL submission",
+  % as the assignment asks; acl.sty itself stays unmodified.
+  \makeatletter\acl@anonymizefalse\makeatother
+\else
+  \usepackage[preprint]{acl}
+\fi
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+% Figures are read straight from the experiment outputs.
+\graphicspath{{../results/}}
+
+% TODO: fill in the team ID and every member's name and student ID.
+\newcommand{\teamid}{Team TODO}
+\newcommand{\repourl}{\url{https://github.com/calculusfkyou/nycu-data-mining-assignment-2-115-1}}
+
+\title{TODO: Paper Title}
+
+\ifnum\anonymous=1
+  \author{\teamid}
+\else
+  \author{\teamid \\
+    TODO Member A (student ID) \quad
+    TODO Member B (student ID) \quad
+    TODO Member C (student ID) \\
+    {\normalfont\small \repourl}}
+\fi
+
+\begin{document}
+\maketitle
+
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/data}
+\input{sections/eda}
+\input{sections/method}
+\input{sections/setup}
+\input{sections/results}
+\input{sections/analysis}
+\input{sections/conclusion}
+\input{sections/contributions}
+
+\bibliography{references}
+
+\end{document}
