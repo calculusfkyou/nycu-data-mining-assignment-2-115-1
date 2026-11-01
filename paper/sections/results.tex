@@ -1,5 +1,98 @@
 % !TEX root = ../main.tex
+% §7 Results. Main table: results/stage6_main/summary.csv and latency.csv; significance:
+% results/stage8_analysis/significance.csv (src/analyze.py, N_BOOT = 1000); ablations:
+% results/stage7_ablation/ablation_summary.csv.
 \section{Results}
 \label{sec:results}
 
-TODO
+\begin{table*}[t]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lcccccccc@{}}
+    \toprule
+    Method & PR-AUC & ROC-AUC & F1 & F2 & FPR$\downarrow$ & prec$_{1\%}$ & ms/img$\downarrow$ & fit s$\downarrow$ \\
+    \midrule
+    T0 all normal & 0.442 & 0.500 & 0 & 0 & 0 & -- & -- & -- \\
+    T1 template & 0.702 & 0.762 & 0.693 & 0.767 & 0.465 & 0.023 & \textbf{0.12}$^\ast$ & \textbf{0.1} \\
+    T2 PaDiM & 0.801\,$\pm$\,0.007 & 0.828\,$\pm$\,0.008 & 0.733\,$\pm$\,0.007 & 0.779\,$\pm$\,0.006
+      & 0.332\,$\pm$\,0.012 & 0.037\,$\pm$\,0.005 & 7.38 & 2.8 \\
+    T3 PatchCore & \textbf{0.885}\,$\pm$\,0.002 & \textbf{0.902}\,$\pm$\,0.002 & \textbf{0.806}\,$\pm$\,0.009
+      & \textbf{0.808}\,$\pm$\,0.008 & \textbf{0.174}\,$\pm$\,0.021 & \textbf{0.148}\,$\pm$\,0.044 & 11.72 & 114 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Test results averaged over the 12 objects, mean\,$\pm$\,std over 3 seeds (T0 and T1 are
+    deterministic); best per column in bold, T0 excluded. prec$_{1\%}$: Eq.~\ref{eq:prec-pi} at
+    $\pi = 1\%$. ms / img: median GPU latency incl.\ feature extraction ($^\ast$T1 on CPU, no backbone);
+    fit: total over 12 objects. Without cashew, pcb1 and pcb2, PR-AUC is 0.655 / 0.785 / 0.874 for
+    T1 / T2 / T3.}
+  \label{tab:main}
+\end{table*}
+
+\paragraph{Main results.}
+Table~\ref{tab:main} compares the tiers on the same test set.
+Tier~3 beats Tier~2 on 11 of 12 objects by $+0.084$ PR-AUC.
+The gap is significant: the paired bootstrap 95\% CI is $[0.065, 0.102]$ (test images resampled within
+object and label, 1,000 rounds), the Wilcoxon test over objects gives $p = 0.003$, and the paired
+$t$-test over seeds gives $p = 0.003$.
+Without the three flagged objects the gap is $+0.089$ $[0.067, 0.109]$, $p = 0.012$, with the same
+ranking.
+Tier~2 improves on Tier~1 by $+0.099$, but only on 9 of 12 objects (Wilcoxon $p = 0.077$), so we call
+it a trend, not a significant gain.
+Our Tier~3 ROC-AUC (90.2) is 2.2 points below the 92.4 that \citet{zou2022spot} report on the official
+split (Table~\ref{tab:related}), a plausible gap for a re-implementation on a different test set.
+
+\paragraph{Why Tier 2 loses.}
+Tier~2 assumes that the same part of the object appears at the same location in every image; Tier~3
+compares each patch with stored normal patches from any position.
+The extra robustness costs 41$\times$ the training time (114\,s vs.\ 2.8\,s for all 12 objects, paid
+once) and 4.3\,ms more per image (11.7 vs.\ 7.4\,ms).
+F2 hides most of this gap because the test set is 43\% anomalous, so even a loose threshold scores well
+(Tier~1: F2 0.767 at FPR 0.465).
+At a 1\% prevalence, however, only 3.7\% of Tier~2 alerts and 14.8\% of Tier~3 alerts would be real
+defects.
+
+\begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}llcc@{}}
+    \toprule
+    Factor & Setting & PR-AUC & $\Delta$ \\
+    \midrule
+    -- & full Tier 2 & 0.801\,$\pm$\,0.007 & -- \\
+    \midrule
+    Scoring & Euclidean 1-NN & 0.734\,$\pm$\,0.003 & $-0.067^\ast$ \\
+            & cosine 1-NN    & 0.686\,$\pm$\,0.021 & $-0.115^\ast$ \\
+    Contam. & 1\% of train & 0.797\,$\pm$\,0.007 & $-0.004$ \\
+                  & 2\% of train & 0.794\,$\pm$\,0.008 & $-0.007$ \\
+    Aggregation & top-1\% mean          & 0.799\,$\pm$\,0.006 & $-0.002$ \\
+                & smoothed max &0.796\,$\pm$\,0.007 & $-0.004$ \\
+    Features & global pooled & 0.771\,$\pm$\,0.006 & $-0.029^\ast$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tier~2 ablations, one factor at a time (12 objects, 3 seeds). $^\ast$: $|\Delta|$ exceeds
+    the seed std of both settings. Full Tier~2: Mahalanobis, 0\% contamination, max, patch-level; smoothed max uses
+    $\sigma = 4$.}
+  \label{tab:ablation}
+\end{table}
+
+\paragraph{Controlled ablations.}
+Table~\ref{tab:ablation} changes one factor of Tier~2 at a time.
+The location-wise covariance matters most: replacing the Mahalanobis distance with a nearest-neighbour
+distance at the same location costs 0.07--0.12 PR-AUC.
+Pooling the map into one global vector costs 0.029 (0.038 on nine objects), which supports H2.
+The threshold rule leaves PR-AUC unchanged but moves the operating point.
+Against best-F2 (recall 0.82, FPR 0.33, prec$_{1\%}$ 0.037), best-F1 gives 0.64 / 0.18 / 0.090, a
+review budget of the top 10\% of val gives 0.35 / 0.04 / 0.34, and the 99th percentile of val normals
+gives 0.29 / 0.02 / 0.51; every change exceeds the seed std.
+Raising precision at deployment therefore costs most of the recall.
+
+Two results are negative.
+Adding 1--2\% anomalies to train (4--16 images per object) changes PR-AUC by less than the seed std;
+5\% and 10\% were impossible because the pool holds 20 anomalies per object, 2.5\% of the largest train
+sets.
+We attribute the robustness to defect size: with a median defect of 0.20\% of the image, the share of
+contaminated \emph{locations} stays far below 2\%.
+Aggregation also has no effect beyond seed noise, so H3 is not supported, and the Gaussian smoothing of
+\citet{defard2021padim} does not help either.
