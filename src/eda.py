@@ -4,8 +4,11 @@ Never reads the test split's images, features or masks: feature statistics use t
 (fit) and val normal / val anomaly (held-out contrast); mask statistics use val + contam anomalies.
 Test appears only as label counts in the split/imbalance tables.
 
-Usage:  python src/eda.py        # writes results/stage4_eda/eda_*.csv and fig_*.png
+Usage:  python src/eda.py                 # writes results/stage4_eda/eda_*.csv and fig_*.png
+        python src/eda.py --paper-figure  # only fig_eda_paper.png (4 objects, sized for the paper)
 """
+import sys
+
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -283,7 +286,51 @@ def projection_figures(proj):
           "val normal vs val anomaly", "fig_maha_hist.png", hist)
 
 
+# One object per pattern in §4: well separated, acquisition shortcut, weakly and not separated.
+PAPER_OBJECTS = ["pipe_fryum", "pcb1", "macaroni2", "capsules"]
+
+
+def paper_figure():
+    """Compact §4 figure: PCA (top) and Mahalanobis histogram (bottom) for PAPER_OBJECTS.
+
+    Same computation as feature_analysis(), restricted to four objects; writes no CSV.
+    """
+    fig, axes = plt.subplots(2, 4, figsize=(7.0, 3.4))
+    for col, obj in enumerate(PAPER_OBJECTS):
+        frame, pooled = global_embeddings(obj)
+        emb = np.concatenate([pooled["layer2"], pooled["layer3"]], axis=1)
+        tr = (frame.split == "train").to_numpy()
+        vn = ((frame.split == "val") & (frame.label == "normal")).to_numpy()
+        va = ((frame.split == "val") & (frame.label == "anomaly")).to_numpy()
+        d = np.sqrt(LedoitWolf().fit(emb[tr]).mahalanobis(emb))
+        z = PCA(n_components=2).fit(emb[tr]).transform(emb)
+
+        ax = axes[0, col]
+        ax.scatter(*z[tr].T, s=2, c="0.6", label="train normal", rasterized=True)
+        ax.scatter(*z[va].T, s=5, c="tab:red", label="val anomaly")
+        ax.set_title(f"{obj}  (KS = {ks_2samp(d[vn], d[va]).statistic:.2f})", fontsize=7)
+        ax.set_xlabel("PC 1", fontsize=6)
+        ax.set_ylabel("PC 2", fontsize=6)
+
+        ax = axes[1, col]
+        bins = np.linspace(min(d[vn].min(), d[va].min()), max(d[vn].max(), d[va].max()), 25)
+        ax.hist(d[vn], bins=bins, alpha=0.6, density=True, color="0.5", label="val normal")
+        ax.hist(d[va], bins=bins, alpha=0.6, density=True, color="tab:red", label="val anomaly")
+        ax.set_xlabel("Mahalanobis distance (unitless)", fontsize=6)
+        ax.set_ylabel("density", fontsize=6)
+    for ax in axes.flat:
+        ax.tick_params(labelsize=5)
+    axes[0, 0].legend(fontsize=5, loc="best")
+    axes[1, 0].legend(fontsize=5, loc="best")
+    fig.tight_layout(pad=0.4)
+    fig.savefig(RESULTS / "fig_eda_paper.png", dpi=300)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
+    if "--paper-figure" in sys.argv:
+        paper_figure()
+        sys.exit()
     RESULTS.mkdir(parents=True, exist_ok=True)
     split = load_split()
     split_tables(split)
