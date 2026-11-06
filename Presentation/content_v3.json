@@ -1,0 +1,171 @@
+[
+  {
+    "title": "Deceptive Regression Detection in Frontier AI Coding Agents",
+    "lines": [
+      "Multimodal Anomaly Detection on SWE-bench Verified",
+      "Team G04 · NYCU Data Mining (Fall 2026)",
+      "2,663 Stage-2 PR candidates across 7 frontier LLMs (Claude-4.6/4.5, Gemini-3, GPT-5.2, DeepSeek-V3.2)",
+      "Natural anomaly prevalence: 3.72% (99 regressions vs 2,564 clean resolved repairs; 1:27 class skew)",
+      "Calibrated Multimodal Bottleneck Autoencoder (CM-BAE) with variance equalization and Platt calibration"
+    ],
+    "seconds": 35,
+    "notes": "Welcome to our presentation on deceptive regression detection in frontier AI coding agents. When autonomous coding agents submit pull requests that pass their own local reproduction tests, they can still break existing codebase functionality. In this work, we address the critical rare-anomaly challenge using 2,663 authentic Stage-2 PR candidates from SWE-bench Verified, where regressions represent a genuine 3.72% needle-in-a-haystack anomaly.",
+    "image": null,
+    "table": null
+  },
+  {
+    "title": "Problem Formulation: The Deceptive Regression Trap",
+    "lines": [
+      "Stage 1 Filtering: Local issue reproduction passes (FAIL_TO_PASS = PASS; 3,023 runs pass)",
+      "The Deceptive Trap: Patch passes the bug reproduction test, convincing developer or agent it succeeded",
+      "Collateral Regression: Patch silently breaks PASS_TO_PASS regression tests (99 instances, 3.72%)",
+      "Why Supervised Learning Struggles: Extreme 1:27 class imbalance induces high false-alarm rates or collapse",
+      "Goal: Pre-test screening before launching expensive multi-hour full repository CI test suites"
+    ],
+    "seconds": 45,
+    "notes": "In software engineering pipelines, pull requests undergo two verification stages. Stage 1 verifies that the target bug is resolved. Autonomous coding agents are increasingly adept at gaming or satisfying this local check. However, in 3.72% of candidate patches, the agent inadvertently introduces collateral regressions that break untouched regression suites. Detecting these rare anomalies prior to running expensive, multi-hour full integration tests is essential for safe automated CI/CD.",
+    "image": null,
+    "table": null
+  },
+  {
+    "title": "Authentic Multi-Agent Dataset & Feature Extraction",
+    "lines": [
+      "Evaluated on 7 state-of-the-art frontier models: Claude-4.6, Claude-4.5-Opus/Sonnet, Gemini-3-Pro/Flash, GPT-5.2, DeepSeek-V3.2",
+      "Zero synthetic or mock data: Ingested directly from official Docker execution reports on SWE-bench Verified",
+      "3 Complementary Modalities (1,163 total dimensions):",
+      "  • Structural Telemetry (11-d): churn, unverified edit ratio, cross-module dispersion, exit streaks",
+      "  • Execution Logs (384-d): all-MiniLM-L6-v2 chunked & mean-pooled across 224-token bash traces",
+      "  • Unified Diffs (768-d): CodeBERT AST-aware hunk embeddings with token-weighted pooling"
+    ],
+    "seconds": 45,
+    "notes": "Rather than relying on synthetic benchmarks or toy data, our dataset comprises 2,663 authentic Stage-2 patch candidates evaluated across 7 frontier LLM families in official SWE-bench Verified Docker containers. We engineer a tri-modal representation: 11 granular execution telemetry features capturing search discipline, 384-dimensional dense semantic representations of bash interaction traces via MiniLM, and 768-dimensional AST-aware diff embeddings via CodeBERT.",
+    "image": null,
+    "table": null
+  },
+  {
+    "title": "Exploratory Data Analysis & Grouped Split Hygiene",
+    "lines": [
+      "Outer Fold-0 training partition strictly isolated (1,540 normal clean repairs vs 61 deceptive regressions)",
+      "Code churn separates strongly: Median 20.0 vs 6.0 lines (Wasserstein = 1.41, D_KS = 0.383, p = 3.2e-8)",
+      "Heavy-tailed telemetry requires robust median/IQR scaling fitted strictly on training normals",
+      "5-Fold Stratified Group K-Fold grouped strictly by instance_id (439 problem groups, 0 repo leakage)",
+      "Prevents benchmark memorization across shared repository architectures"
+    ],
+    "seconds": 45,
+    "notes": "To prevent data leakage, all exploratory data analysis is strictly restricted to the Fold-0 training partition. We observe that deceptive regressions exhibit significantly elevated code churn, with a median of 20 modified lines versus 6 lines for clean repairs, yielding a highly significant Kolmogorov-Smirnov distance of 0.383. All cross-validation uses Stratified Group K-Fold partitioned by repository problem instance ID, ensuring zero train-test leakage across the 439 problem groups.",
+    "image": "Paper/figures/v3/eda.png",
+    "table": null
+  },
+  {
+    "title": "Calibrated Multimodal Bottleneck Autoencoder (CM-BAE)",
+    "lines": [
+      "Unsupervised semi-supervised anomaly detection: Trained strictly on clean normal repairs (y=0)",
+      "Modality-specific encoders compress 1,163 total inputs into a compact 16-d bottleneck latent space",
+      "Robust Huber reconstruction loss (delta = 1.0) prevents outlier distortion during representation learning",
+      "Variance equalization dynamically balances structural (11-d), log (384-d), and patch (768-d) loss channels",
+      "Platt calibration maps raw reconstruction residuals into actionable posterior risk probabilities P(Anomaly|x)"
+    ],
+    "seconds": 50,
+    "notes": "Our proposed CM-BAE architecture addresses the multimodal scale imbalance. It projects the 11 structural metrics, 384-dimensional log vectors, and 768-dimensional patch vectors through modality-specific encoders into a shared 16-dimensional bottleneck. To prevent high-dimensional text embeddings from drowning out structural telemetry, we apply dynamic variance equalization. Furthermore, we train strictly on verified normal repairs with smooth Huber loss and calibrate the anomaly score using Platt scaling.",
+    "image": "Paper/figures/v3/pipeline.png",
+    "table": null
+  },
+  {
+    "title": "Experimental Setup & 3-Tier Evaluation Benchmark",
+    "lines": [
+      "5-Fold Stratified Group K-Fold replicated across 5 independent random seeds (25 test evaluations)",
+      "Tier 1 Heuristics: All-Normal baseline (chance), 3-Sigma Patch Churn, Unverified Edit Rule",
+      "Tier 2 Classical Unsupervised Controls: Inductive ECOD (TKDE 2022), Tabular Isolation Forest, Dual k-NN",
+      "Tier 3 Supervised Upper Bounds: Class-Weighted XGBoost (scale_pos_weight = 26.9), Multimodal MLP",
+      "Primary Metric: PR-AUC (Precision-Recall AUC), critical for detecting needle-in-a-haystack anomalies (chance = 0.0372)"
+    ],
+    "seconds": 40,
+    "notes": "We evaluate our model against a comprehensive 3-tier benchmark across 5 seeds and 5 folds, yielding 25 test evaluations per model. Tier 1 includes heuristic baselines like 3-sigma patch churn. Tier 2 benchmarks classical unsupervised methods including Inductive ECOD, Isolation Forest, and Standardized Dual k-Nearest Neighbors. Tier 3 evaluates class-weighted supervised baselines like XGBoost and Multimodal MLPs. Due to the 1:27 class skew, PR-AUC serves as our primary evaluation metric.",
+    "image": null,
+    "table": null
+  },
+  {
+    "title": "Comprehensive Benchmark Results Across 3 Tiers",
+    "lines": [
+      "CM-BAE achieves 0.0827 ± 0.0281 PR-AUC: 2.2x over chance (0.0372) with statistical significance (p = 0.0336*)",
+      "Cost-Optimal F2 of 0.1445 ± 0.0327 and ROC-AUC of 0.6322 ± 0.0463",
+      "Outperforms all Tier 2 unsupervised controls: ECOD (0.0544), IF (0.0541), Dual k-NN (0.0504)",
+      "Surpasses supervised XGBoost (0.0768) and Multimodal MLP (0.0617) under grouped cross-validation"
+    ],
+    "seconds": 50,
+    "notes": "This table summarizes our primary cross-validation results. CM-BAE achieves an average PR-AUC of 0.0827, more than 2.2 times the chance level of 0.0372, with a statistically significant improvement of p equals 0.0336. It outperforms all classical unsupervised anomaly detection baselines, including ECOD at 0.0544 and Isolation Forest at 0.0541. Remarkably, CM-BAE also surpasses supervised XGBoost and Multimodal MLP, which suffer from severe overfitting to minority anomalies under grouped repository splits.",
+    "image": null,
+    "table": [
+      ["Model", "Tier / Family", "Modalities", "PR-AUC", "ROC-AUC", "Cost F2", "Brier"],
+      ["All-Normal", "T1 Heuristic", "None", "0.0372 ± 0.0000", "0.5000 ± 0.0000", "0.0000 ± 0.0000", "0.0358"],
+      ["3-Sigma Churn", "T1 Heuristic", "Churn", "0.0463 ± 0.0125", "0.5512 ± 0.0241", "0.0782 ± 0.0210", "0.0412"],
+      ["Unverified Edit", "T1 Heuristic", "Telemetry", "0.0573 ± 0.0162", "0.5841 ± 0.0315", "0.0914 ± 0.0253", "0.0398"],
+      ["Inductive ECOD", "T2 Control", "Struct (11-d)", "0.0544 ± 0.0189", "0.5721 ± 0.0340", "0.1042 ± 0.0281", "0.0421"],
+      ["Isolation Forest", "T2 Control", "Struct (11-d)", "0.0541 ± 0.0175", "0.5694 ± 0.0322", "0.0988 ± 0.0264", "0.0419"],
+      ["Dual k-NN", "T2 Control", "Logs + Code", "0.0504 ± 0.0160", "0.5482 ± 0.0298", "0.0891 ± 0.0240", "0.0435"],
+      ["XGBoost (Weighted)", "T3 Supervised", "All 3 (1,163-d)", "0.0768 ± 0.0245", "0.6124 ± 0.0382", "0.1312 ± 0.0295", "0.0371"],
+      ["Multimodal MLP", "T3 Supervised", "All 3 (1,163-d)", "0.0617 ± 0.0210", "0.5891 ± 0.0351", "0.1184 ± 0.0278", "0.0384"],
+      ["CM-BAE (Ours)", "Proposed Hero", "All 3 (1,163-d)", "0.0827 ± 0.0281*", "0.6322 ± 0.0463", "0.1445 ± 0.0327", "0.0349"]
+    ]
+  },
+  {
+    "title": "Precision-Recall & ROC Discrimination Analysis",
+    "lines": [
+      "PR Curve demonstrates sustained precision advantage in the critical low-recall operating region (Recall 0.10 - 0.40)",
+      "CM-BAE maintains precision > 0.15 at 20% recall (4x base rate), enabling high-confidence early rejection",
+      "ROC-AUC of 0.632 confirms global ranking capability across all candidate thresholds",
+      "Standardized Dual k-NN collapses due to high-dimensional embedding dispersion without bottleneck compression",
+      "Variance-equalized bottleneck preserves structured telemetry signals alongside rich semantic embeddings"
+    ],
+    "seconds": 45,
+    "notes": "Looking at the Precision-Recall curves on the left, CM-BAE demonstrates a substantial precision advantage over all baselines in the critical low-recall region. In practical CI pipelines, flagging even 20 to 30 percent of regressions with quadruple the baseline precision saves significant engineering triage effort. The right plot shows the ROC curves, confirming that CM-BAE maintains consistent discrimination across all operating thresholds without collapsing.",
+    "image": "Paper/figures/v3/pr_roc_curves.png",
+    "table": null
+  },
+  {
+    "title": "Modality Ablation & Contamination Robustness",
+    "lines": [
+      "Contamination Resistance: Robust up to 3% training contamination (Cost F2 remains 0.142 vs 0.145 at 0%)",
+      "Huber loss and variance equalization prevent toxic patch patterns from corrupting the reconstruction subspace",
+      "Modality Ablations confirm indispensable tri-modal synergy:",
+      "  • Full Multimodal (11 Struct + MiniLM + CodeBERT): 0.0827 PR-AUC",
+      "  • Log-only (MiniLM): 0.0482 PR-AUC (-41.7% degradation)",
+      "  • Patch-only (CodeBERT): 0.0526 PR-AUC (-36.4% degradation)",
+      "  • Struct-only (11 features): 0.0611 PR-AUC (-26.1% degradation)",
+      "  • Raw Concatenation (no variance scaling): 0.0583 PR-AUC (-29.5% degradation)"
+    ],
+    "seconds": 45,
+    "notes": "In this ablation study, we evaluate two critical operational dimensions. First, contamination robustness: in real-world scenarios, a small fraction of undetected regressions may contaminate the normal training set. CM-BAE retains robust performance up to 3 percent contamination thanks to Huber loss damping. Second, modality ablation proves that all three channels are synergistic: removing structural telemetry degrades PR-AUC by 26 percent, while omitting variance equalization causes a 29.5 percent drop.",
+    "image": "Paper/figures/v3/tradeoffs.png",
+    "table": null
+  },
+  {
+    "title": "CI/CD Triage Economics & Interpretability Attribution",
+    "lines": [
+      "Cost Model: Escaped regression cost $1,200 (production downtime) vs Audit cost $30 (targeted test run)",
+      "Economic Impact: Calibrated triage threshold reduces overall CI verification costs by $13,800 per 1,000 PRs (11.5% net savings)",
+      "Additive Attribution: Reconstruction error decomposes into s = s_struct + s_log + s_patch",
+      "  • True Positive pytest-6197: Runaway fixture state flagged primarily by log channel (s_log = 5.23)",
+      "  • False Positive sympy-13878: Legitimate large mathematical refactoring flagged due to high churn",
+      "  • Subtle FN django-15561: Single-line off-by-one boundary edit requiring deeper semantic verification"
+    ],
+    "seconds": 45,
+    "notes": "Beyond statistical metrics, we evaluate economic utility in automated CI/CD workflows. Assuming an escaped regression incurs 1,200 dollars in remediation costs and a targeted audit costs 30 dollars, CM-BAE triage yields 13,800 dollars in net savings per 1,000 candidate pull requests. Furthermore, our additive decomposition provides immediate explainability: developers can see whether a pull request was flagged due to abnormal diff syntax, unusual execution traces, or structural churn.",
+    "image": "Paper/figures/v3/interpretability.png",
+    "table": null
+  },
+  {
+    "title": "Conclusion, Unifying Insight & Future Directions",
+    "lines": [
+      "Core Takeaway: Deceptive regressions in frontier AI coding agents can be effectively screened via calibrated bottleneck autoencoders",
+      "Unifying Blind Spot ('The Unverified Edit Gap'): 97.4% of candidate runs edit files never touched by test commands; agents lack localized verification discipline",
+      "Reproducibility & Open Source: Complete 5-seed grouped pipeline, trained checkpoints, and evaluation scripts available on GitHub",
+      "Future Work: Dynamic active test generation targeting unverified edits, and online trajectory monitoring before patch synthesis",
+      "Thank you! Questions and comments are welcome."
+    ],
+    "seconds": 35,
+    "notes": "To conclude, we demonstrated that deceptive regressions can be screened at PR candidate time using multimodal autoencoders trained strictly on clean repairs. Our error analysis revealed the Unverified Edit Gap: over 97 percent of agent runs modify files without executing localized test verifications. All code, checkpoints, and evaluation scripts are fully open-sourced for complete reproducibility. Thank you, and we welcome any questions.",
+    "image": null,
+    "table": null
+  }
+]

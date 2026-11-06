@@ -437,16 +437,16 @@ def run_benchmark():
     # Generate PR and ROC curve figure
     plt.rcParams.update({
         "font.family": "serif",
-        "font.size": 10,
-        "axes.labelsize": 10,
-        "axes.titlesize": 11,
-        "xtick.labelsize": 9,
-        "ytick.labelsize": 9,
-        "legend.fontsize": 8.5,
+        "font.size": 8.5,
+        "axes.labelsize": 8.5,
+        "axes.titlesize": 9.5,
+        "xtick.labelsize": 8.0,
+        "ytick.labelsize": 8.0,
+        "legend.fontsize": 7.8,
         "figure.dpi": 300,
     })
 
-    fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.0))
+    fig, axes = plt.subplots(1, 2, figsize=(9.5, 2.7))
 
     colors = {
         "T1-A: All-Normal": "#888888",

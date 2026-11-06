@@ -1,19 +1,31 @@
 {
-  "experiment_version": "v2",
-  "checks_passed": 1306,
+  "experiment_version": "v3",
+  "dataset": "SWE-bench Verified (Frontier Models)",
+  "population": "Stage-2 Candidate Patches (Passing FAIL_TO_PASS)",
+  "sample_size": 2663,
+  "clean_normals": 2564,
+  "deceptive_regressions": 99,
+  "natural_prevalence": "3.72%",
+  "primary_model": "Calibrated Multimodal Bottleneck Autoencoder (CM-BAE)",
+  "pr_auc": "0.0827 \u00b1 0.0281",
+  "cost_f2": "0.1445 \u00b1 0.0327",
+  "chance_pr_auc": "0.0372",
+  "checks_passed": 82,
   "technical_verification": "pass",
   "body_pages": 6,
+  "presentation_slides": 11,
+  "rehearsal_budget_seconds": 480,
   "files": {
-    "HW2_G04_report.pdf": "e5e8033616a265539167a11c8941a10e6d045fef75a1e20f8b41831eb089e4f6",
-    "HW2_G04_report_anonymized.pdf": "0aa4cded32a3c6bfa9174e0007b932ad1cf0b0b9ddff8f703ce6b25d438c6551",
-    "HW2_G04_presentation.pptx": "46e9e592c1dfba4ddcd173d2a3d2ce52e9091fb1b54e1a0254a56947341c313e",
-    "HW2_G04.zip": "648a733c55883dff1e38a2b0a1ff306b749449c2d0f397561ae133e11282a7ca"
+    "HW2_G04_report.pdf": "f03f2e61688dc6a0c50468cd86ffd35ef57f0dea1c531218a4618b602b647fb6",
+    "HW2_G04_report_anonymized.pdf": "4dc44effd3fe484556863feaba05c2b22b51fc8bf4f85262e615a87d89db9d52",
+    "HW2_G04_presentation.pptx": "714c75f655a70f642e8e03a26fba824a57c19ce10d780acb29145c37efba7c88",
+    "HW2_G04.zip": "391f3446e8665067e76a403041972c266b3885a0fc9b73b0da5e54e0ff1d09a6"
   },
   "remaining_human_items": [
-    "Confirm member contributions",
-    "Team review and actual 8-minute rehearsal",
-    "Verify public repository access",
-    "Upload to E3 and retain receipt"
+    "Confirm member contributions in final submission portal",
+    "Team review and 8-minute slide rehearsal before in-class presentation",
+    "Verify public GitHub repository access",
+    "Upload HW2_G04.zip and HW2_G04_report_anonymized.pdf to NYCU E3 portal"
   ],
   "external_submission_performed": false,
   "grade_claimed": false

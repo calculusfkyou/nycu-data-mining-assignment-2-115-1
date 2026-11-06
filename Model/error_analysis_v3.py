@@ -191,16 +191,16 @@ def run_error_analysis():
     # Plot Additive Channel Attribution Figure (interpretability.pdf)
     plt.rcParams.update({
         "font.family": "serif",
-        "font.size": 10,
-        "axes.labelsize": 10,
-        "axes.titlesize": 11,
-        "xtick.labelsize": 9,
-        "ytick.labelsize": 9,
-        "legend.fontsize": 9,
+        "font.size": 8.5,
+        "axes.labelsize": 8.5,
+        "axes.titlesize": 9.5,
+        "xtick.labelsize": 8.0,
+        "ytick.labelsize": 8.0,
+        "legend.fontsize": 8.0,
         "figure.dpi": 300,
     })
 
-    fig, ax = plt.subplots(figsize=(7.2, 3.8))
+    fig, ax = plt.subplots(figsize=(7.2, 2.4))
     case_labels = [
         f"Clean Normal (TN)\n{cases['TN']['instance_id'][:16]}",
         f"Subtle FN\n{cases['FN']['instance_id'][:16]}",
@@ -235,6 +235,7 @@ def run_error_analysis():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     interp_fig = FIG_DIR / "interpretability.pdf"
     plt.savefig(interp_fig, bbox_inches="tight")
+    plt.savefig(FIG_DIR / "interpretability.png", bbox_inches="tight", dpi=300)
     plt.close()
     print(f"Saved interpretability attribution figure to {interp_fig}")
 
