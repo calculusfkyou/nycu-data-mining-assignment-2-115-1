@@ -1,0 +1,17 @@
+\begin{center}\small\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lccccc}
+\toprule
+Method & AP $\uparrow$ & $F_2$ & ROC-AUC & Recall & FPR \\
+\midrule
+All-Normal & 0.037 $\pm$ 0.002 & 0.000 & 0.500 & 0.0\% & 0.0\% \\
+3-Sigma Churn & 0.192 $\pm$ 0.140 & 0.175 & 0.712 & 16.5\% & 1.9\% \\
+Unverified-Edit & 0.038 $\pm$ 0.004 & 0.162 & 0.504 & 90.8\% & 89.6\% \\
+Inductive ECOD & 0.132 $\pm$ 0.054 & 0.190 & 0.687 & 20.3\% & 3.8\% \\
+Isolation Forest & 0.141 $\pm$ 0.051 & 0.174 & 0.700 & 18.0\% & 3.4\% \\
+Dual k-NN & 0.039 $\pm$ 0.006 & 0.029 & 0.470 & 3.1\% & 4.0\% \\
+CM-BAE & 0.083 $\pm$ 0.028 & 0.145 & 0.596 & 82.9\% & 83.3\% \\
+Supervised XGBoost & 0.096 $\pm$ 0.039 & 0.037 & 0.626 & 3.2\% & 0.5\% \\
+Supervised MLP & 0.066 $\pm$ 0.031 & 0.120 & 0.551 & 15.2\% & 7.3\% \\
+\bottomrule\end{tabular}
+\reportcaption{table}{Five-fold benchmark (seed 42). AP is mean $\pm$ fold standard deviation. Threshold metrics use validation-selected operating points. CM-BAE is the proposed model, not the best performer.}{tab:main_benchmark}
+\end{center}

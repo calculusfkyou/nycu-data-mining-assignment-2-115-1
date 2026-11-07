@@ -1,5 +1,29 @@
 # Coding-Agent Failure Screening - NYCU Data Mining HW2
 
+## Current v3 report revision (2026-11-07)
+
+The PDFs now use `Paper/v3_body.tex`. Both variants contain six body pages and
+references on page 7. Layout panels are generated directly from saved v3 JSON
+results; no model rerun is required:
+
+```powershell
+.venv/Scripts/python.exe Paper/build_report_layout.py
+tectonic Paper/HW2_G04_report.tex --keep-logs
+tectonic Paper/HW2_G04_report_anonymized.tex --keep-logs
+Copy-Item Paper/HW2_G04_report*.pdf .
+.venv/Scripts/python.exe tools/package_submission.py
+.venv/Scripts/python.exe tools/verify_v3.py
+```
+
+The corrected report does **not** claim that CM-BAE beats the strongest controls,
+generalizes to held-out repositories, or provides demonstrated production savings.
+Its AP is 0.083 and its cost-selected FPR is 83.3%. See
+`docs/REPORT_REVIEW_2026-11-07.md` for the evidence audit. Slides are unchanged in
+this report-layout task and still need a separate claim-consistency review before
+submission. The ZIP is synchronized technically, not certified ready to submit.
+
+The remaining sections below describe the historical v2 workflow and results.
+
 Team **G04**. Current report, slides and submission ZIP use the **v2 local NLP experiments**. Five members and IDs follow the supplied HW1 author block; all contributions remain **pending confirmation** as requested.
 
 ## Current deliverables

@@ -16,12 +16,13 @@
   "presentation_slides": 11,
   "rehearsal_budget_seconds": 480,
   "files": {
-    "HW2_G04_report.pdf": "f03f2e61688dc6a0c50468cd86ffd35ef57f0dea1c531218a4618b602b647fb6",
-    "HW2_G04_report_anonymized.pdf": "4dc44effd3fe484556863feaba05c2b22b51fc8bf4f85262e615a87d89db9d52",
+    "HW2_G04_report.pdf": "8349bcd3a22a7260431f666bd1e89b9e3bad222d9ba16f6f4a8197ce1392fec6",
+    "HW2_G04_report_anonymized.pdf": "0bd3a816a42f2e10992b8371f0cb002cebc8559d20f168dac7e302199b2868d8",
     "HW2_G04_presentation.pptx": "714c75f655a70f642e8e03a26fba824a57c19ce10d780acb29145c37efba7c88",
-    "HW2_G04.zip": "391f3446e8665067e76a403041972c266b3885a0fc9b73b0da5e54e0ff1d09a6"
+    "HW2_G04.zip": "05647218f72829fff7a068aed3a2c56e585bba161607c965b2f8a319d4347173"
   },
   "remaining_human_items": [
+    "Audit unchanged slide claims and speaker notes against the corrected report before submission",
     "Confirm member contributions in final submission portal",
     "Team review and 8-minute slide rehearsal before in-class presentation",
     "Verify public GitHub repository access",

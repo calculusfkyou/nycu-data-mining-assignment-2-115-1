@@ -1,7 +1,8 @@
 \documentclass[11pt]{article}
 \ifdefined\JUDGE
-  \usepackage[review]{acl}
-  \makeatletter\acl@anonymizefalse\makeatother
+  % Keep anonymous and named layouts identical; review line numbering is
+  % incompatible with balanced fixed-page panels and can push text off-page.
+  \usepackage[preprint]{acl}
 \else
   \usepackage[preprint]{acl}
 \fi
@@ -18,6 +19,12 @@
 \usepackage{amssymb}
 \usepackage{enumitem}
 \usepackage{needspace}
+\usepackage{balance}
+% Full-width page-top panels keep tables readable without shrinking body text.
+\newcommand{\reportcaption}[3]{\par\vspace{5pt}\begingroup
+  \refstepcounter{#1}\label{#3}\small
+  \noindent\textbf{\csname #1name\endcsname~\csname the#1\endcsname.} #2\par
+  \endgroup}
 \setlist{nosep,leftmargin=*}
 \renewcommand{\arraystretch}{1.0}
 \input{generated/numbers}
@@ -29,6 +36,7 @@
 \fi
 \begin{document}
 \maketitle
+\balance
 \input{v3_body}
 \clearpage
 \bibliography{custom}

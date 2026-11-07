@@ -1,0 +1,13 @@
+\begin{center}\small\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lcc}
+\toprule
+Variant & AP $\uparrow$ & $F_2$ $\uparrow$ \\
+\midrule
+Full (Struct+Log+Patch+VarEq) & 0.083 $\pm$ 0.028 & 0.145 \\
+Raw Fusion (w/o VarEq) & 0.123 $\pm$ 0.043 & 0.200 \\
+Log-Only (MiniLM 384-D) & 0.044 $\pm$ 0.004 & 0.165 \\
+Patch-Only (CodeBERT 768-D) & 0.048 $\pm$ 0.013 & 0.161 \\
+Struct-Only (R0-struct 12-D) & 0.133 $\pm$ 0.048 & 0.148 \\
+\bottomrule\end{tabular}
+\reportcaption{table}{Saved modality ablations. Structural-only and raw fusion outperform the full equalized model.}{tab:ablation}
+\end{center}

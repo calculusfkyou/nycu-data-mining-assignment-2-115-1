@@ -429,7 +429,7 @@ def run_benchmark():
 
         f.write(r"\bottomrule" + "\n")
         f.write(r"\end{tabular}" + "\n")
-        f.write(r"\caption{\textbf{Main 5-Fold Benchmark on SWE-bench Verified Candidates.} Natural anomaly prevalence is $\pi = 3.72\%$ ($n_1=99, n_0=2,564$). Primary metrics are PR-AUC and Cost-Optimal $F_2$ ($C_{\text{escaped}}=\$1,200$, $C_{\text{audit}}=\$30$). CM-BAE is evaluated across 5 random seeds ($0.384 \pm 0.018$ PR-AUC over 25 evaluations). Statistical significance against CM-BAE via paired $t$-test: $^{***}p<0.001$, $^{**}p<0.01$, $^{*}p<0.05$.}" + "\n")
+        f.write(r"\caption{\textbf{Main 5-Fold Benchmark on SWE-bench Verified Candidates.} Natural anomaly prevalence is $\pi = 3.72\%$ ($n_1=99, n_0=2,564$). Primary metrics are PR-AUC and Cost-Optimal $F_2$ ($C_{\text{escaped}}=\$1,200$, $C_{\text{audit}}=\$30$). CM-BAE is evaluated across 5 random seeds ($0.083 \pm 0.028$ PR-AUC over 25 evaluations). Statistical significance against CM-BAE via paired $t$-test: $^{***}p<0.001$, $^{**}p<0.01$, $^{*}p<0.05$.}" + "\n")
         f.write(r"\label{tab:main_benchmark}" + "\n")
         f.write(r"\end{table*}" + "\n")
     print(f"Saved LaTeX benchmark table to {TEX_PATH}")

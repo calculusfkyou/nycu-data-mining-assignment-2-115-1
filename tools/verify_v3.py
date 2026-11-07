@@ -101,7 +101,8 @@ def main():
         reader = PdfReader(str(root_pdf))
         texts = [p.extract_text() or "" for p in reader.pages]
         ref_idx = next(i for i, t in enumerate(texts) if "References" in t or "REFERENCES" in t)
-        check(ref_idx <= 6, f"Body page limit: References on page {ref_idx + 1} (<= 7)")
+        check(ref_idx == 6 and len(reader.pages) == 7,
+              f"Exactly six body pages and one references page (got {len(reader.pages)} pages; references at {ref_idx + 1})")
 
         body_text = "\n".join(texts[:ref_idx])
         check("Contributions of Each Member" in body_text, f"{name}: Contributions in body")
@@ -173,6 +174,7 @@ def main():
             "HW2_G04.zip": sha(root / "HW2_G04.zip")
         },
         "remaining_human_items": [
+            "Audit unchanged slide claims and speaker notes against the corrected report before submission",
             "Confirm member contributions in final submission portal",
             "Team review and 8-minute slide rehearsal before in-class presentation",
             "Verify public GitHub repository access",
